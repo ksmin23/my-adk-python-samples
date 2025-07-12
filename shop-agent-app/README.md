@@ -23,6 +23,7 @@ The core logic is in `agent.py`. It defines an `LlmAgent` that is configured to 
         *   `LOCATION`: The location of your catalog (e.g., `global`).
         *   `CATALOG_ID`: The ID of your Vertex AI Search catalog.
         *   `SERVING_CONFIG_ID`: The ID of the serving config to use (e.g., `default_serving_config`).
+        *   `MCP_SERVER_URL`: The URL for the remote MCP server. Defaults to `http://localhost:8000/mcp` if not set.
     *   Install the server's dependencies: `uv pip install -r requirements.txt`
 
 ## Running the Agent
@@ -45,6 +46,14 @@ You can run this agent using the ADK Web UI for interactive testing.
 Once the agent is running in the ADK Web UI, you can interact with it.
 
 **Example prompt:**
-> "Can you find me some blue jeans?"
+> "Can you find me some hoodies?"
 
 The agent will use the `search_products` tool to query the catalog and return the results.
+
+## References
+
+- [(YouTube) Build AI agents for e-commerce with ADK + Vector Search](https://www.youtube.com/watch?v=UIntXBP--gI)
+- [Agent Development Kit (ADK)](https://goo.gle/3RGrB9T)
+- [Vertex AI Vector Search](https://goo.gle/3T5xxK5)
+- [Shopper's Concierge demo video](https://goo.gle/4jRbMJb)
+- [Shopper's Concierge sample notebook](https://goo.gle/4kMkxot)
