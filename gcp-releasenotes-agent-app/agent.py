@@ -19,6 +19,9 @@ def get_google_id_token():
     # Prefix for Authorization header tokens
     BEARER_TOKEN_PREFIX = auth_methods.BEARER_TOKEN_PREFIX
 
+    if auth_methods._is_cached_token_valid(auth_methods._cached_google_id_token):
+        return BEARER_TOKEN_PREFIX + auth_methods._cached_google_id_token["token"]
+
     credentials, _project_id = google.auth.default()
     session = AuthorizedSession(credentials)
     request = Request(session)
@@ -32,6 +35,8 @@ def get_google_id_token():
     new_id_token = getattr(credentials, "token", None)
     expiry = getattr(credentials, "expiry")
 
+    auth_methods._update_token_cache(auth_methods._cached_google_id_token, new_id_token, expiry)
+
     if new_id_token:
         return BEARER_TOKEN_PREFIX + new_id_token
     else:
@@ -39,8 +44,7 @@ def get_google_id_token():
         traceback.print_exc()
         raise Exception("Failed to fetch Google ID token.")
 
-auth_methods.get_google_id_token = get_google_id_token 
-auth_token_provider = auth_methods.get_google_id_token
+auth_token_provider = get_google_id_token
 
 toolbox = ToolboxSyncClient(
     TOOLBOX_ENDPOINT,
