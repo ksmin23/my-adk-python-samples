@@ -111,8 +111,8 @@ Now, set up the agent itself.
 2.  **Google Cloud SDK (`gcloud`)**: If you don't have it, [install it from here](https://cloud.google.com/sdk/docs/install).
 3.  **Authentication**: Authenticate your local environment to allow the agent to invoke the deployed Toolbox service.
     ```bash
-gcloud auth application-default login
-```
+    gcloud auth application-default login
+    ```
 
 
 ## Setup and Local Execution
