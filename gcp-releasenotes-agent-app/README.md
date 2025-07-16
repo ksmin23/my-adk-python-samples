@@ -1,6 +1,6 @@
 # Google Cloud Release Notes Agent
 
-This agent is designed to answer questions about Google Cloud Release Notes. It utilizes the Google Agent Development Kit (ADK) and connects to a [MCP Toolbox for Databases](https://googleapis.github.io/genai-toolbox/getting-started/) to query information.
+This agent is designed to answer questions about Google Cloud Release Notes. It utilizes the Google Agent Development Kit (ADK) and connects to the [MCP Toolbox for Databases](https://googleapis.github.io/genai-toolbox/getting-started/) to query information.
 
 The core logic is in `gcp_releasenotes_agent/agent.py`.
 
@@ -29,10 +29,17 @@ Before running the agent, ensure you have the following:
     uv pip install -r gcp_releasenotes_agent/requirements.txt
     ```
 
-3.  **Run the Agent Locally**:
+3.  **Configure Environment**:
+    Create a `.env` file for the agent by copying the example:
+    ```bash
+    cp gcp_releasenotes_agent/.env.example gcp_releasenotes_agent/.env
+    ```
+    *Note: The default `.env` file is often sufficient for local execution, but you can edit it if you need to customize the `TOOLBOX_ENDPOINT`.*
+
+4.  **Run the Agent Locally**:
     To start the agent and interact with it through the ADK's web interface, run the following command from the `gcp-releasenotes-agent-app/` directory:
     ```bash
-    adk web -m gcp_releasenotes_agent
+    adk web
     ```
     This will start a local web server where you can test the agent.
 
