@@ -8,6 +8,62 @@ The agent is built using the Google Agent Development Kit (ADK). It leverages th
 
 The core logic is in `shop_agent/agent.py`. It defines an `LlmAgent` that is configured to use the `search_products` tool, which is made available through an `MCPToolset`. The toolset communicates with a separate MCP server, which you can find at [mcp-vertex-ai-retail-search-server](https://github.com/ksmin23/mcp-vertex-ai-retail-search-server).
 
+## Architecture
+
+The `Vertex AI Search for Commerce MCP Server` is deployed to Cloud Run within a private VPC subnet but is configured with public ingress, allowing it to be accessed from the internet. The `Shop Search Agent` communicates with it via its public URL.
+
+```ascii
++----------+
+|          |
+|   User   |
+|          |
++----------+
+     |
+     | 1. User Question (HTTPS)
+     v
++-------------------------------------------------------------------+
+| Google Cloud                                                      |
+|                                                                   |
+|    +--------------------------------+                             |
+|    |    Shop Search Agent           |                             |
+|    |    (Cloud Run - A)             |                             |
+|    |    (Public Ingress)            |                             |
+|    +--------------------------------+                             |
+|                 |                                                 |
+|                 | 2. MCP Call (HTTPS to Public URL)               |
+|                 |                                                 |
+|  +--------------|----------------------------------------------+  |
+|  | Default VPC  |                                              |  |
+|  |              v                                              |  |
+|  |  +-------------------------------------------------------+  |  |
+|  |  | Private Subnet                                        |  |  |
+|  |  |                                                       |  |  |
+|  |  |    +--------------------------------------------+     |  |  |
+|  |  |    | Vertex AI Search for Commerce MCP Server   |     |  |  |
+|  |  |    | (Cloud Run - B)                            |     |  |  |
+|  |  |    | (Deployed in VPC, but with Public Ingress) |     |  |  |
+|  |  |    +--------------------------------------------+     |  |  |
+|  |  |                                                       |  |  |
+|  |  +-------------------------------------------------------+  |  |
+|  |                                                             |  |
+|  +-------------------------------------------------------------+  |
+|                                                                   |
++-------------------------------------------------------------------+
+```
+
+### Diagram Description
+
+1.  **Public Ingress in VPC**:
+    *   The `Vertex AI Search for Commerce MCP Server (Cloud Run - B)` is deployed within a **Private Subnet** in a VPC, as indicated by its position inside the VPC and Subnet boundaries in the diagram.
+    *   However, this service is configured with **Public Ingress**, meaning it has a public URL and is directly accessible from the internet.
+
+2.  **Communication Path**:
+    *   The `Shop Search Agent (Cloud Run - A)` sends MCP calls over the internet to the **public URL** of `Cloud Run - B`.
+    *   Because this communication happens over Google Cloud's external network, `Cloud Run - A` does not need to be aware that `Cloud Run - B` is located inside a VPC, and no Serverless VPC Access Connector is required for this interaction.
+
+3.  **Architecture Purpose**:
+    *   This setup is useful when a service like `Cloud Run - B` needs to receive requests directly from external sources (like `Cloud Run - A`) while also needing to securely access other private resources within the VPC, such as a database or cache with a private IP address.
+
 ## Prerequisites
 
 1.  **Set Up and Run the MCP Server:** This agent requires the `mcp-vertex-ai-retail-search-server` to be running.
