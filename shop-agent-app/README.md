@@ -6,13 +6,13 @@ This agent acts as a shopping assistant, using a tool to search for products in 
 
 The agent is built using the Google Agent Development Kit (ADK). It leverages the Model Context Protocol (MCP) to communicate with a separate server process that provides access to a Vertex AI Search for Retail backend.
 
-The core logic is in `agent.py`. It defines an `LlmAgent` that is configured to use the `search_products` tool, which is made available through an `MCPToolset`. The toolset starts and communicates with the MCP server defined in `../../mcp-search-server/server.py`.
+The core logic is in `shop_agent/agent.py`. It defines an `LlmAgent` that is configured to use the `search_products` tool, which is made available through an `MCPToolset`. The toolset starts and communicates with the MCP server defined in `../../mcp-search-server/server.py`.
 
 ## Prerequisites
 
 1.  **Install ADK and Dependencies:** Ensure you have the ADK installed and a virtual environment set up for this project. You can install the required Python packages using the `requirements.txt` file:
     ```bash
-    uv pip install -r requirements.txt
+    uv pip install -r shop_agent/requirements.txt
     ```
 
 2.  **Configure the MCP Server:** The agent relies on the `@mcp-search-server` to function. You must configure it correctly.
@@ -39,7 +39,7 @@ You can run this agent using the ADK Web UI for interactive testing.
     adk web
     ```
 3.  Open the provided URL in your browser.
-4.  Select the `shop_search_agent` from the list of available agents.
+4.  Select the `shop-agent-app.shop_agent` from the list of available agents.
 
 ## Example Usage
 

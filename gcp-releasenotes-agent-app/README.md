@@ -19,12 +19,12 @@ Before running the agent, ensure you have the following installed and configured
 2.  Navigate to the `gcp-releasenotes-agent-app` directory.
 3.  Install the required Python packages using `pip`:
     ```bash
-    pip install -r requirements.txt
+    uv pip install -r gcp_releasenotes_agent/requirements.txt
     ```
 
 ## Configuration
 
--   **Toolbox Endpoint**: The agent connects to a Toolbox service defined by the `TOOLBOX_ENDPOINT` variable in `agent.py`. The default is set to `https://toolbox-vsi6xb4zha-uc.a.run.app`.
+-   **Toolbox Endpoint**: The agent connects to a Toolbox service defined by the `TOOLBOX_ENDPOINT` variable in `gcp_releasenotes_agent/agent.py`.
 -   **Authentication**: Authentication is handled automatically by obtaining a Google ID token from the credentials configured via the `gcloud` command in the prerequisites.
 -   **Tools**: The agent loads a toolset named `my_bq_toolset` from the Toolbox service.
 
@@ -32,10 +32,10 @@ Before running the agent, ensure you have the following installed and configured
 
 This agent is designed to be run with the Google ADK CLI.
 
-To start the agent and interact with it through a web interface, run the following command from the parent directory (`my-agents/`):
+To start the agent and interact with it through a web interface, run the following command from the parent directory (`gcp-releasenotes-agent-app/`):
 
 ```bash
-adk web -m gcp-releasenotes-agent-app
+adk web
 ```
 
 This will start a local web server where you can test and interact with the agent.
@@ -49,7 +49,7 @@ You can deploy this agent as a containerized application on Google Cloud Run. Th
 `adk` 커맨드라인 도구를 사용하는 것이 가장 간단한 배포 방법입니다.
 
 1.  **Google Cloud 인증**:
-    먼저 다음 명령어를 실행하여 Google Cloud�� 인증합니다.
+    먼저 다음 명령어를 실행하여 Google Cloud 인증합니다.
     ```bash
     gcloud auth login
     ```
@@ -59,7 +59,7 @@ You can deploy this agent as a containerized application on Google Cloud Run. Th
     ```bash
     export GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
     export GOOGLE_CLOUD_LOCATION="us-central1"
-    export AGENT_PATH="./gcp-releasenotes-agent-app"
+    export AGENT_PATH="./gcp_releasenotes_agent"
     export SERVICE_NAME="gcp-releasenotes-agent-service"
     export APP_NAME="gcp-releasenotes-agent-app"
     ```
@@ -71,7 +71,7 @@ You can deploy this agent as a containerized application on Google Cloud Run. Th
     `[PROJECT_ID]`와 `[REGION]`을 실제 값으로 바꾸세요 (예: `us-central1`).
 
 3.  **배포**:
-    프로젝트의 루트 디렉토리 (`my-agents/`)에서 다음 명령어를 실행하여 에이전트를 배포합니다.
+    프로젝트의 루트 디렉토리 (`gcp-releasenotes-agent-app/`)에서 다음 명령어를 실행하여 에이전트를 배포합니다.
     ```bash
     adk deploy cloud_run \
         --project=$GOOGLE_CLOUD_PROJECT \
@@ -105,20 +105,20 @@ ENV PYTHONUNBUFFERED TRUE
 WORKDIR /app
 
 # Copy the requirements file into the container
-COPY gcp-releasenotes-agent-app/requirements.txt .
+COPY gcp_releasenotes_agent/requirements.txt .
 
 # Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code into the container
-COPY gcp-releasenotes-agent-app/ /app/gcp-releasenotes-agent-app/
+COPY gcp_releasenotes_agent/ /app/gcp_releasenotes_agent/
 
 # Expose the port that the ADK web server will run on
 EXPOSE 8080
 
 # Set the command to run the application
 # The ADK web server will bind to 0.0.0.0:8080 by default
-CMD ["adk", "web", "-m", "gcp-releasenotes-agent-app"]
+CMD ["adk", "web", "-m", "gcp_releasenotes_agent"]
 ```
 
 #### 2. Build and Deploy
@@ -132,13 +132,18 @@ CMD ["adk", "web", "-m", "gcp-releasenotes-agent-app"]
 2.  **Build the container image using Cloud Build**:
     Replace `[PROJECT_ID]` with your Google Cloud project ID.
     ```bash
-    gcloud builds submit --tag gcr.io/[PROJECT_ID]/gcp-releasenotes-agent
+    gcloud builds submit --tag [REGION]-docker.pkg.dev/[PROJECT_ID]/[REPOSITORY_NAME]/gcp-releasenotes-agent:latest .
     ```
 
 3.  **Deploy the image to Cloud Run**:
     Replace `[PROJECT_ID]` and `[REGION]` with your project ID and desired region (e.g., `us-central1`).
     ```bash
-    gcloud run deploy gcp-releasenotes-agent --image gcr.io/[PROJECT_ID]/gcp-releasenotes-agent --platform managed --region [REGION] --allow-unauthenticated
+    gcloud run deploy gcp-releasenotes-agent \
+        --image gcr.io/[PROJECT_ID]/gcp-releasenotes-agent \
+        --region [REGION] \
+        --allow-unauthenticated \
+        # --network [VPC] \
+        # --subnet [SUBNET] \
     ```
     This command deploys the agent and makes it publicly accessible. For production environments, you should configure appropriate authentication.
 
