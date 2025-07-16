@@ -25,6 +25,19 @@ The core logic is in `shop_agent/agent.py`. It defines an `LlmAgent` that is con
         ```bash
         cd shop-agent-app
         ```
+    *   Create a virtual environment using `uv`:
+        ```bash
+        uv venv
+        ```
+    *   Activate the virtual environment:
+        *   **macOS/Linux:**
+            ```bash
+            source .venv/bin/activate
+            ```
+        *   **Windows:**
+            ```bash
+            .venv\Scripts\activate
+            ```
     *   Install the required Python packages:
         ```bash
         uv pip install -r shop_agent/requirements.txt

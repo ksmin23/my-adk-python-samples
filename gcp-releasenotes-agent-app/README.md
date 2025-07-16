@@ -124,9 +124,22 @@ Now, set up the agent itself.
     ```
 
 2.  **Install Dependencies**:
-    Install the required Python packages:
-    ```bash
-    uv pip install -r gcp_releasenotes_agent/requirements.txt
+    *   Create a virtual environment using `uv`:
+        ```bash
+        uv venv
+        ```
+    *   Activate the virtual environment:
+        *   **macOS/Linux:**
+            ```bash
+            source .venv/bin/activate
+            ```
+        *   **Windows:**
+            ```bash
+            .venv\Scripts\activate
+            ```
+    *   Install the required Python packages:
+        ```bash
+        uv pip install -r gcp_releasenotes_agent/requirements.txt
     ```
 
 3.  **Configure Environment**:
