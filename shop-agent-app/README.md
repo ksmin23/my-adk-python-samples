@@ -6,39 +6,47 @@ This agent acts as a shopping assistant, using a tool to search for products in 
 
 The agent is built using the Google Agent Development Kit (ADK). It leverages the Model Context Protocol (MCP) to communicate with a separate server process that provides access to a Vertex AI Search for Retail backend.
 
-The core logic is in `shop_agent/agent.py`. It defines an `LlmAgent` that is configured to use the `search_products` tool, which is made available through an `MCPToolset`. The toolset starts and communicates with the MCP server defined in `../../mcp-search-server/server.py`.
+The core logic is in `shop_agent/agent.py`. It defines an `LlmAgent` that is configured to use the `search_products` tool, which is made available through an `MCPToolset`. The toolset communicates with a separate MCP server, which you can find at [mcp-vertex-ai-retail-search-server](https://github.com/ksmin23/mcp-vertex-ai-retail-search-server).
 
 ## Prerequisites
 
-1.  **Install ADK and Dependencies:** Ensure you have the ADK installed and a virtual environment set up for this project. You can install the required Python packages using the `requirements.txt` file:
-    ```bash
-    uv pip install -r shop_agent/requirements.txt
-    ```
+1.  **Set Up and Run the MCP Server:** This agent requires the `mcp-vertex-ai-retail-search-server` to be running.
+    *   First, clone the server repository to a separate location:
+        ```bash
+        git clone https://github.com/ksmin23/mcp-vertex-ai-retail-search-server.git
+        ```
+    *   Follow the setup instructions in the cloned repository's `README.md`. The key steps are:
+        *   Installing its dependencies.
+        *   Creating and configuring a `.env` file with your project details (`PROJECT_ID`, `LOCATION`, etc.).
+        *   Starting the server. **Make a note of the URL where the server is running** (e.g., `http://localhost:8000/mcp/`).
 
-2.  **Configure the MCP Server:** The agent relies on the `@mcp-search-server` to function. You must configure it correctly.
-    *   Create a `.env` file by copying the example: `cp .env.example .env`
-    *   Edit the `.env` file and provide the necessary values for your Google Cloud project:
-        *   `PROJECT_ID`: Your Google Cloud Project ID.
-        *   `LOCATION`: The location of your catalog (e.g., `global`).
-        *   `CATALOG_ID`: The ID of your Vertex AI Search catalog.
-        *   `SERVING_CONFIG_ID`: The ID of the serving config to use (e.g., `default_serving_config`).
-        *   `MCP_SERVER_URL`: The URL for the remote MCP server. Defaults to `http://localhost:8000/mcp/` if not set.
-    *   Install the server's dependencies: `uv pip install -r requirements.txt`
+2.  **Install Agent Dependencies:**
+    *   Navigate to this agent's directory from the repository root:
+        ```bash
+        cd shop-agent-app
+        ```
+    *   Install the required Python packages:
+        ```bash
+        uv pip install -r shop_agent/requirements.txt
+        ```
+
+3.  **Configure Agent Connection:**
+    *   Create a `.env` file for the agent by copying the example:
+        ```bash
+        # Ensure you are in the shop-agent-app/ directory
+        cp shop_agent/.env.example shop_agent/.env
+        ```
+    *   Edit the `shop_agent/.env` file and set `MCP_SERVER_URL` to the URL of the MCP server from step 1.
 
 ## Running the Agent Locally
 
 You can run this agent using the ADK Web UI for interactive testing.
 
-1.  Navigate to the parent directory (`shop-agent-app/`):
-    ```bash
-    cd shop-agent-app/
-    ```
-2.  Start the ADK web server:
+1.  **Start the ADK Web Server:** From the `shop-agent-app/` directory, run the following command:
     ```bash
     adk web
     ```
-3.  Open the provided URL in your browser.
-4.  Select the `shop_agent` from the list of available agents.
+2.  **Interact with the Agent:** Open the provided URL in your browser and select the `shop_agent` from the list of available agents.
 
 ## Deploying to Cloud Run
 
@@ -46,44 +54,35 @@ You can deploy this agent as a containerized application on Google Cloud Run.
 
 ### Using the ADK CLI (Recommended)
 
-Using the `adk` command-line tool is the simplest way to deploy the agent.
+Using the `adk` command-line tool is the simplest way to deploy.
 
 1.  **Authenticate with Google Cloud**:
-    First, run the following command to authenticate with Google Cloud:
+    First, run the following command to authenticate:
     ```bash
     gcloud auth login
     ```
 
 2.  **Set Project and Location**:
-    To simplify the deployment process, you can set the following environment variables:
+    To simplify deployment, you can set the following environment variables.
     ```bash
+    # Ensure these are set correctly for your environment
     export GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
     export GOOGLE_CLOUD_LOCATION="us-central1"
-    export AGENT_PATH="./shop_agent"
-    export SERVICE_NAME="shop-agent-service"
-    export APP_NAME="shop-agent-app"
     ```
-    Alternatively, you can set the project and region directly using `gcloud` commands:
-    ```bash
-    gcloud config set project [PROJECT_ID]
-    gcloud config set compute/region [REGION]
-    ```
-    Replace `[PROJECT_ID]` and `[REGION]` with your actual values (e.g., `us-central1`).
 
 3.  **Deploy**:
-    From the project's root directory (`shop-agent-app/`), run the following command to deploy the agent:
+    From the `shop-agent-app/` directory, run the following command to deploy the agent:
     ```bash
     adk deploy cloud_run \
         --project=$GOOGLE_CLOUD_PROJECT \
         --region=$GOOGLE_CLOUD_LOCATION \
-        --service_name=$SERVICE_NAME \
-        --app_name=$APP_NAME \
+        --service_name="shop-agent-service" \
+        --app_name="shop-agent-app" \
         --with_ui \
-        $AGENT_PATH
+        ./shop_agent
     ```
-    During the deployment, you may be prompted to allow unauthenticated invocations for the service.
+    During deployment, you may be prompted to allow unauthenticated invocations for the service. The ADK automatically handles containerization and deployment. Once complete, it will provide a URL to access your agent on Cloud Run.
 
-    The ADK automatically handles the containerization and deployment process. Once complete, it will provide a URL to access your agent on Cloud Run.
 
 ## Example Usage
 
