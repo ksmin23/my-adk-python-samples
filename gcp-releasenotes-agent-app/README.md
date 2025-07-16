@@ -44,18 +44,18 @@ This will start a local web server where you can test and interact with the agen
 
 You can deploy this agent as a containerized application on Google Cloud Run. There are two ways to do this:
 
-### ADK CLI 사용 (권장)
+### Using the ADK CLI (Recommended)
 
-`adk` 커맨드라인 도구를 사용하는 것이 가장 간단한 배포 방법입니다.
+Using the `adk` command-line tool is the simplest way to deploy the agent.
 
-1.  **Google Cloud 인증**:
-    먼저 다음 명령어를 실행하여 Google Cloud 인증합니다.
+1.  **Authenticate with Google Cloud**:
+    First, run the following command to authenticate with Google Cloud:
     ```bash
     gcloud auth login
     ```
 
-2.  **프로젝트 및 위치 설정**:
-    배포를 간소화하기 위해 다음 환경 변수를 설정할 수 있습니다.
+2.  **Set Project and Location**:
+    To simplify the deployment process, you can set the following environment variables:
     ```bash
     export GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
     export GOOGLE_CLOUD_LOCATION="us-central1"
@@ -63,15 +63,15 @@ You can deploy this agent as a containerized application on Google Cloud Run. Th
     export SERVICE_NAME="gcp-releasenotes-agent-service"
     export APP_NAME="gcp-releasenotes-agent-app"
     ```
-    또는 `gcloud` 명령어로 직접 프로젝트와 리전을 설정할 수도 있습니다.
+    Alternatively, you can set the project and region directly using `gcloud` commands:
     ```bash
     gcloud config set project [PROJECT_ID]
     gcloud config set compute/region [REGION]
     ```
-    `[PROJECT_ID]`와 `[REGION]`을 실제 값으로 바꾸세요 (예: `us-central1`).
+    Replace `[PROJECT_ID]` and `[REGION]` with your actual values (e.g., `us-central1`).
 
-3.  **배포**:
-    프로젝트의 루트 디렉토리 (`gcp-releasenotes-agent-app/`)에서 다음 명령어를 실행하여 에이전트를 배포합니다.
+3.  **Deploy**:
+    From the project's root directory (`gcp-releasenotes-agent-app/`), run the following command to deploy the agent:
     ```bash
     adk deploy cloud_run \
         --project=$GOOGLE_CLOUD_PROJECT \
@@ -81,9 +81,10 @@ You can deploy this agent as a containerized application on Google Cloud Run. Th
         --with_ui \
         $AGENT_PATH
     ```
-    배포 과정에서 서비스에 대한 인증되지 않은 호출을 허용할지 묻는 메시지가 표시될 수 있습니다.
+    During the deployment, you may be prompted to allow unauthenticated invocations for the service.
 
-    ADK는 컨테이너화 및 배포 프로세스를 자동으로 처리합니다. 배포가 완료되면 Cloud Run에서 에이전트에 액세스할 수 있는 URL을 제공합니다.
+    The ADK automatically handles the containerization and deployment process. Once complete, it will provide a URL to access your agent on Cloud Run.
+
 
 ### Using a Dockerfile (Manual Method)
 
@@ -158,8 +159,8 @@ This project relies on the following major packages:
 
 ## References
 
-- [Build a Travel Agent using MCP Toolbox for Databases and Agent ...](https://codelabs.developers.google.com/travel-agent-mcp-toolbox-adk#0)
+- [Build a Travel Agent using MCP Toolbox for Databases and Agent Development Kit (ADK)](https://codelabs.developers.google.com/travel-agent-mcp-toolbox-adk#0)
 - [Build a Sports Shop Agent AI Assistant with ADK, MCP Toolbox and AlloyDB](https://codelabs.developers.google.com/codelabs/devsite/codelabs/sports-agent-adk-mcp-alloydb#0)
 - [MCP Toolbox for Databases](https://googleapis.github.io/genai-toolbox/getting-started/)
-- [toolbox-core · PyPI](https://pypi.org/project/toolbox-core/)
-- [googleapis/mcp-toolbox-sdk-python: Python SDK for ... - GitHub](https://github.com/googleapis/mcp-toolbox-sdk-python)
+- [toolbox-core - PyPI](https://pypi.org/project/toolbox-core/)
+- [googleapis/mcp-toolbox-sdk-python: Python SDK for interacting with the MCP Toolbox for Databases. - GitHub](https://github.com/googleapis/mcp-toolbox-sdk-python)
