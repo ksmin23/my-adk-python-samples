@@ -14,6 +14,8 @@ load_dotenv()
 
 TOOLBOX_ENDPOINT = os.getenv("TOOLBOX_ENDPOINT")
 
+#XXX: Cloud Run: Authentication overview
+# https://cloud.google.com/run/docs/authenticating/overview
 def get_google_id_token():
     import google.auth
     from google.auth._credentials_async import Credentials
@@ -49,6 +51,7 @@ def get_google_id_token():
         raise Exception("Failed to fetch Google ID token.")
 
 auth_token_provider = get_google_id_token
+# auth_token_provider = auth_methods.get_google_id_token # Running Agent on local pc
 
 toolbox = ToolboxSyncClient(
     TOOLBOX_ENDPOINT,
