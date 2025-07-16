@@ -50,6 +50,9 @@ Once the agent is running in the ADK Web UI, you can interact with it.
 
 The agent will use the `search_products` tool to query the catalog and return the results.
 
+![](./assets/shop-agent-01.png)
+![](./assets/shop-agent-02.png)
+
 ## References
 
 - [(YouTube) Build AI agents for e-commerce with ADK + Vector Search](https://www.youtube.com/watch?v=UIntXBP--gI)
