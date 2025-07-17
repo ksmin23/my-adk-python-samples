@@ -156,6 +156,16 @@ Now, set up the agent itself.
     ```
     This will start a local web server where you can test the agent.
 
+## Example Usage
+
+Once the agent is running in the ADK Web UI, you can interact with it.
+
+**Example prompt:**
+> "Get me the google cloud release notes"
+
+The agent will use the `search_release_notes_bq` tool to query BigQuery for release notes and return the results.
+![GCP Release Notes Agent Example Usage](assets/gcp_releasenotes_agent.png)
+
 ## Deploying to Cloud Run
 
 You can deploy this agent as a containerized application on Google Cloud Run using the ADK CLI. The ADK automatically handles containerization, so a manual `Dockerfile` is not needed.
