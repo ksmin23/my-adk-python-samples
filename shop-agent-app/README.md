@@ -67,102 +67,95 @@ This agent uses a secure, two-tiered network architecture within a Google Cloud 
 3.  **Architecture Purpose**:
     *   This architecture enhances security by exposing only the necessary web-facing component (`Cloud Run - A`) to the internet, while protecting the backend data-processing service (`Cloud Run - B`) in an isolated private network.
 
-## Prerequisites
+## Getting Started
 
-**Install Agent Dependencies:**
-    *   Navigate to this agent's directory from the repository root:
-        ```bash
-        cd shop-agent-app
-        ```
-    *   Create a virtual environment using `uv`:
-        ```bash
-        uv venv
-        ```
-    *   Activate the virtual environment:
-        *   **macOS/Linux:**
-            ```bash
-            source .venv/bin/activate
-            ```
-        *   **Windows:**
-            ```bash
-            .venv\Scripts\activate
-            ```
-    *   Install the required Python packages:
-        ```bash
-        uv pip install -r shop_agent/requirements.txt
-        ```
+### 1. Prerequisites
 
-## Running the Agent Locally
+First, install the agent's dependencies.
 
-1.  **Set Up and Run the MCP Server:** This agent requires the `mcp-vertex-ai-retail-search-server` to be running.
-    *   First, clone the server repository to a separate location:
+*   Navigate to this agent's directory from the repository root:
+    ```bash
+    cd shop-agent-app
+    ```
+*   Create and activate a virtual environment:
+    ```bash
+    # Create the virtual environment
+    uv venv
+
+    # Activate it (macOS/Linux)
+    source .venv/bin/activate
+
+    # Windows
+    # .venv\Scripts\activate
+    ```
+*   Install the required Python packages:
+    ```bash
+    uv pip install -r shop_agent/requirements.txt
+    ```
+
+### 2. Running Locally
+
+To run the agent locally, you must first run its required backend service, the `mcp-vertex-ai-retail-search-server`.
+
+1.  **Run the MCP Server (Backend)**:
+    *   In a separate terminal, clone and run the MCP server:
         ```bash
         git clone https://github.com/ksmin23/mcp-vertex-ai-retail-search-server.git
+        cd mcp-vertex-ai-retail-search-server
+        # Follow the setup instructions in that repository's README.md
         ```
-    *   Follow the setup instructions in the cloned repository's `README.md`. The key steps are:
-        *   Installing its dependencies.
-        *   Creating and configuring a `.env` file with your project details (`PROJECT_ID`, `LOCATION`, etc.).
-        *   Starting the server. **Make a note of the URL where the server is running** (e.g., `http://localhost:8000/mcp/`).
+    *   Once the server is running, **note the URL where it is being served** (e.g., `http://localhost:8000/mcp/`).
 
-2. **Configure Agent Connection:**
-    *   Create a `.env` file for the agent by copying the example:
+2.  **Configure and Run the Agent (Frontend)**:
+    *   Return to the `shop-agent-app` directory.
+    *   Create a `.env` file by copying the example:
         ```bash
-        # Ensure you are in the shop-agent-app/ directory
         cp shop_agent/.env.example shop_agent/.env
         ```
-    *   Edit the `shop_agent/.env` file and set `MCP_SERVER_URL` to the URL of the running MCP server from step 1.
+    *   Edit `shop_agent/.env` and set `MCP_SERVER_URL` to the URL of your running MCP server.
+    *   Start the ADK web server to interact with the agent:
+        ```bash
+        adk web
+        ```
+    *   Open the provided URL in your browser and select `shop_agent`.
 
-You can run this agent using the ADK Web UI for interactive testing.
+### 3. Deploying to Cloud Run
 
-1.  **Start the ADK Web Server:** From the `shop-agent-app/` directory, run the following command:
-    ```bash
-    adk web
-    ```
-2.  **Interact with the Agent:** Open the provided URL in your browser and select `shop_agent` from the list of available agents.
+You can deploy both the agent and its backend MCP server to Cloud Run for a scalable, production-ready setup.
 
-## Deploying to Cloud Run
+1.  **Deploy the MCP Server (Backend)**:
+    *   First, follow the deployment instructions in the [mcp-vertex-ai-retail-search-server repository](https://github.com/ksmin23/mcp-vertex-ai-retail-search-server).
+    *   Ensure it is deployed with **internal ingress** within a private VPC subnet.
+    *   Once deployed, **note its internal service URL**.
 
-You can deploy this agent as a containerized application on Google Cloud Run.
+2.  **Deploy the Shop Agent (Frontend)**:
+    *   **Authenticate with Google Cloud**:
+        ```bash
+        gcloud auth login
+        ```
+    *   **Set Environment Variables**:
+        ```bash
+        export GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
+        export GOOGLE_CLOUD_LOCATION="us-central1"
+        # Set these to your specific VPC and Subnet names
+        export VPC_NETWORK="your-vpc-network"
+        export VPC_SUBNET="your-public-subnet"
+        ```
+    *   **Run the Deployment Script**:
+        From the project root directory (`./my-adk-python-samples`), run the following command. The script handles containerization and deployment.
+        ```bash
+        python deploy_to_cloud_run.py --agent-folder=shop-agent-app/shop_agent \
+            --project=$GOOGLE_CLOUD_PROJECT \
+            --region=$GOOGLE_CLOUD_LOCATION \
+            --service_name="shop-agent-service" \
+            --vpc-egress="all-traffic" \
+            --network=$VPC_NETWORK \
+            --subnet=$VPC_SUBNET \
+            --with-ui
+        ```
+    *   The `--vpc-egress` flag configures the necessary VPC Access Connector so the agent can communicate with the internal MCP server.
+    *   Once complete, the script will provide a public URL to access your agent.
 
-### **Deploy MCP Server to Cloud Run**:
-
-This agent requires the `mcp-vertex-ai-retail-search-server` to be running on Cloud Run.
-Follow the setup instructions in the cloned MCP server repository's `README.md`.
-Ensure that the MCP server is deployed securely within a private VPC subnet.
-
-**Make a note of the URL where the server is running** (e.g., `https://internal-mcp-vaisr-server-xxxxxxxx-uc.a.run.app/mcp/`).
-
-### Using the ADK CLI (Recommended)
-
-The [`deploy_to_cloud_run.py`](../deploy_to_cloud_run.py) tool provides the simplest way to deploy.
-
-1.  **Authenticate with Google Cloud**:
-    First, run the following command to authenticate:
-    ```bash
-    gcloud auth login
-    ```
-
-2.  **Set Project and Location**:
-    To simplify deployment, you can set the following environment variables:
-    ```bash
-    # Ensure these are set correctly for your environment
-    export GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
-    export GOOGLE_CLOUD_LOCATION="us-central1"
-    ```
-
-3.  **Deploy**:
-    From the project root directory, run the following command to deploy the agent:
-    ```bash
-    python deploy_to_cloud_run.py --agent-folder=shop-agent-app/shop_agent \
-        --project=$GOOGLE_CLOUD_PROJECT \
-        --region=$GOOGLE_CLOUD_LOCATION \
-        --service_name="shop-agent-service" \
-        --vpc-egress="all-traffic" \
-        --network=[VPC] \
-        --subnet=[SUBNET] \
-        --with-ui
-    ```
-    During deployment, you may be prompted to allow unauthenticated invocations for the service. The ADK automatically handles containerization and deployment. Once complete, it will provide a URL to access your agent on Cloud Run.
 
 
 ## Example Usage
