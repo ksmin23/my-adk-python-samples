@@ -6,8 +6,8 @@ import os
 from dotenv import load_dotenv
 from google.adk.agents import LlmAgent
 from google.adk.tools.mcp_tool.mcp_toolset import (
-    MCPToolset,
-    StreamableHTTPConnectionParams,
+  MCPToolset,
+  StreamableHTTPConnectionParams,
 )
 
 load_dotenv()
@@ -27,15 +27,15 @@ instruction = f'''
 # For adk web, MCPToolset should be instantiated directly in the tools list.
 # The adk web runner will handle the asynchronous connection lifecycle.
 root_agent = LlmAgent(
-    model='gemini-2.5-flash',
-    name='shop_search_agent',
-    instruction=instruction,
-    tools=[
-        MCPToolset(
-            connection_params=StreamableHTTPConnectionParams(
-                url=MCP_SERVER_URL,
-            ),
-            tool_filter=['search_products']
-        )
-    ],
+  model='gemini-2.5-flash',
+  name='shop_search_agent',
+  instruction=instruction,
+  tools=[
+    MCPToolset(
+      connection_params=StreamableHTTPConnectionParams(
+        url=MCP_SERVER_URL,
+      ),
+      tool_filter=['search_products']
+    )
+  ],
 )
