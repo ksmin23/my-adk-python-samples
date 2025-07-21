@@ -140,7 +140,7 @@ Now, set up the agent itself.
     *   Install the required Python packages:
         ```bash
         uv pip install -r gcp_releasenotes_agent/requirements.txt
-    ```
+        ```
 
 3.  **Configure Environment**:
     Create a `.env` file for the agent by copying the example:
