@@ -140,7 +140,7 @@ Now, set up the agent itself.
     *   Install the required Python packages:
         ```bash
         uv pip install -r gcp_releasenotes_agent/requirements.txt
-    ```
+        ```
 
 3.  **Configure Environment**:
     Create a `.env` file for the agent by copying the example:
@@ -152,6 +152,7 @@ Now, set up the agent itself.
 4.  **Run the Agent Locally**:
     To start the agent and interact with it through the ADK's web interface, run the following command from the `gcp-releasenotes-agent-app/` directory:
     ```bash
+    export ADK_AGENT_HOST=localhost
     adk web
     ```
     This will start a local web server where you can test the agent.
@@ -201,13 +202,6 @@ You can deploy this agent as a containerized application on Google Cloud Run usi
 -   **Toolbox Endpoint**: The agent connects to a Toolbox service defined by the `TOOLBOX_ENDPOINT` variable in `gcp_releasenotes_agent/agent.py`.
 -   **Authentication**: The agent automatically obtains a Google ID token from the credentials configured via the `gcloud auth` command.
 -   **Tools**: The agent is configured to load a toolset named `my_bq_toolset` from the Toolbox service.
-
-## Dependencies
-
-This project relies on the following major packages:
-
--   `google-adk==1.5.0`
--   `toolbox-core==0.3.0`
 
 ## References
 

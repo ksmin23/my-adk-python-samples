@@ -3,6 +3,7 @@
 # vim: tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
 import os
+from urllib.parse import urlparse
 from dotenv import load_dotenv
 from google.adk.agents import Agent
 from toolbox_core import (
@@ -13,6 +14,8 @@ from toolbox_core import (
 load_dotenv()
 
 TOOLBOX_ENDPOINT = os.getenv("TOOLBOX_ENDPOINT")
+# Check if TOOLBOX_ENDPOINT is set
+assert TOOLBOX_ENDPOINT, "TOOLBOX_ENDPOINT environment variable is not set."
 
 #XXX: Cloud Run: Authentication overview
 # https://cloud.google.com/run/docs/authenticating/overview
@@ -50,8 +53,12 @@ def get_google_id_token():
     traceback.print_exc()
     raise Exception("Failed to fetch Google ID token.")
 
-auth_token_provider = get_google_id_token
-# auth_token_provider = auth_methods.get_google_id_token # Running Agent on local pc
+# Set the auth_token_provider based on the hostname
+if os.getenv("ADK_AGENT_HOST") in ("localhost", "127.0.0.1"):
+  # Running Agent on local pc
+  auth_token_provider = auth_methods.get_google_id_token
+else:
+  auth_token_provider = get_google_id_token
 
 toolbox = ToolboxSyncClient(
   TOOLBOX_ENDPOINT,
