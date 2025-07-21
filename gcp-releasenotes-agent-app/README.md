@@ -4,6 +4,57 @@ This agent is designed to answer questions about Google Cloud Release Notes. It 
 
 The core logic is in `gcp_releasenotes_agent/agent.py`.
 
+## Architecture
+
+This agent uses a secure, two-tiered network architecture. The user-facing `gcp-releasenotes-agent-service` (`Cloud Run - A`) is deployed as a public Cloud Run service, while the backend `mcp-toolbox-service` (`Cloud Run - B`) is isolated in a private subnet within a VPC. Communication from the public agent to the private backend is secured via a Serverless VPC Access connector and authenticated using a Google-signed ID token.
+
+```ascii
++----------+
+|          |
+|   User   |
+|          |
++----------+
+     |
+     | 1. User Question (HTTPS)
+     v
++--------------------------------------------------------------------------------------------------+
+| Google Cloud                                                                                     |
+|                                                                                                  |
+|  +--------------------------------------+                                                        |
+|  |   gcp-releasenotes-agent-service     |                                                        |
+|  |   (Cloud Run - A, Public)            |                                                        |
+|  +--------------------------------------+                                                        |
+|     |                                                                                            |
+|     | 2. Call with Auth Token (via VPC Connector)                                                |
+|     v                                                                                            |
+|  +-------------------------------------------------------+          +----------------------+     |
+|  | VPC / Private Subnet                                  |          |                      |     |
+|  |                                                       |          |   BigQuery Public    |     |
+|  |    +--------------------------------------+           | 3. Query |       Datasets       |     |
+|  |    |   mcp-toolbox-service                |-----------|--------->|                      |     |
+|  |    |   (Cloud Run - B, Internal)          |           |          |                      |     |
+|  |    +--------------------------------------+           |          +----------------------+     |
+|  |                                                       |                                       |
+|  +-------------------------------------------------------+                                       |
+|                                                                                                  |
++--------------------------------------------------------------------------------------------------+
+```
+
+### Diagram Description
+
+1.  **Public Agent, Private Backend**:
+    *   The `gcp-releasenotes-agent-service (Cloud Run - A)` is deployed as a standard Cloud Run service with public ingress, accessible from the internet.
+    *   The `mcp-toolbox-service (Cloud Run - B)` is deployed in a **Private Subnet** with **Internal Ingress** only. This isolates it from the public internet.
+
+2.  **Communication Path**:
+    *   When a user sends a request to the agent (`Cloud Run - A`), the agent needs to call the private backend service.
+    *   To do this, the agent's service account generates a Google-signed **ID Token** with the audience set to the target service (`Cloud Run - B`).
+    *   This call, including the authentication token in the `Authorization` header, is routed from the public agent into the private VPC network via a **Serverless VPC Access connector**.
+    *   The `mcp-toolbox-service` then queries the public BigQuery dataset to fetch the requested release notes.
+
+3.  **Architecture Purpose**:
+    *   This architecture enhances security by exposing only the agent to the internet, while the backend toolbox service, which has access to data sources, remains protected in an isolated private network. All communication is authenticated and occurs over the private network.
+
 ## Prerequisites
 
 Before running the agent, you must have a running instance of the [MCP Toolbox for Databases](https://googleapis.github.io/genai-toolbox/getting-started/) and have the agent's local environment configured.
