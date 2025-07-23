@@ -118,16 +118,30 @@ gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT \
 Create a `tools.yaml` file to define the tools your agent will use. For this agent, we need a tool to query a public BigQuery dataset containing Google Cloud release notes.
 ```yaml
 # tools.yaml
-my_bq_toolset:
-  description: "This toolset is for querying Google Cloud release notes."
-  tools:
-    - name: "release_notes_tool"
-      description: "A tool for querying Google Cloud release notes from a BigQuery table."
-      type: "BIGQUERY"
-      bigquery:
-        project_id: "bigquery-public-data"
-        dataset_id: "google_cloud_release_notes"
-        table_id: "release_notes"
+sources:
+ my-bq-source:
+   kind: bigquery
+   project: YOUR_PROJECT_ID
+
+tools:
+ search_release_notes_bq:
+   kind: bigquery-sql
+   source: my-bq-source
+   statement: |
+    SELECT
+     product_name,description,published_at
+    FROM
+      `bigquery-public-data`.`google_cloud_release_notes`.`release_notes`
+    WHERE
+     DATE(published_at) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+    GROUP BY product_name,description,published_at
+    ORDER BY published_at DESC
+   description: |
+    Use this tool to get information on Google Cloud Release Notes.
+
+toolsets:
+ my_bq_toolset:
+   - search_release_notes_bq
 ```
 
 **D. Store the Configuration in Secret Manager**
