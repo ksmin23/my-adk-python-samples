@@ -145,11 +145,17 @@ gcloud secrets versions add $TOOLBOX_SECRET_NAME \
 
 Deploy the pre-built MCP Toolbox container image to Cloud Run. This command configures the service to use your service account and the `tools.yaml` from Secret Manager.
 ```bash
+# Set these to your specific VPC and Subnet names
+export VPC_NETWORK="your-vpc-network"
+export VPC_SUBNET="your-public-subnet"
+
 gcloud run deploy $TOOLBOX_SERVICE_NAME \
   --image="us-docker.pkg.dev/mcp-tool-releases/mcp-toolbox/mcp-toolbox-server:latest" \
   --region=$GOOGLE_CLOUD_LOCATION \
   --service-account="$TOOLBOX_SA_NAME@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com" \
   --update-secrets=TOOL_CONFIG_FILE="$TOOLBOX_SECRET_NAME:latest" \
+  --network=$VPC_NETWORK \
+  --subnet=$VPC_SUBNET \
   --allow-unauthenticated
 ```
 Once the deployment is complete, **copy the service URL**. You will need it to configure the agent.
