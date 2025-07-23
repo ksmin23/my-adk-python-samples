@@ -147,7 +147,7 @@ Deploy the pre-built MCP Toolbox container image to Cloud Run. This command conf
 ```bash
 # Set these to your specific VPC and Subnet names
 export VPC_NETWORK="your-vpc-network"
-export VPC_SUBNET="your-public-subnet"
+export VPC_SUBNET="your-private-subnet"
 
 gcloud run deploy $TOOLBOX_SERVICE_NAME \
   --image="us-docker.pkg.dev/mcp-tool-releases/mcp-toolbox/mcp-toolbox-server:latest" \
