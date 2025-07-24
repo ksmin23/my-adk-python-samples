@@ -170,7 +170,7 @@ gcloud run deploy $TOOLBOX_SERVICE_NAME \
   --update-secrets=TOOL_CONFIG_FILE="$TOOLBOX_SECRET_NAME:latest" \
   --network=$VPC_NETWORK \
   --subnet=$VPC_SUBNET \
-  --allow-unauthenticated
+  # --allow-unauthenticated # https://cloud.google.com/run/docs/authenticating/public#gcloud
 ```
 Once the deployment is complete, **copy the service URL**. You will need it to configure the agent.
 
