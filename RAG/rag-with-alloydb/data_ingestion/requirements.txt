@@ -1,0 +1,7 @@
+google-cloud-aiplatform
+google-cloud-alloydb-connector[pg8000]
+psycopg2-binary
+langchain-google-vertexai
+langchain-core
+langchain-text-splitters
+langchain-community
