@@ -4,26 +4,16 @@
 
 import argparse
 import os
-import time
 
+from dotenv import load_dotenv
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_community.vectorstores.alloydb import AlloyDBEngine, AlloyDBVectorStore
 from langchain_google_vertexai import VertexAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-# 환경 변수 설정
-os.environ["GOOGLE_CLOUD_PROJECT"] = "gcp-project-id"
+load_dotenv()
 
-def main(
-  project_id: str,
-  region: str,
-  cluster: str,
-  instance: str,
-  database: str,
-  user: str,
-  password: str,
-  table_name: str = "documents",
-):
+def main(database: str, table_name: str, user: str, password: str):
   """
   문서를 로드하고, 분할하고, 임베딩하여 AlloyDB에 저장합니다.
   """
@@ -42,10 +32,10 @@ def main(
   # 3. AlloyDB 엔진 초기화
   print("Initializing AlloyDB engine...")
   engine = AlloyDBEngine.from_instance(
-    project_id=project_id,
-    region=region,
-    cluster=cluster,
-    instance=instance,
+    project_id=os.environ["PROJECT_ID"],
+    region=os.environ["REGION"],
+    cluster=os.environ["CLUSTER"],
+    instance=os.environ["INSTANCE"],
     database=database,
     user=user,
     password=password,
@@ -57,7 +47,7 @@ def main(
 
   # 5. AlloyDB VectorStore 초기화 및 데이터 저장
   print(f"Initializing AlloyDBVectorStore and adding documents to table '{table_name}'...")
-  vector_store = AlloyDBVectorStore.create_sync(
+  AlloyDBVectorStore.create_sync(
     engine=engine,
     table_name=table_name,
     embedding_service=embeddings,
@@ -68,25 +58,30 @@ def main(
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description="Ingest documents into AlloyDB.")
-  parser.add_argument("--project_id", required=True, help="Google Cloud project ID.")
-  parser.add_argument("--region", required=True, help="AlloyDB region.")
-  parser.add_argument("--cluster", required=True, help="AlloyDB cluster name.")
-  parser.add_argument("--instance", required=True, help="AlloyDB instance name.")
-  parser.add_argument("--database", required=True, help="AlloyDB database name.")
-  parser.add_argument("--user", required=True, help="AlloyDB database user.")
-  parser.add_argument("--password", required=True, help="AlloyDB database password.")
   parser.add_argument(
-    "--table_name", default="documents", help="Table name for storing vectors."
+    "--database",
+    default=os.getenv("DATABASE"),
+    help="AlloyDB database name. Defaults to DATABASE environment variable.",
+  )
+  parser.add_argument(
+    "--table_name",
+    default=os.getenv("TABLE_NAME", "vector_stores"),
+    help="Table name for storing vectors. Defaults to TABLE_NAME environment variable or 'vector_stores'.",
+  )
+  parser.add_argument(
+    "--user",
+    default=os.getenv("DB_USER"),
+    help="AlloyDB database user. Defaults to DB_USER environment variable.",
+  )
+  parser.add_argument(
+    "--password",
+    default=os.getenv("DB_PASSWORD"),
+    help="AlloyDB database password. Defaults to DB_PASSWORD environment variable.",
   )
   args = parser.parse_args()
 
-  main(
-    project_id=args.project_id,
-    region=args.region,
-    cluster=args.cluster,
-    instance=args.instance,
-    database=args.database,
-    user=args.user,
-    password=args.password,
-    table_name=args.table_name,
-  )
+  assert args.database, "Database name must be provided via --database argument or DATABASE environment variable."
+  assert args.user, "Database user must be provided via --user argument or DB_USER environment variable."
+  assert args.password, "Database password must be provided via --password argument or DB_PASSWORD environment variable."
+
+  main(database=args.database, table_name=args.table_name, user=args.user, password=args.password)
