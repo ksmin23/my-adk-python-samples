@@ -91,7 +91,7 @@ def main():
   parser.add_argument(
     "--source_dir",
     default="../source_documents/",
-    help="Directory containing the source documents. Defaults to ../source_documents/",
+    help="Directory containing the source text files (e.g., *.txt, *.md). Defaults to ../source_documents/",
   )
   args = parser.parse_args()
 
