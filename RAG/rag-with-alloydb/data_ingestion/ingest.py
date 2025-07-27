@@ -13,13 +13,13 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 load_dotenv()
 
-def main(database: str, table_name: str, user: str, password: str):
+def main(database: str, table_name: str, user: str, password: str, source_dir: str):
   """
   문서를 로드하고, 분할하고, 임베딩하여 AlloyDB에 저장합니다.
   """
   # 1. 문서 로드
-  print("Loading documents...")
-  loader = DirectoryLoader("../source_documents/", glob="**/*.md")
+  print(f"Loading documents from {source_dir}...")
+  loader = DirectoryLoader(source_dir, glob="**/*.md")
   docs = loader.load()
   print(f"Loaded {len(docs)} documents.")
 
@@ -83,10 +83,21 @@ if __name__ == "__main__":
     default=os.getenv("DB_PASSWORD"),
     help="AlloyDB database password. Defaults to DB_PASSWORD environment variable.",
   )
+  parser.add_argument(
+    "--source_dir",
+    default="../source_documents/",
+    help="Directory containing the source documents. Defaults to ../source_documents/",
+  )
   args = parser.parse_args()
 
   assert args.database, "Database name must be provided via --database argument or DATABASE environment variable."
   assert args.user, "Database user must be provided via --user argument or DB_USER environment variable."
   assert args.password, "Database password must be provided via --password argument or DB_PASSWORD environment variable."
 
-  main(database=args.database, table_name=args.table_name, user=args.user, password=args.password)
+  main(
+      database=args.database,
+      table_name=args.table_name,
+      user=args.user,
+      password=args.password,
+      source_dir=args.source_dir
+  )
