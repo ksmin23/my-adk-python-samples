@@ -19,8 +19,10 @@ def ingest_documents(database: str, table_name: str, user: str, password: str, s
   """
   # 1. Load documents
   print(f"Loading documents from {source_dir}...")
-  loader = DirectoryLoader(source_dir, glob="**/*.md")
-  docs = loader.load()
+  docs = []
+  for glob_pattern in ["**/*.md", "**/*.txt"]:
+      loader = DirectoryLoader(source_dir, glob=glob_pattern)
+      docs.extend(loader.load())
   print(f"Loaded {len(docs)} documents.")
 
   # 2. Split documents
