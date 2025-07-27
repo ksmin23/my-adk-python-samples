@@ -20,7 +20,13 @@ Before you begin, you need to have an active Google Cloud project and an AlloyDB
 
 ### 1. Configure your Google Cloud project
 
-First, set up your project, enable the necessary APIs, and create a service account with the required permissions.
+First, you need to authenticate with Google Cloud. Run the following command and follow the instructions to log in.
+
+```bash
+gcloud auth application-default login
+```
+
+Next, set up your project, enable the necessary APIs, and create a service account with the required permissions.
 
 ```bash
 # Set your project ID
