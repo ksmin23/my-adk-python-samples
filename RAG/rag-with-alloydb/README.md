@@ -14,7 +14,74 @@ This project is a sample implementation of an Agentic RAG using the Agent Develo
 └── README.md
 ```
 
+## Prerequisites
+
+Before you begin, you need to have an active Google Cloud project and an AlloyDB cluster.
+
+### 1. Configure your Google Cloud project
+
+First, set up your project and enable the necessary APIs.
+
+```bash
+# Set your project ID
+gcloud config set project YOUR_PROJECT_ID
+
+# Enable the required APIs
+gcloud services enable \
+  alloydb.googleapis.com \
+  compute.googleapis.com \
+  servicenetworking.googleapis.com \
+  aiplatform.googleapis.com
+```
+
+### 2. Create an AlloyDB Cluster
+
+Create an AlloyDB cluster and a primary instance. For simplicity, this guide uses public IP, but for production environments, it is recommended to use a private IP and a VPC network.
+
+```bash
+# Set environment variables
+export ALLOYDB_REGION=your-alloydb-region
+export ALLOYDB_CLUSTER=your-alloydb-cluster
+export ALLOYDB_INSTANCE=your-alloydb-instance
+export ALLOYDB_PASSWORD=your-db-password
+
+# Create the AlloyDB cluster
+gcloud alloydb clusters create $ALLOYDB_CLUSTER \
+  --region=$ALLOYDB_REGION \
+  --password=$ALLOYDB_PASSWORD \
+  --project=YOUR_PROJECT_ID
+
+# Create the primary instance
+gcloud alloydb instances create $ALLOYDB_INSTANCE \
+  --cluster=$ALLOYDB_CLUSTER \
+  --region=$ALLOYDB_REGION \
+  --instance-type=PRIMARY \
+  --cpu-count=2 \
+  --database-flags=google_ml_integration.enable_google_ml_integration=on
+
+# Note: It may take a few minutes for the cluster and instance to be ready.
+```
+
+### 3. Grant IAM Permissions
+
+Grant the necessary IAM roles to the service account that will be used to run the application.
+
+```bash
+# Set your service account email
+export SERVICE_ACCOUNT=your-service-account@your-project-id.iam.gserviceaccount.com
+
+# Grant the required roles
+gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
+  --member="serviceAccount:$SERVICE_ACCOUNT" \
+  --role="roles/alloydb.client"
+
+gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
+  --member="serviceAccount:$SERVICE_ACCOUNT" \
+  --role="roles/aiplatform.user"
+```
+
 ## Setup
+
 
 ### 1. Install Dependencies
 
