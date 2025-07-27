@@ -52,7 +52,6 @@ def ingest_documents(database: str, table_name: str, user: str, password: str, s
   engine.init_vectorstore_table(
       table_name=table_name,
       vector_size=768, # Embedding dimension for the text-embedding-005 model
-      overwrite_existing=True
   )
   vector_store = AlloyDBVectorStore.create_sync(
     engine=engine,
