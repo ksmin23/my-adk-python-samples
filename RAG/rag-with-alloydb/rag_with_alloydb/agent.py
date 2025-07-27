@@ -13,5 +13,5 @@ root_agent = LlmAgent(
   model='gemini-2.5-flash',
   name='rag_agent',
   instruction=instruction,
-  tools=[tools.search_documents_in_alloydb],
+  tools=[tools.search_documents],
 )
