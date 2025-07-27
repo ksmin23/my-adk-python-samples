@@ -41,7 +41,7 @@ def search_documents_in_alloydb(query: str, k: int = 4) -> str:
         search_kwargs={"k": k},
     )
 
-    docs = retriever.get_relevant_documents(query)
+    docs = retriever.invoke(query)
     return "\n\n".join(doc.page_content for doc in docs)
   except Exception as e:
     return f"An error occurred while searching in AlloyDB: {e}"
