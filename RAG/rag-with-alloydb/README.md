@@ -20,36 +20,58 @@ Before you begin, you need to have an active Google Cloud project and an AlloyDB
 
 ### 1. Configure your Google Cloud project
 
-First, set up your project and enable the necessary APIs.
+First, set up your project, enable the necessary APIs, and create a service account with the required permissions.
 
 ```bash
 # Set your project ID
-gcloud config set project YOUR_PROJECT_ID
+export PROJECT_ID=$(gcloud config get-value project)
 
 # Enable the required APIs
 gcloud services enable \
   alloydb.googleapis.com \
   compute.googleapis.com \
   servicenetworking.googleapis.com \
-  aiplatform.googleapis.com
+  aiplatform.googleapis.com \
+  cloudresourcemanager.googleapis.com
+
+# Create a service account
+export SERVICE_ACCOUNT="alloydb-rag-sa"
+gcloud iam service-accounts create $SERVICE_ACCOUNT \
+    --description="Service account for the AlloyDB RAG sample" \
+    --display-name="AlloyDB RAG SA"
+
+# Grant the required roles to the service account
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com" \
+    --role="roles/alloydb.client"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com" \
+    --role="roles/aiplatform.user"
 ```
 
-### 2. Create an AlloyDB Cluster
+### 2. Create an AlloyDB Cluster and primary instance
 
-Create an AlloyDB cluster and a primary instance. For simplicity, this guide uses public IP, but for production environments, it is recommended to use a private IP and a VPC network.
+Create an AlloyDB cluster and a primary instance using the `gcloud` CLI. For simplicity, this guide uses public IP, but for production environments, it is recommended to use a private IP and a VPC network.
+
+Alternatively, you can create the cluster and instance using the Google Cloud Console. Follow the instructions in the [official documentation](https://cloud.google.com/alloydb/docs/ai/perform-vector-search).
 
 ```bash
 # Set environment variables
-export ALLOYDB_REGION=your-alloydb-region
-export ALLOYDB_CLUSTER=your-alloydb-cluster
-export ALLOYDB_INSTANCE=your-alloydb-instance
-export ALLOYDB_PASSWORD=your-db-password
+export ALLOYDB_REGION="your-alloydb-region"
+export ALLOYDB_CLUSTER="your-alloydb-cluster"
+export ALLOYDB_INSTANCE="your-alloydb-instance"
+export ALLOYDB_PASSWORD="your-db-password"
+export VPC_NETWORK="your-vpc-network"
 
 # Create the AlloyDB cluster
 gcloud alloydb clusters create $ALLOYDB_CLUSTER \
   --region=$ALLOYDB_REGION \
   --password=$ALLOYDB_PASSWORD \
-  --project=YOUR_PROJECT_ID
+  --network=$VPC_NETWORK \
+  --enable-private-service-connect \
+  --project=$PROJECT_ID
+
 
 # Create the primary instance
 gcloud alloydb instances create $ALLOYDB_INSTANCE \
@@ -57,31 +79,51 @@ gcloud alloydb instances create $ALLOYDB_INSTANCE \
   --region=$ALLOYDB_REGION \
   --instance-type=PRIMARY \
   --cpu-count=2 \
-  --database-flags=google_ml_integration.enable_google_ml_integration=on
+  --database-flags=google_ml_integration.enable_google_ml_integration=on \
+  --assign-inbound-public-ip=ASSIGN_IPV4
 
 # Note: It may take a few minutes for the cluster and instance to be ready.
 ```
 
-### 3. Grant IAM Permissions
+### 3. Configure the Database
 
-Grant the necessary IAM roles to the service account that will be used to run the application.
+After creating the cluster and instance, connect to your database using AlloyDB Studio in the Google Cloud console to enable the necessary extensions and grant permissions.
 
+1.  Navigate to the **AlloyDB clusters** page in the Google Cloud console.
+2.  Find your cluster and click **Connect** under the **Actions** column.
+3.  Select **AlloyDB Studio** and sign in with your database user and password.
+4.  In the query editor, run the following SQL commands to enable the required extensions:
+
+    ```sql
+    CREATE EXTENSION IF NOT EXISTS vector;
+    CREATE EXTENSION IF NOT EXISTS google_ml_integration;
+    ```
+
+5.  Grant the `EXECUTE` permission on the `embedding` function to your database user. This allows the user to generate embeddings.
+
+    ```sql
+    -- Replace 'your-db-user' with the actual database user
+    GRANT EXECUTE ON FUNCTION embedding TO "your-db-user";
+    ```
+
+### 4. Grant Vertex AI permissions to AlloyDB
+
+To allow AlloyDB to call the Vertex AI embedding models, you must grant the "Vertex AI User" role to the AlloyDB service account.
+
+First, get your project number:
 ```bash
-# Set your service account email
-export SERVICE_ACCOUNT=your-service-account@your-project-id.iam.gserviceaccount.com
+gcloud projects describe $PROJECT_ID --format='value(projectNumber)'
+```
 
-# Grant the required roles
-gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
-  --member="serviceAccount:$SERVICE_ACCOUNT" \
-  --role="roles/alloydb.client"
-
-gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
-  --member="serviceAccount:$SERVICE_ACCOUNT" \
-  --role="roles/aiplatform.user"
+Then, use the project number to grant the role to the AlloyDB service account:
+```bash
+# Replace YOUR_PROJECT_NUMBER with the value from the previous command
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:service-YOUR_PROJECT_NUMBER@gcp-sa-alloydb.iam.gserviceaccount.com" \
+    --role="roles/aiplatform.user"
 ```
 
 ## Setup
-
 
 ### 1. Install Dependencies
 
