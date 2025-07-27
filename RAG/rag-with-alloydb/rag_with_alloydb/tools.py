@@ -32,7 +32,7 @@ def search_documents_in_alloydb(query: str, k: int = 4) -> str:
 
     vector_store = AlloyDBVectorStore.create_sync(
         engine=engine,
-        table_name=os.getenv("TABLE_NAME", "documents"),
+        table_name=os.environ["ALLOYDB_TABLE_NAME"],
         embedding_service=VertexAIEmbeddings(model_name="text-embedding-005"),
     )
 
