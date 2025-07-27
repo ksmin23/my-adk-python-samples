@@ -7,9 +7,10 @@
 ```
 /rag_with_alloydb_project
 ├── rag_with_alloydb/          # ADK Agent 디렉터리
+│   └── requirements.txt     # 에이전트 의존성
 ├── data_ingestion/          # 데이터 수집 디렉터리
+│   └── requirements.txt     # 데이터 수집 스크립트 의존성
 ├── source_documents/        # RAG의 기반이 될 원본 문서
-├── requirements.txt         # 프로젝트 전체 의존성
 └── README.md
 ```
 
@@ -17,30 +18,49 @@
 
 ### 1. 의존성 설치
 
-**공통 의존성:**
+이 프로젝트는 `uv`를 사용하여 파이썬 가상 환경 및 패키지 의존성을 관리합니다.
+
+**가상 환경 생성 및 활성화:**
 ```bash
-pip install -r requirements.txt
+# 가상 환경 생성
+uv venv
+
+# 가상 환경 활성화 (macOS/Linux)
+source .venv/bin/activate
+# 가상 환경 활성화 (Windows)
+.venv\Scripts\activate
 ```
 
-**Data Ingestion 스크립트 의존성:**
+**의존성 설치:**
 ```bash
-pip install -r data_ingestion/requirements.txt
+# 에이전트 의존성 설치
+uv pip install -r rag_with_alloydb/requirements.txt
+
+# Data Ingestion 스크립트 의존성 설치
+uv pip install -r data_ingestion/requirements.txt
 ```
 
 ### 2. 데이터 수집 (Data Ingestion)
 
 `data_ingestion/ingest.py` 스크립트를 실행하여 `source_documents`에 있는 문서들을 AlloyDB에 적재합니다.
 
+먼저, `data_ingestion/.env.example` 파일을 복사하여 `data_ingestion/.env` 파일을 생성하고, 필요한 값들을 채워넣어야 합니다.
+
+```bash
+cp data_ingestion/.env.example data_ingestion/.env
+# 이제 data_ingestion/.env 파일을 에디터로 열어 값을 수정하세요.
+```
+
+`.env` 파일이 준비되면, 다음 명령어로 데이터 수집 스크립트를 실행할 수 있습니다. 명령줄 인자를 사용하여 `.env` 파일의 값을 덮어쓸 수도 있습니다.
+
 **실행 예시:**
 ```bash
 python data_ingestion/ingest.py \
-  --project_id="your-gcp-project-id" \
-  --region="your-alloydb-region" \
-  --cluster="your-alloydb-cluster" \
-  --instance="your-alloydb-instance" \
   --database="your-alloydb-database" \
+  --table_name="vector_store" \
   --user="your-db-user" \
-  --password="your-db-password"
+  --password="your-db-password" \
+  --source_dir="source_documents/"
 ```
 
 ### 3. 에이전트 실행
