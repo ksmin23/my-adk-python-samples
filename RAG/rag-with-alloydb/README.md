@@ -248,15 +248,17 @@ adk web rag_with_alloydb
 
 ## Reference
 
-### Official Google Cloud Docs
+#### Official Google Cloud Docs
 - [Perform a vector search | AlloyDB for PostgreSQL | Google Cloud](https://cloud.google.com/alloydb/docs/ai/perform-vector-search)
-- [Run a vector similarity search | AlloyDB for PostgreSQL | Google ...](https://cloud.google.com/alloydb/docs/ai/run-vector-similarity-search)
+- [Run a vector similarity search | AlloyDB for PostgreSQL | Google Cloud](https://cloud.google.com/alloydb/docs/ai/run-vector-similarity-search)
+- [Run a hybrid vector similarity search | AlloyDB for PostgreSQL | Google Cloud](https://cloud.google.com/alloydb/docs/ai/run-hybrid-vector-similarity-search)
+- [Choose an indexing strategy | AlloyDB for PostgreSQL | Google Cloud](https://cloud.google.com/alloydb/docs/ai/choose-index-strategy)
 - [Generate text embeddings](https://cloud.google.com/alloydb/docs/ai/work-with-embeddings?resource=google_ml)
 
-### Google Codelabs
+#### Google Codelabs
 - [Getting started with Vector Embeddings with AlloyDB AI](https://codelabs.developers.google.com/alloydb-ai-embedding#0)
 - [Build a Patent Search App with AlloyDB, Vector Search & Vertex AI!](https://codelabs.developers.com/patent-search-alloydb-gemini#0)
 - [Building a Smart Shop Agent with Gemini and AlloyDB Omni | Codelabs | Google for Developers](https://codelabs.developers.google.com/smart-shop-agent-alloydb#0)
 
-### LangChain Integration
+#### LangChain Integration
 - [Google AlloyDB for PostgreSQL | 🦜️ LangChain](https://python.langchain.com/docs/integrations/vectorstores/google_alloydb/)
