@@ -75,8 +75,8 @@ def main():
   )
   parser.add_argument(
     "--table_name",
-    default=os.getenv("TABLE_NAME", "vector_stores"),
-    help="Table name for storing vectors. Defaults to TABLE_NAME environment variable or 'vector_stores'.",
+    default=os.getenv("TABLE_NAME", "vector_store"),
+    help="Table name for storing vectors. Defaults to TABLE_NAME environment variable or 'vector_store'.",
   )
   parser.add_argument(
     "--user",
