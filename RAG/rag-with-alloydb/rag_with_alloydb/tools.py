@@ -3,13 +3,11 @@
 # vim: tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
 import os
-from langchain.tools import tool
 from langchain_core.documents import Document
 from langchain_google_vertexai import VertexAIEmbeddings
 from langchain_google_alloydb_pg import AlloyDBEngine, AlloyDBVectorStore
 
 
-@tool
 def search_documents_in_alloydb(query: str, k: int = 4) -> str:
   """
   Searches for relevant documents in AlloyDB based on a query.
@@ -34,8 +32,8 @@ def search_documents_in_alloydb(query: str, k: int = 4) -> str:
 
     vector_store = AlloyDBVectorStore.create_sync(
         engine=engine,
-        table_name="documents",
-        embedding_service=VertexAIEmbeddings(model_name="textembedding-gecko@latest"),
+        table_name=os.getenv("TABLE_NAME", "documents"),
+        embedding_service=VertexAIEmbeddings(model_name="text-embedding-005"),
     )
 
     retriever = vector_store.as_retriever(

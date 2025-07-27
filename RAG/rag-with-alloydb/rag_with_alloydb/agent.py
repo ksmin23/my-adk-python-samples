@@ -4,7 +4,6 @@
 
 from dotenv import load_dotenv
 from google.adk.agents import LlmAgent
-from google.adk.tools import Toolset
 from .prompt import instruction
 from . import tools
 
@@ -14,9 +13,5 @@ root_agent = LlmAgent(
   model='gemini-2.5-flash',
   name='rag_agent',
   instruction=instruction,
-  tools=[
-    Toolset.from_tools(
-      [tools.search_documents_in_alloydb]
-    )
-  ],
+  tools=[tools.search_documents_in_alloydb],
 )

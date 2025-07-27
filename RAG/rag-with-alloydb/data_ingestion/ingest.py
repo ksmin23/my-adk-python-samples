@@ -7,7 +7,7 @@ import os
 
 from dotenv import load_dotenv
 from langchain_community.document_loaders import DirectoryLoader
-from langchain_community.vectorstores.alloydb import AlloyDBEngine, AlloyDBVectorStore
+from langchain_google_alloydb_pg import AlloyDBEngine, AlloyDBVectorStore
 from langchain_google_vertexai import VertexAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -43,16 +43,21 @@ def main(database: str, table_name: str, user: str, password: str):
 
   # 4. 임베딩 모델 초기화
   print("Initializing VertexAIEmbeddings...")
-  embeddings = VertexAIEmbeddings(model_name="textembedding-gecko@latest")
+  embeddings = VertexAIEmbeddings(model_name="text-embedding-005")
 
   # 5. AlloyDB VectorStore 초기화 및 데이터 저장
   print(f"Initializing AlloyDBVectorStore and adding documents to table '{table_name}'...")
-  AlloyDBVectorStore.create_sync(
+  engine.init_vectorstore_table(
+      table_name=table_name,
+      vector_size=768, # text-embedding-005 모델의 임베딩 차원
+      overwrite_existing=True
+  )
+  vector_store = AlloyDBVectorStore.create_sync(
     engine=engine,
     table_name=table_name,
     embedding_service=embeddings,
-    documents=splits,
   )
+  vector_store.add_documents(documents=splits)
   print("Data ingestion complete.")
 
 
