@@ -62,24 +62,23 @@ export ALLOYDB_REGION="your-alloydb-region"
 export ALLOYDB_CLUSTER="your-alloydb-cluster"
 export ALLOYDB_INSTANCE="your-alloydb-instance"
 export ALLOYDB_PASSWORD="your-db-password"
+export PROJECT_NUMBER=$(gcloud projects describe ${PROJECT_ID} --format="value(projectNumber)")
 export VPC_NETWORK="your-vpc-network"
 
 # Create the AlloyDB cluster
 gcloud alloydb clusters create $ALLOYDB_CLUSTER \
   --region=$ALLOYDB_REGION \
   --password=$ALLOYDB_PASSWORD \
-  --network=$VPC_NETWORK \
-  --enable-private-service-connect \
+  --network="projects/${PROJECT_NUMBER}/global/networks/${VPC_NETWORK}" \
   --project=$PROJECT_ID
-
 
 # Create the primary instance
 gcloud alloydb instances create $ALLOYDB_INSTANCE \
   --cluster=$ALLOYDB_CLUSTER \
   --region=$ALLOYDB_REGION \
   --instance-type=PRIMARY \
-  --cpu-count=2 \
-  --database-flags=google_ml_integration.enable_google_ml_integration=on \
+  --cpu-count=8 \
+  --database-flags=google_ml_integration.enable_model_support=on,password.enforce_complexity=on \
   --assign-inbound-public-ip=ASSIGN_IPV4
 
 # Note: It may take a few minutes for the cluster and instance to be ready.
@@ -102,9 +101,10 @@ After creating the cluster and instance, connect to your database using AlloyDB 
 5.  Grant the `EXECUTE` permission on the `embedding` function to your database user. This allows the user to generate embeddings.
 
     ```sql
-    -- Replace 'your-db-user' with the actual database user
-    GRANT EXECUTE ON FUNCTION embedding TO "your-db-user";
+    GRANT EXECUTE ON FUNCTION embedding TO postgres;
     ```
+
+> **Note**: This example uses `postgres` as the username because it is the default user created when setting up the database.
 
 ### 4. Grant Vertex AI permissions to AlloyDB
 
@@ -117,10 +117,13 @@ gcloud projects describe $PROJECT_ID --format='value(projectNumber)'
 
 Then, use the project number to grant the role to the AlloyDB service account:
 ```bash
-# Replace YOUR_PROJECT_NUMBER with the value from the previous command
 gcloud projects add-iam-policy-binding $PROJECT_ID \
-    --member="serviceAccount:service-YOUR_PROJECT_NUMBER@gcp-sa-alloydb.iam.gserviceaccount.com" \
+    --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-alloydb.iam.gserviceaccount.com" \
     --role="roles/aiplatform.user"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-alloydb.iam.gserviceaccount.com" \
+    --role="roles/alloydb.serviceAgent"
 ```
 
 ## Setup
