@@ -65,7 +65,11 @@ python data_ingestion/ingest.py \
 
 ### 3. Run the Agent
 
-Run the agent using the ADK CLI.
+You can run the agent using either the command-line interface or a web-based interface.
+
+#### Using the Command-Line Interface (CLI)
+
+Run the agent in your terminal using the `adk run` command.
 
 ```bash
 adk run rag_with_alloydb
@@ -110,6 +114,18 @@ Running agent rag_agent, type exit to exit.
 *   **Tool Usage:** External APIs or services can be defined as 'tools' for the agent to utilize.
 *   **RAG Support:** It simplifies the implementation of RAG (Retrieval-Augmented Generation) patterns by leveraging external data sources like Vector Search.
 ```
+
+#### Using the Web Interface
+
+You can also interact with the agent through a web interface using the `adk web` command.
+
+```bash
+adk web rag_with_alloydb
+```
+
+**Screenshot:**
+
+![ADK Web Interface for RAG with AlloyDB](assets/rag-with-alloydb.png)
 
 ## Reference
 
