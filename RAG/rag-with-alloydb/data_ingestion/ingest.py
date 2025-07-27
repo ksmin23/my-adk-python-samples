@@ -13,23 +13,23 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 load_dotenv()
 
-def main(database: str, table_name: str, user: str, password: str, source_dir: str):
+def ingest_documents(database: str, table_name: str, user: str, password: str, source_dir: str):
   """
-  문서를 로드하고, 분할하고, 임베딩하여 AlloyDB에 저장합니다.
+  Loads, splits, and embeds documents, then stores them in AlloyDB.
   """
-  # 1. 문서 로드
+  # 1. Load documents
   print(f"Loading documents from {source_dir}...")
   loader = DirectoryLoader(source_dir, glob="**/*.md")
   docs = loader.load()
   print(f"Loaded {len(docs)} documents.")
 
-  # 2. 문서 분할
+  # 2. Split documents
   print("Splitting documents...")
   text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
   splits = text_splitter.split_documents(docs)
   print(f"Split into {len(splits)} chunks.")
 
-  # 3. AlloyDB 엔진 초기화
+  # 3. Initialize AlloyDB engine
   print("Initializing AlloyDB engine...")
   engine = AlloyDBEngine.from_instance(
     project_id=os.environ["PROJECT_ID"],
@@ -41,15 +41,15 @@ def main(database: str, table_name: str, user: str, password: str, source_dir: s
     password=password,
   )
 
-  # 4. 임베딩 모델 초기화
+  # 4. Initialize embedding model
   print("Initializing VertexAIEmbeddings...")
   embeddings = VertexAIEmbeddings(model_name="text-embedding-005")
 
-  # 5. AlloyDB VectorStore 초기화 및 데이터 저장
+  # 5. Initialize AlloyDB VectorStore and save data
   print(f"Initializing AlloyDBVectorStore and adding documents to table '{table_name}'...")
   engine.init_vectorstore_table(
       table_name=table_name,
-      vector_size=768, # text-embedding-005 모델의 임베딩 차원
+      vector_size=768, # Embedding dimension for the text-embedding-005 model
       overwrite_existing=True
   )
   vector_store = AlloyDBVectorStore.create_sync(
@@ -61,7 +61,10 @@ def main(database: str, table_name: str, user: str, password: str, source_dir: s
   print("Data ingestion complete.")
 
 
-if __name__ == "__main__":
+def main():
+  """
+  Parses command-line arguments and executes the document ingestion process.
+  """
   parser = argparse.ArgumentParser(description="Ingest documents into AlloyDB.")
   parser.add_argument(
     "--database",
@@ -94,10 +97,13 @@ if __name__ == "__main__":
   assert args.user, "Database user must be provided via --user argument or DB_USER environment variable."
   assert args.password, "Database password must be provided via --password argument or DB_PASSWORD environment variable."
 
-  main(
+  ingest_documents(
       database=args.database,
       table_name=args.table_name,
       user=args.user,
       password=args.password,
       source_dir=args.source_dir
   )
+
+if __name__ == "__main__":
+  main()
