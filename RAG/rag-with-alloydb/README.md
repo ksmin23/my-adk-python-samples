@@ -177,6 +177,13 @@ python data_ingestion/ingest.py \
 
 ### 3. Run the Agent
 
+Before running the agent, you need to create a `.env` file in the `rag_with_alloydb` directory. Copy the example file and fill in the required values for your environment.
+
+```bash
+cp rag_with_alloydb/.env.example rag_with_alloydb/.env
+# Now, open rag_with_alloydb/.env in an editor and modify the values.
+```
+
 You can run the agent using either the command-line interface or a web-based interface.
 
 #### Using the Command-Line Interface (CLI)
