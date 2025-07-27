@@ -71,6 +71,46 @@ Run the agent using the ADK CLI.
 adk run rag_with_alloydb
 ```
 
+**Example Output:**
+
+The example below shows the difference in the agent's responses before and after implementing RAG.
+
+**Without RAG:**
+
+The agent responds based on its general knowledge, which may be incorrect or not specific to the project's context.
+
+```text
+$ adk run rag_with_alloydb
+Running agent rag_agent, type exit to exit.
+[user]: What is ADK?
+[rag_agent]: The ADK (Application Development Kit) is a set of APIs and services that allows an app to extend its functionality to the Android environment. It enables developers to integrate the app's features with the user's vehicle, such as starting and stopping the engine, controlling the air conditioning, and accessing vehicle information like tire pressure and fuel level. The ADK provides a secure way for apps to interact with vehicle systems.
+[user]: Tell me main features of ADK
+[rag_agent]: The ADK (Application Development Kit) offers several key features for developers:
+
+*   **Vehicle Interaction:** It allows apps to interact with various vehicle systems, such as starting/stopping the engine, controlling air conditioning, and accessing vehicle data like tire pressure and fuel level.
+*   **Security:** The ADK provides a secure framework for applications to communicate with the vehicle's systems.
+*   **API and Services:** It is a collection of APIs and services designed to extend app functionality to the Android environment within a vehicle.
+*   **Contextual Information:** It enables apps to leverage the in-vehicle context, enhancing the user experience by integrating vehicle-specific data and controls.
+```
+
+**With RAG:**
+
+The agent uses the `search_documents_in_alloydb` tool to retrieve relevant information from the `source_documents` and provides an accurate answer based on that context.
+
+```text
+$ adk run rag_with_alloydb
+Running agent rag_agent, type exit to exit.
+[user]: What is ADK?
+[rag_agent]: ADK (Agent Development Kit) is a framework designed to facilitate the development of Agentic AI applications on Google Cloud. It offers features such as declarative agent behavior definition, easy integration with LLMs like Gemini, the ability to define and utilize external APIs or services as 'tools', and support for RAG patterns using external data sources like Vector Search. ADK can be used for applications such as customer support chatbots, internal knowledge retrieval systems, and automating complex workflows.
+[user]: Tell me main features of ADK.
+[rag_agent]: The main features of ADK include:
+
+*   **Declarative Approach:** Agents' behavior can be defined using configuration files instead of code.
+*   **LLM Integration:** It allows for easy linkage with the latest Large Language Models like Gemini.
+*   **Tool Usage:** External APIs or services can be defined as 'tools' for the agent to utilize.
+*   **RAG Support:** It simplifies the implementation of RAG (Retrieval-Augmented Generation) patterns by leveraging external data sources like Vector Search.
+```
+
 ## Reference
 
 ### Official Google Cloud Docs
