@@ -1,0 +1,12 @@
+# Agent Framework
+google-adk
+python-dotenv
+
+# LangChain and Vertex AI
+langchain
+langchain-core
+langchain-google-vertexai
+langchain-google-spanner==0.1.1
+
+# For local testing and running
+google-auth

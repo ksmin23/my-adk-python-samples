@@ -1,0 +1,9 @@
+google-cloud-aiplatform
+google-cloud-spanner
+langchain-google-spanner==0.1.1
+langchain-google-vertexai
+langchain-core
+langchain-text-splitters
+langchain-community
+unstructured[md]
+python-dotenv
