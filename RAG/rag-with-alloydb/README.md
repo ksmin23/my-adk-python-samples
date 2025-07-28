@@ -40,7 +40,7 @@ gcloud services enable \
   aiplatform.googleapis.com \
   cloudresourcemanager.googleapis.com
 
-# Create a service account
+# Create a service account for local execution and data ingestion
 export SERVICE_ACCOUNT="alloydb-rag-sa"
 gcloud iam service-accounts create $SERVICE_ACCOUNT \
     --description="Service account for the AlloyDB RAG sample" \
@@ -116,13 +116,9 @@ After creating the cluster and instance, connect to your database using AlloyDB 
 
 To allow AlloyDB to call the Vertex AI embedding models, you must grant the "Vertex AI User" role to the AlloyDB service account.
 
-First, get your project number:
 ```bash
-gcloud projects describe $PROJECT_ID --format='value(projectNumber)'
-```
+export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
 
-Then, use the project number to grant the role to the AlloyDB service account:
-```bash
 gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-alloydb.iam.gserviceaccount.com" \
     --role="roles/aiplatform.user"
@@ -130,6 +126,18 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-alloydb.iam.gserviceaccount.com" \
     --role="roles/alloydb.serviceAgent"
+```
+
+### 5. Grant Agent Engine permissions to AlloyDB
+
+To allow the deployed Agent Engine to connect to your AlloyDB instance, you must grant the `AlloyDB Client` role to the Agent Engine's service account.
+
+```bash
+export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-aiplatform-re.iam.gserviceaccount.com" \
+    --role="roles/alloydb.client"
 ```
 
 ## Setup
@@ -181,7 +189,7 @@ python data_ingestion/ingest.py \
   --source_dir="source_documents/"
 ```
 
-### 3. Run the Agent
+### 3. Run the Agent Locally
 
 Before running the agent, you need to create a `.env` file in the `rag_with_alloydb` directory. Copy the example file and fill in the required values for your environment.
 
@@ -200,46 +208,6 @@ Run the agent in your terminal using the `adk run` command.
 adk run rag_with_alloydb
 ```
 
-**Example Output:**
-
-The example below shows the difference in the agent's responses before and after implementing RAG.
-
-**Without RAG:**
-
-The agent responds based on its general knowledge, which may be incorrect or not specific to the project's context.
-
-```text
-$ adk run rag_with_alloydb
-Running agent rag_agent, type exit to exit.
-[user]: What is ADK?
-[rag_agent]: The ADK (Application Development Kit) is a set of APIs and services that allows an app to extend its functionality to the Android environment. It enables developers to integrate the app's features with the user's vehicle, such as starting and stopping the engine, controlling the air conditioning, and accessing vehicle information like tire pressure and fuel level. The ADK provides a secure way for apps to interact with vehicle systems.
-[user]: Tell me main features of ADK
-[rag_agent]: The ADK (Application Development Kit) offers several key features for developers:
-
-*   **Vehicle Interaction:** It allows apps to interact with various vehicle systems, such as starting/stopping the engine, controlling air conditioning, and accessing vehicle data like tire pressure and fuel level.
-*   **Security:** The ADK provides a secure framework for applications to communicate with the vehicle's systems.
-*   **API and Services:** It is a collection of APIs and services designed to extend app functionality to the Android environment within a vehicle.
-*   **Contextual Information:** It enables apps to leverage the in-vehicle context, enhancing the user experience by integrating vehicle-specific data and controls.
-```
-
-**With RAG:**
-
-The agent uses the `search_documents_in_alloydb` tool to retrieve relevant information from the `source_documents` and provides an accurate answer based on that context.
-
-```text
-$ adk run rag_with_alloydb
-Running agent rag_agent, type exit to exit.
-[user]: What is ADK?
-[rag_agent]: ADK (Agent Development Kit) is a framework designed to facilitate the development of Agentic AI applications on Google Cloud. It offers features such as declarative agent behavior definition, easy integration with LLMs like Gemini, the ability to define and utilize external APIs or services as 'tools', and support for RAG patterns using external data sources like Vector Search. ADK can be used for applications such as customer support chatbots, internal knowledge retrieval systems, and automating complex workflows.
-[user]: Tell me main features of ADK.
-[rag_agent]: The main features of ADK include:
-
-*   **Declarative Approach:** Agents' behavior can be defined using configuration files instead of code.
-*   **LLM Integration:** It allows for easy linkage with the latest Large Language Models like Gemini.
-*   **Tool Usage:** External APIs or services can be defined as 'tools' for the agent to utilize.
-*   **RAG Support:** It simplifies the implementation of RAG (Retrieval-Augmented Generation) patterns by leveraging external data sources like Vector Search.
-```
-
 #### Using the Web Interface
 
 You can also interact with the agent through a web interface using the `adk web` command.
@@ -251,6 +219,116 @@ adk web rag_with_alloydb
 **Screenshot:**
 
 ![ADK Web Interface for RAG with AlloyDB](assets/rag-with-alloydb.png)
+
+## Deployment
+
+The RAG with AlloyDB agent can be deployed to Vertex AI Agent Engine using the following commands.
+
+### 1. Set Environment Variables
+
+Before running the deployment script, you need to set the following environment variables.
+
+```bash
+export GOOGLE_CLOUD_PROJECT=$(gcloud config get-value project)
+export GOOGLE_CLOUD_LOCATION="your-gcp-location"
+export GOOGLE_CLOUD_STORAGE_BUCKET="your-gcs-bucket-for-staging"
+```
+
+### 2. Install Deployment Dependencies
+
+You will need to install `google-cloud-aiplatform` with the `agent_engines` extra.
+```bash
+uv pip install "google-cloud-aiplatform[agent_engines]>=1.91.0,!=1.92.0" cloudpickle absl-py
+```
+
+### 3. Run the Deployment Script
+
+```bash
+python3 deployment/deploy.py --create
+```
+
+When the deployment finishes, it will print a line like this:
+```
+Created remote agent: projects/<PROJECT_NUMBER>/locations/<PROJECT_LOCATION>/reasoningEngines/<AGENT_ENGINE_ID>
+```
+Make a note of the `AGENT_ENGINE_ID`. You will need it to interact with your deployed agent.
+
+If you forgot the ID, you can list existing agents using:
+```bash
+python3 deployment/deploy.py --list
+```
+
+To delete the deployed agent, you may run the following command:
+```bash
+python3 deployment/deploy.py --delete --resource_id=${AGENT_ENGINE_ID}
+```
+
+### 4. Interact with the Deployed Agent
+
+You can interact with your deployed agent using a simple Python script.
+
+**a. Set Environment Variables:**
+Ensure the following environment variables are set in your terminal. You will need the `AGENT_ENGINE_ID` from the deployment step.
+
+```bash
+export GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
+export GOOGLE_CLOUD_LOCATION="your-gcp-location"
+export AGENT_ENGINE_ID="your-agent-engine-id"
+```
+
+**b. Create and Run the Python Script:**
+Create a file named `query_agent.py` and add the following code.
+
+```python
+import os
+import vertexai
+from vertexai import agent_engines
+
+def query_remote_agent(project_id, location, agent_id, user_query):
+    """Initializes Vertex AI and sends a query to the deployed agent."""
+    vertexai.init(project=project_id, location=location)
+
+    # Load the deployed agent
+    remote_agent = agent_engines.get(agent_id)
+    remote_session = remote_agent.create_session(user_id="u_123")
+
+    print(f"Querying agent: '{user_query}'...")
+
+    # Stream the query and print the final text response
+    for event in remote_agent.stream_query(
+        user_id="u_123",
+        session_id=remote_session["id"],
+        message=user_query
+    ):
+        if event.get('content', {}).get('parts', [{}])[0].get('text'):
+            print("Response:", event['content']['parts'][0]['text'])
+
+if __name__ == "__main__":
+    project = os.getenv("GOOGLE_CLOUD_PROJECT")
+    loc = os.getenv("GOOGLE_CLOUD_LOCATION")
+    agent = os.getenv("AGENT_ENGINE_ID")
+    
+    if not all([project, loc, agent]):
+        print("Error: GOOGLE_CLOUD_PROJECT, GOOGLE_CLOUD_LOCATION, and AGENT_ENGINE_ID environment variables must be set.")
+    else:
+        query = "What is ADK?"
+        query_remote_agent(project, loc, agent, query)
+```
+
+**c. Run the script:**
+```bash
+python query_agent.py
+```
+
+**Example Output:**
+```
+Querying agent: 'What is ADK?'...
+Response: ADK (Agent Development Kit) is a framework designed to help develop Agentic AI applications on Google Cloud. It allows for defining an agent's behavior through configuration files rather than code, integrates with Large Language Models (LLMs) like Gemini, enables the use of external APIs or services as tools, and supports RAG (Retrieval Augmented Generation) patterns leveraging external data sources.
+
+ADK Agents are core components for building autonomous applications within this framework, with a `BaseAgent` class providing the fundamental structure. There are different types of agents, including LLM Agents that use LLMs for understanding and decision-making, and Workflow Agents that control the execution flow of other agents.
+
+ADK also integrates with MCP (Model Context Protocol), an open standard that standardizes LLM communication with external systems, simplifying how LLMs get context, perform actions, and interact with data sources and tools.
+```
 
 ## Reference
 
