@@ -1,0 +1,22 @@
+Google Cloud Spanner is a fully managed, globally distributed relational database service that combines the benefits of relational semantics with non-relational horizontal scalability. It is designed for mission-critical applications that require strong consistency, high availability, and global scale.
+
+How Spanner Works
+
+Applications interact with Spanner using standard client libraries and Google Standard SQL. Under the hood, Spanner automatically manages the replication and distribution of data across multiple geographic regions. It uses Google's dedicated network and TrueTime technology—a globally distributed clock—to ensure that all transactions are strongly consistent across the entire database, regardless of where the data is located.
+
+Spanner's Architectural Difference from Traditional Databases
+
+Unlike traditional monolithic databases that scale vertically (by increasing the power of a single server), Spanner is designed to scale horizontally. It separates compute from storage and automatically shards data into "splits" based on load and data size. As a workload grows, Spanner can distribute these splits across more nodes and zones, transparently increasing the database's capacity and throughput without downtime. This architecture provides virtually unlimited scalability while maintaining the ACID properties of a traditional relational database.
+
+Key Features
+
+Spanner provides a unique combination of features that set it apart from both traditional relational databases and NoSQL databases.
+
+- Global Distribution: Spanner can replicate data across multiple regions worldwide, placing data closer to users for low-latency reads and providing robust disaster recovery.
+- Strong External Consistency: Spanner provides strong, externally consistent transactions across its entire distributed database, which simplifies application development by guaranteeing data correctness.
+- Horizontal Scalability: You can scale your database's compute capacity by simply adding or removing nodes, with no need to manually re-shard or rebalance data. Storage scales automatically and independently.
+- High Availability: Spanner offers an industry-leading 99.999% availability SLA for multi-regional configurations, with automatic, synchronous replication and transparent failover.
+- Relational Model with SQL: Spanner supports a relational data model with schemas, primary keys, and secondary indexes. It uses a familiar, ANSI 2011-compliant SQL dialect.
+- Fully Managed Service: As a fully managed service, Spanner handles operational overhead such as patching, backups, replication, and scaling, allowing developers to focus on their applications.
+- Security and Access Control: Spanner integrates with Google Cloud IAM for fine-grained access control and supports CMEK (Customer-Managed Encryption Keys) for data at rest.
+- Vector Search: Spanner supports vector similarity search, allowing it to store and query high-dimensional vector embeddings for use cases like Retrieval-Augmented Generation (RAG), recommendation systems, and semantic search.

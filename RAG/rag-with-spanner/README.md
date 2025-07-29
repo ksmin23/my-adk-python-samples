@@ -68,27 +68,35 @@ export SPANNER_REGION="your-spanner-region"
 gcloud spanner instances create $SPANNER_INSTANCE \
   --config=regional-$SPANNER_REGION \
   --description="Spanner instance for RAG" \
-  --nodes=1
+  --nodes=1 \
+  --edition=ENTERPRISE
 
 # Create the database
 gcloud spanner databases create $SPANNER_DATABASE \
   --instance=$SPANNER_INSTANCE
 ```
 
-### 3. Configure the Database Table
+### 3. Grant Agent Engine permissions to Spanner
 
-After creating the instance and database, you need to create a table to store the vectors. You can do this using the `gcloud` CLI.
+To allow the deployed Agent Engine to connect to your Spanner instance, you must grant the necessary IAM roles to the Agent Engine's service account. The LangChain library requires two distinct roles to function correctly:
 
-The table should have columns for `content`, `embedding`, and a primary key. The `embedding` column must be of type `ARRAY<FLOAT64>`.
+1.  **`roles/spanner.databaseReader`**: This role grants permission to get database metadata, such as checking if the database exists (`spanner.databases.get`). This is required for the initial connection setup.
+2.  **`roles/spanner.databaseUser`**: This role grants permission to read and write data from tables, which is necessary for performing the vector search.
+
+Run the following commands to grant both roles to the Agent Engine service account:
 
 ```bash
-# Create the vector store table
-gcloud spanner databases ddl update $SPANNER_DATABASE --instance=$SPANNER_INSTANCE \
-  --ddl='CREATE TABLE vector_store (
-            id STRING(36) NOT NULL,
-            content STRING(MAX),
-            embedding ARRAY<FLOAT64>(768)
-         ) PRIMARY KEY (id)'
+export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
+
+# Grant permission to read database metadata
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-aiplatform-re.iam.gserviceaccount.com" \
+    --role="roles/spanner.databaseReader"
+
+# Grant permission to read and write data
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-aiplatform-re.iam.gserviceaccount.com" \
+    --role="roles/spanner.databaseUser"
 ```
 
 ## Setup
@@ -166,6 +174,112 @@ You can also interact with the agent through a web interface using the `adk web`
 adk web rag_with_spanner
 ```
 
+**Screenshot:**
+
+![ADK Web Interface for RAG with Spanner](assets/rag-with-spanner.png)
+
 ## Deployment
 
-The RAG with Spanner agent can be deployed to Vertex AI Agent Engine using the `deployment/deploy.py` script. The usage is the same as the `rag-with-alloydb` example. Refer to its `README.md` for detailed deployment and interaction instructions.
+The RAG with Spanner agent can be deployed to Vertex AI Agent Engine using the following commands.
+
+### 1. Set Environment Variables
+
+Before running the deployment script, you need to set the following environment variables.
+
+```bash
+export GOOGLE_CLOUD_PROJECT=$(gcloud config get-value project)
+export GOOGLE_CLOUD_LOCATION="your-gcp-location"
+export GOOGLE_CLOUD_STORAGE_BUCKET="your-gcs-bucket-for-staging"
+```
+
+### 2. Install Deployment Dependencies
+
+You will need to install `google-cloud-aiplatform` with the `agent_engines` extra.
+```bash
+uv pip install "google-cloud-aiplatform[agent_engines]>=1.91.0,!=1.92.0" cloudpickle absl-py
+```
+
+### 3. Run the Deployment Script
+
+```bash
+python3 deployment/deploy.py create
+```
+
+When the deployment finishes, it will print a line like this:
+```
+Created remote agent: projects/<PROJECT_NUMBER>/locations/<PROJECT_LOCATION>/reasoningEngines/<AGENT_ENGINE_ID>
+```
+Make a note of the `AGENT_ENGINE_ID`. You will need it to interact with your deployed agent.
+
+If you forgot the ID, you can list existing agents using:
+```bash
+python3 deployment/deploy.py list
+```
+
+To delete the deployed agent, you may run the following command:
+```bash
+python3 deployment/deploy.py delete --resource-id=${AGENT_ENGINE_ID}
+```
+
+### 4. Interact with the Deployed Agent
+
+You can interact with your deployed agent using a simple Python script.
+
+**a. Set Environment Variables:**
+Ensure the following environment variables are set in your terminal. You will need the `AGENT_ENGINE_ID` from the deployment step.
+
+```bash
+export GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
+export GOOGLE_CLOUD_LOCATION="your-gcp-location"
+export AGENT_ENGINE_ID="your-agent-engine-id"
+```
+
+**b. Create and Run the Python Script:**
+Create a file named `query_agent.py` and add the following code.
+
+```python
+import os
+import vertexai
+from vertexai import agent_engines
+
+def query_remote_agent(project_id, location, agent_id, user_query):
+    """Initializes Vertex AI and sends a query to the deployed agent."""
+    vertexai.init(project=project_id, location=location)
+
+    # Load the deployed agent
+    remote_agent = agent_engines.get(agent_id)
+    remote_session = remote_agent.create_session(user_id="u_123")
+
+    print(f"Querying agent: '{user_query}'...")
+
+    # Stream the query and print the final text response
+    for event in remote_agent.stream_query(
+        user_id="u_123",
+        session_id=remote_session["id"],
+        message=user_query
+    ):
+        if event.get('content', {}).get('parts', [{}])[0].get('text'):
+            print("Response:", event['content']['parts'][0]['text'])
+
+if __name__ == "__main__":
+    project = os.getenv("GOOGLE_CLOUD_PROJECT")
+    loc = os.getenv("GOOGLE_CLOUD_LOCATION")
+    agent = os.getenv("AGENT_ENGINE_ID")
+    
+    if not all([project, loc, agent]):
+        print("Error: GOOGLE_CLOUD_PROJECT, GOOGLE_CLOUD_LOCATION, and AGENT_ENGINE_ID environment variables must be set.")
+    else:
+        query = "What is ADK?"
+        query_remote_agent(project, loc, agent, query)
+```
+
+**c. Run the script:**
+```bash
+python query_agent.py
+```
+
+## References
+
+- [Build LLM-powered applications using LangChain | Spanner](https://cloud.google.com/spanner/docs/langchain)
+- [langchain-google-spanner-python - GitHub](https://github.com/googleapis/langchain-google-spanner-python)
+- [Google Spanner | 🦜️ LangChain](https://python.langchain.com/docs/integrations/vectorstores/google_spanner/)
