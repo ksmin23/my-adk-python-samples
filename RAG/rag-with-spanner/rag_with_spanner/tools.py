@@ -16,24 +16,24 @@ def search_documents_in_spanner(query: str, k: int = 4) -> str:
   Searches for relevant documents in Spanner based on a query.
 
   Args:
-      query: The user's search query.
-      k: The number of documents to return.
+    query: The user's search query.
+    k: The number of documents to return.
 
   Returns:
-      A formatted string of the retrieved documents.
+    A formatted string of the retrieved documents.
   """
   try:
     logger.info("Connecting to Spanner...")
-    vector_store = SpannerVectorStore.from_instance(
-        embedding=VertexAIEmbeddings(model_name="text-embedding-005"),
-        instance_id=os.environ["SPANNER_INSTANCE_ID"],
-        database_id=os.environ["SPANNER_DATABASE_ID"],
-        table_name=os.environ["SPANNER_TABLE_NAME"],
+    vector_store = SpannerVectorStore(
+      embedding_service=VertexAIEmbeddings(model_name="text-embedding-005"),
+      instance_id=os.environ["SPANNER_INSTANCE_ID"],
+      database_id=os.environ["SPANNER_DATABASE_ID"],
+      table_name=os.environ["SPANNER_TABLE_NAME"],
     )
 
     retriever = vector_store.as_retriever(
-        search_type="similarity",
-        search_kwargs={"k": k},
+      search_type="similarity",
+      search_kwargs={"k": k},
     )
 
     logger.info(f"Searching for documents related to '{query}'...")

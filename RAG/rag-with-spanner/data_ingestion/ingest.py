@@ -13,21 +13,35 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 load_dotenv()
 
-def ingest_documents(instance_id: str, database_id: str, table_name: str, source_dir: str):
+
+def ingest_documents(
+  instance_id: str, database_id: str, table_name: str, source_dir: str
+):
   """
   Loads, splits, and embeds documents, then stores them in Spanner.
   """
+  # 0. Create table if not exists
+  print(f"Initializing SpannerVectorStore with table '{table_name}'...")
+  SpannerVectorStore.init_vector_store_table(
+    instance_id=instance_id,
+    database_id=database_id,
+    table_name=table_name,
+    vector_size=768, # Embedding dimension for the text-embedding-005 model
+  )
+
   # 1. Load documents
   print(f"Loading documents from {source_dir}...")
   docs = []
   for glob_pattern in ["**/*.md", "**/*.txt"]:
-      loader = DirectoryLoader(source_dir, glob=glob_pattern)
-      docs.extend(loader.load())
+    loader = DirectoryLoader(source_dir, glob=glob_pattern)
+    docs.extend(loader.load())
   print(f"Loaded {len(docs)} documents.")
 
   # 2. Split documents
   print("Splitting documents...")
-  text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+  text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000, chunk_overlap=100
+  )
   splits = text_splitter.split_documents(docs)
   print(f"Split into {len(splits)} chunks.")
 
@@ -36,13 +50,15 @@ def ingest_documents(instance_id: str, database_id: str, table_name: str, source
   embeddings = VertexAIEmbeddings(model_name="text-embedding-005")
 
   # 4. Initialize Spanner VectorStore and save data
-  print(f"Initializing SpannerVectorStore and adding documents to table '{table_name}'...")
+  print(
+    f"Initializing SpannerVectorStore and adding documents to table '{table_name}'..."
+  )
   SpannerVectorStore.from_documents(
-      embedding=embeddings,
-      documents=splits,
-      instance_id=instance_id,
-      database_id=database_id,
-      table_name=table_name,
+    embedding=embeddings,
+    documents=splits,
+    instance_id=instance_id,
+    database_id=database_id,
+    table_name=table_name,
   )
   print("Data ingestion complete.")
 
@@ -64,8 +80,8 @@ def main():
   )
   parser.add_argument(
     "--table_name",
-    default=os.getenv("TABLE_NAME", "vector_store"),
-    help="Table name for storing vectors. Defaults to TABLE_NAME environment variable or 'vector_store'.",
+    default=os.getenv("SPANNER_TABLE_NAME", "vector_store"),
+    help="Table name for storing vectors. Defaults to SPANNER_TABLE_NAME environment variable or 'vector_store'.",
   )
   parser.add_argument(
     "--source_dir",
@@ -74,15 +90,20 @@ def main():
   )
   args = parser.parse_args()
 
-  assert args.instance_id, "Instance ID must be provided via --instance_id argument or SPANNER_INSTANCE_ID environment variable."
-  assert args.database_id, "Database ID must be provided via --database_id argument or SPANNER_DATABASE_ID environment variable."
+  assert (
+    args.instance_id
+  ), "Instance ID must be provided via --instance_id argument or SPANNER_INSTANCE_ID environment variable."
+  assert (
+    args.database_id
+  ), "Database ID must be provided via --database_id argument or SPANNER_DATABASE_ID environment variable."
 
   ingest_documents(
-      instance_id=args.instance_id,
-      database_id=args.database_id,
-      table_name=args.table_name,
-      source_dir=args.source_dir
+    instance_id=args.instance_id,
+    database_id=args.database_id,
+    table_name=args.table_name,
+    source_dir=args.source_dir,
   )
+
 
 if __name__ == "__main__":
   main()

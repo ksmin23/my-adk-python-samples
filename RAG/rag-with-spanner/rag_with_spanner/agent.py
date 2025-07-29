@@ -10,8 +10,8 @@ from . import tools
 load_dotenv()
 
 root_agent = LlmAgent(
-  model='gemini-1.5-flash',
-  name='rag_with_spanner_agent',
+  model='gemini-2.5-flash',
+  name='spanner_rag_agent',
   instruction=instruction,
   tools=[tools.search_documents],
 )
