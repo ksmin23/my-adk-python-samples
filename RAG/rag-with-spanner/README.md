@@ -91,12 +91,29 @@ export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(pro
 # Grant permission to read database metadata
 gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-aiplatform-re.iam.gserviceaccount.com" \
-    --role="roles/spanner.databaseReader"
+    --role="roles/spanner.databaseReaderWithDataBoost"
 
-# Grant permission to read and write data
+# Grant permission to get databases
 gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-aiplatform-re.iam.gserviceaccount.com" \
-    --role="roles/spanner.databaseUser"
+    --role="roles/spanner.restoreAdmin"
+```
+
+The `roles/spanner.restoreAdmin` role is granted to the Agent Engine service account to provide the necessary `spanner.databases.get` permission.
+
+Without this permission, the following error will occur:
+
+```
+google.api_core.exceptions.PermissionDenied: 403 Caller is missing IAM permission spanner.databases.get on resource projects/[PROJECT_ID]/instances/[SPANNER_INSTANCE]/databases/[SPANNER_DATABASE].
+```
+
+To check the roles assigned to the Agent Engine, run the following command:
+
+```bash
+gcloud projects get-iam-policy $(gcloud config get-value project) \
+    --flatten="bindings[].members" \
+    --format='table(bindings.role)' \
+    --filter="bindings.members:service-${PROJECT_NUMBER}@gcp-sa-aiplatform-re.iam.gserviceaccount.com"
 ```
 
 ## Setup
