@@ -297,3 +297,4 @@ python query_agent.py
 - [Build LLM-powered applications using LangChain | Spanner](https://cloud.google.com/spanner/docs/langchain)
 - [langchain-google-spanner-python - GitHub](https://github.com/googleapis/langchain-google-spanner-python)
 - [Google Spanner | 🦜️ LangChain](https://python.langchain.com/docs/integrations/vectorstores/google_spanner/)
+- [IAM for Spanner](https://cloud.google.com/spanner/docs/iam)
