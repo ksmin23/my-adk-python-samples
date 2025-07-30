@@ -78,10 +78,7 @@ gcloud spanner databases create $SPANNER_DATABASE \
 
 ### 3. Grant Agent Engine permissions to Spanner
 
-To allow the deployed Agent Engine to connect to your Spanner instance, you must grant the necessary IAM roles to the Agent Engine's service account. The LangChain library requires two distinct roles to function correctly:
-
-1.  **`roles/spanner.databaseReader`**: This role grants permission to get database metadata, such as checking if the database exists (`spanner.databases.get`). This is required for the initial connection setup.
-2.  **`roles/spanner.databaseUser`**: This role grants permission to read and write data from tables, which is necessary for performing the vector search.
+To allow the deployed Agent Engine to connect to your Spanner instance, you must grant the necessary IAM roles to the Agent Engine's service account.
 
 Run the following commands to grant both roles to the Agent Engine service account:
 
