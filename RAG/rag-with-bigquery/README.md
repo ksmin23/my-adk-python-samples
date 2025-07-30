@@ -71,33 +71,43 @@ bq --location=$BIGQUERY_LOCATION mk --dataset \
 
 To allow the deployed Agent Engine to connect to your BigQuery instance, you must grant the necessary IAM roles to the Agent Engine's service account.
 
-Run the following commands to grant the required role to the Agent Engine service account:
+Run the following commands to grant the required roles to the Agent Engine service account:
 
 ```bash
 export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
 
-# Grant permission to read database metadata, create tables, and run jobs
+# Grant permission to read dataset metadata and create tables
 gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-aiplatform-re.iam.gserviceaccount.com" \
-    --role="roles/bigquery.admin"
+    --role="roles/bigquery.dataEditor"
+
+# Grant permission to run jobs
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-aiplatform-re.iam.gserviceaccount.com" \
+    --role="roles/bigquery.jobUser"
 ```
 
-The `roles/bigquery.admin` role is granted to the Agent Engine service account to provide the necessary permissions to read dataset metadata, create tables, and run queries in BigQuery.
-
+The `roles/bigquery.dataEditor` and `roles/bigquery.jobUser` roles are granted to the Agent Engine service account to provide the necessary permissions to read dataset metadata, create tables, and run queries in BigQuery.
 
 Without this permission, the following errors will occur:
 
-```
-ERROR:    An error occurred while searching in BigQuery: 403 GET https://bigquery.googleapis.com/bigquery/v2/projects/[PROJECT_ID]/datasets/[BIGQUERY_DATASET]?prettyPrint=false: Access Denied: Dataset [PROJECT_ID]:[BIGQUERY_DATASET]: Permission bigquery.datasets.get denied on dataset [PROJECT_ID]:[BIGQUERY_DATASET] (or it may not exist).
-```
+- Permission `bigquery.datasets.get` denied on dataset
 
-```
-ERROR:    An error occurred while searching in BigQuery: 403 POST https://bigquery.googleapis.com/bigquery/v2/projects/[PROJECT_ID]/datasets/[BIGQUERY_DATASET]/tables?prettyPrint=false: Access Denied: Dataset [PROJECT_ID]:[BIGQUERY_DATASET]: Permission bigquery.tables.create denied on dataset [PROJECT_ID]:[BIGQUERY_DATASET] (or it may not exist).
-```
+    ```
+    ERROR:    An error occurred while searching in BigQuery: 403 GET https://bigquery.googleapis.com/bigquery/v2/projects/[PROJECT_ID]/datasets/[BIGQUERY_DATASET]?prettyPrint=false: Access Denied: Dataset [PROJECT_ID]:[BIGQUERY_DATASET]: Permission bigquery.datasets.get denied on dataset [PROJECT_ID]:[BIGQUERY_DATASET] (or it may not exist).
+    ```
 
-```
-ERROR:    An error occurred while searching in BigQuery: 403 POST https://bigquery.googleapis.com/bigquery/v2/projects/[PROJECT_ID]/queries?prettyPrint=false: Access Denied: Project [PROJECT_ID]:[BIGQUERY_DATASET]: User does not have bigquery.jobs.create permission in project [PROJECT_ID]:[BIGQUERY_DATASET].
-```
+- Permission `bigquery.tables.create` denied on dataset
+
+    ```
+    ERROR:    An error occurred while searching in BigQuery: 403 POST https://bigquery.googleapis.com/bigquery/v2/projects/[PROJECT_ID]/datasets/[BIGQUERY_DATASET]/tables?prettyPrint=false: Access Denied: Dataset [PROJECT_ID]:[BIGQUERY_DATASET]: Permission bigquery.tables.create denied on dataset [PROJECT_ID]:[BIGQUERY_DATASET] (or it may not exist).
+    ```
+
+- User does not have `bigquery.jobs.create` permission
+
+    ```
+    ERROR:    An error occurred while searching in BigQuery: 403 POST https://bigquery.googleapis.com/bigquery/v2/projects/[PROJECT_ID]/queries?prettyPrint=false: Access Denied: Project [PROJECT_ID]:[BIGQUERY_DATASET]: User does not have bigquery.jobs.create permission in project [PROJECT_ID]:[BIGQUERY_DATASET].
+    ```
 
 To check the roles assigned to the Agent Engine, run the following command:
 
