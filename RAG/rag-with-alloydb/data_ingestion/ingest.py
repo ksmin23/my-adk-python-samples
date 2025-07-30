@@ -21,8 +21,8 @@ def ingest_documents(database: str, table_name: str, user: str, password: str, s
   print(f"Loading documents from {source_dir}...")
   docs = []
   for glob_pattern in ["**/*.md", "**/*.txt"]:
-      loader = DirectoryLoader(source_dir, glob=glob_pattern)
-      docs.extend(loader.load())
+    loader = DirectoryLoader(source_dir, glob=glob_pattern)
+    docs.extend(loader.load())
   print(f"Loaded {len(docs)} documents.")
 
   # 2. Split documents
@@ -50,8 +50,8 @@ def ingest_documents(database: str, table_name: str, user: str, password: str, s
   # 5. Initialize AlloyDB VectorStore and save data
   print(f"Initializing AlloyDBVectorStore and adding documents to table '{table_name}'...")
   engine.init_vectorstore_table(
-      table_name=table_name,
-      vector_size=768, # Embedding dimension for the text-embedding-005 model
+    table_name=table_name,
+    vector_size=768, # Embedding dimension for the text-embedding-005 model
   )
   vector_store = AlloyDBVectorStore.create_sync(
     engine=engine,
@@ -99,11 +99,11 @@ def main():
   assert args.password, "Database password must be provided via --password argument or DB_PASSWORD environment variable."
 
   ingest_documents(
-      database=args.database,
-      table_name=args.table_name,
-      user=args.user,
-      password=args.password,
-      source_dir=args.source_dir
+    database=args.database,
+    table_name=args.table_name,
+    user=args.user,
+    password=args.password,
+    source_dir=args.source_dir
   )
 
 if __name__ == "__main__":

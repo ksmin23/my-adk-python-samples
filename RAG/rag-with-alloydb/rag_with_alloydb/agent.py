@@ -11,7 +11,7 @@ load_dotenv()
 
 root_agent = LlmAgent(
   model='gemini-2.5-flash',
-  name='rag_agent',
+  name='alloydb_rag_agent',
   instruction=instruction,
   tools=[tools.search_documents],
 )
