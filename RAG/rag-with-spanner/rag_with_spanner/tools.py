@@ -26,8 +26,8 @@ def search_documents_in_spanner(query: str, k: int = 4) -> str:
     logger.info("Connecting to Spanner...")
     vector_store = SpannerVectorStore(
       embedding_service=VertexAIEmbeddings(model_name="text-embedding-005"),
-      instance_id=os.environ["SPANNER_INSTANCE_ID"],
-      database_id=os.environ["SPANNER_DATABASE_ID"],
+      instance_id=os.environ["SPANNER_INSTANCE"],
+      database_id=os.environ["SPANNER_DATABASE"],
       table_name=os.environ["SPANNER_TABLE_NAME"],
     )
 

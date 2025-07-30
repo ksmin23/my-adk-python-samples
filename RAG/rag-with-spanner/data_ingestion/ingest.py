@@ -70,13 +70,13 @@ def main():
   parser = argparse.ArgumentParser(description="Ingest documents into Spanner.")
   parser.add_argument(
     "--instance_id",
-    default=os.getenv("SPANNER_INSTANCE_ID"),
-    help="Spanner instance ID. Defaults to SPANNER_INSTANCE_ID environment variable.",
+    default=os.getenv("SPANNER_INSTANCE"),
+    help="Spanner instance ID. Defaults to SPANNER_INSTANCE environment variable.",
   )
   parser.add_argument(
     "--database_id",
-    default=os.getenv("SPANNER_DATABASE_ID"),
-    help="Spanner database ID. Defaults to SPANNER_DATABASE_ID environment variable.",
+    default=os.getenv("SPANNER_DATABASE"),
+    help="Spanner database ID. Defaults to SPANNER_DATABASE environment variable.",
   )
   parser.add_argument(
     "--table_name",
@@ -92,10 +92,10 @@ def main():
 
   assert (
     args.instance_id
-  ), "Instance ID must be provided via --instance_id argument or SPANNER_INSTANCE_ID environment variable."
+  ), "Instance ID must be provided via --instance_id argument or SPANNER_INSTANCE environment variable."
   assert (
     args.database_id
-  ), "Database ID must be provided via --database_id argument or SPANNER_DATABASE_ID environment variable."
+  ), "Database ID must be provided via --database_id argument or SPANNER_DATABASE environment variable."
 
   ingest_documents(
     instance_id=args.instance_id,

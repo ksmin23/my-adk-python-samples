@@ -52,7 +52,7 @@ def create_agent(project_id, location, bucket):
 
   # Filter for SPANNER_ variables and ensure all required ones are present
   required_vars = [
-    "SPANNER_INSTANCE_ID", "SPANNER_DATABASE_ID", "SPANNER_TABLE_NAME"
+    "SPANNER_INSTANCE", "SPANNER_DATABASE", "SPANNER_TABLE_NAME"
   ]
 
   # We only want to pass the SPANNER variables to the agent
