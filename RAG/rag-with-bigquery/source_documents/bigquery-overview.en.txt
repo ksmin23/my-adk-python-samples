@@ -1,0 +1,32 @@
+BigQuery is a fully managed, serverless data warehouse designed for business agility. It allows for super-fast SQL queries using the processing power of Google's infrastructure. Because there is no infrastructure to manage, you can focus on uncovering meaningful insights using familiar SQL, and you can get started in seconds.
+
+How BigQuery Works
+
+You can load data into BigQuery from various sources and then query it using SQL. BigQuery is built on Google's Dremel technology, which is a massively parallel query engine. It separates compute and storage, allowing them to scale independently on demand. This architecture provides great flexibility and cost control. Under the hood, BigQuery leverages Google's global infrastructure, including the Colossus distributed file system, the Borg cluster management system, and the Jupiter network.
+
+BigQuery's Architectural Difference from Traditional Data Warehouses
+
+Traditional data warehouses couple compute and storage resources on the same cluster. This means scaling one requires scaling the other, leading to inefficiencies and higher costs, especially with large datasets. BigQuery's serverless, disaggregated architecture separates compute (the Dremel query engine) from storage (Colossus).
+
+This disaggregated design offers several advantages:
+
+- Independent scaling: You can scale your compute resources based on query complexity and concurrency without changing your storage. As your data grows, storage scales automatically and transparently.
+- Cost-effectiveness: You pay for the queries you run and the data you store. The separation of compute and storage allows for more granular and efficient pricing models.
+- Enhanced performance: With its massively parallel processing (MPP) query engine and columnar storage, BigQuery can execute complex analytical queries over petabytes of data in seconds.
+- Simplified management: As a fully managed service, BigQuery handles all infrastructure management, including patching, updates, and resource provisioning, allowing you to focus on data analysis.
+- High availability and durability: Data is automatically replicated across multiple locations to ensure high availability and durability without any manual intervention.
+
+This fundamental architectural difference means you interact with BigQuery as a service, without needing to manage clusters or nodes. You simply load data and run queries.
+
+Key Features
+
+BigQuery offers a rich set of features that differentiate it from traditional data warehousing solutions.
+
+- Serverless Architecture: No infrastructure to manage or provision. BigQuery automatically manages and allocates resources, so you can focus on your data.
+- Real-time Analytics: BigQuery can ingest and analyze streaming data in real-time, providing up-to-the-second insights.
+- BigQuery ML: Allows data scientists and analysts to build and operationalize machine learning models directly within BigQuery using simple SQL commands, eliminating the need to move data.
+- BigQuery Omni: Enables you to run BigQuery analytics on data stored in other clouds like AWS and Azure, providing a multi-cloud analytics solution without having to move or copy datasets.
+- Standard SQL Compliance: Supports ANSI:2011 compliant SQL, making it easy for analysts to get started without learning a new dialect.
+- Security and Access Control: Integrates with Google Cloud Identity and Access Management (IAM) for fine-grained access control. Data is always encrypted at rest and in transit by default.
+- Data Ingestion Flexibility: Supports loading data in batches or streams from a wide variety of sources, including Google Cloud Storage, Google Ads, and other databases.
+- BI Engine: A fast, in-memory analysis service for BigQuery that allows users to analyze large and complex datasets interactively with sub-second query response time and high concurrency. It integrates with tools like Looker Studio.
