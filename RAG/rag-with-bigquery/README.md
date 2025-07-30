@@ -220,5 +220,5 @@ You can interact with your deployed agent using a simple Python script. (Instruc
 - [Perform semantic search and retrieval-augmented generation ...](https://cloud.google.com/bigquery/docs/vector-index-text-search-tutorial)
 - [Explore the bq command-line tool | BigQuery | Google Cloud](https://cloud.google.com/bigquery/docs/bq-command-line-tool)
 - [Google BigQuery Vector Search | 🦜️ LangChain](https://python.langchain.com/docs/integrations/vectorstores/google_bigquery_vector_search/)
-- https://cloud.google.com/blog/products/ai-machine-learning/rag-with-bigquery-and-langchain-in-cloud
-- https://github.com/GoogleCloudPlatform/generative-ai/blob/main/gemini/use-cases/retrieval-augmented-generation/rag_qna_with_bq_and_featurestore.ipynb
+- [RAG with BigQuery and Langchain in Cloud | Google Cloud Blog](https://cloud.google.com/blog/products/ai-machine-learning/rag-with-bigquery-and-langchain-in-cloud)
+- [GitHub: RAG Q&A with BigQuery and Feature Store](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/gemini/use-cases/retrieval-augmented-generation/rag_qna_with_bq_and_featurestore.ipynb)
