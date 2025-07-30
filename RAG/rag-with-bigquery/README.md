@@ -182,6 +182,10 @@ You can also interact with the agent through a web interface using the `adk web`
 adk web rag_with_bigquery
 ```
 
+**Screenshot:**
+
+![ADK Web Interface for RAG with BigQuery](assets/rag-with-bigquery.png)
+
 ## Deployment
 
 The RAG with BigQuery agent can be deployed to Vertex AI Agent Engine using the following commands.
