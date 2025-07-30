@@ -236,3 +236,4 @@ You can interact with your deployed agent using a simple Python script. (Instruc
 - [Google BigQuery Vector Search | 🦜️ LangChain](https://python.langchain.com/docs/integrations/vectorstores/google_bigquery_vector_search/)
 - [RAG with BigQuery and Langchain in Cloud | Google Cloud Blog](https://cloud.google.com/blog/products/ai-machine-learning/rag-with-bigquery-and-langchain-in-cloud)
 - [GitHub: RAG Q&A with BigQuery and Feature Store](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/gemini/use-cases/retrieval-augmented-generation/rag_qna_with_bq_and_featurestore.ipynb)
+- [BigQuery IAM roles and permissions | Google Cloud](https://cloud.google.com/bigquery/docs/access-control)
