@@ -31,3 +31,40 @@ For detailed setup and execution instructions, please see the [GCP Release Notes
     -   Provides a clear example of a retail or e-commerce use case.
 
 For detailed setup and execution instructions, please see the [Shop Search Agent README](./shop-agent-app/README.md).
+
+### 3. Agentic RAG
+
+This section includes agents that implement the Retrieval-Augmented Generation (RAG) pattern using different Google Cloud database services for vector search.
+
+#### QnA Agent with AlloyDB
+
+-   **Directory**: [`RAG/rag-with-alloydb/`](./RAG/rag-with-alloydb/)
+-   **Description**: An agent that implements the RAG pattern using AlloyDB for PostgreSQL for vector search.
+-   **Features**:
+    -   Demonstrates using AlloyDB as a vector store for RAG.
+    -   Includes data ingestion scripts for populating the vector database.
+    -   Provides instructions for local execution and deployment to Vertex AI Agent Engine.
+
+For detailed setup and execution instructions, please see the [RAG with AlloyDB Agent README](./RAG/rag-with-alloydb/README.md).
+
+#### QnA Agent with BigQuery
+
+-   **Directory**: [`RAG/rag-with-bigquery/`](./RAG/rag-with-bigquery/)
+-   **Description**: An agent that implements the RAG pattern using BigQuery for vector search.
+-   **Features**:
+    -   Demonstrates using BigQuery as a vector store for RAG.
+    -   Includes data ingestion scripts.
+    -   Provides instructions for local execution and deployment to Vertex AI Agent Engine.
+
+For detailed setup and execution instructions, please see the [RAG with BigQuery Agent README](./RAG/rag-with-bigquery/README.md).
+
+#### QnA Agent with Spanner
+
+-   **Directory**: [`RAG/rag-with-spanner/`](./RAG/rag-with-spanner/)
+-   **Description**: An agent that implements the RAG pattern using Google Cloud Spanner for vector search.
+-   **Features**:
+    -   Demonstrates using Spanner as a vector store for RAG.
+    -   Includes data ingestion scripts.
+    -   Provides instructions for local execution and deployment to Vertex AI Agent Engine.
+
+For detailed setup and execution instructions, please see the [RAG with Spanner Agent README](./RAG/rag-with-spanner/README.md).
