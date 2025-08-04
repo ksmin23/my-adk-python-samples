@@ -338,6 +338,7 @@ ADK also integrates with MCP (Model Context Protocol), an open standard that sta
 - [Run a hybrid vector similarity search | AlloyDB for PostgreSQL | Google Cloud](https://cloud.google.com/alloydb/docs/ai/run-hybrid-vector-similarity-search)
 - [Choose an indexing strategy | AlloyDB for PostgreSQL | Google Cloud](https://cloud.google.com/alloydb/docs/ai/choose-index-strategy)
 - [Generate text embeddings](https://cloud.google.com/alloydb/docs/ai/work-with-embeddings?resource=google_ml)
+- [Announcing ScaNN: Efficient Vector Similarity Search](https://research.google/blog/announcing-scann-efficient-vector-similarity-search/)
 
 #### Google Codelabs
 - [Getting started with Vector Embeddings with AlloyDB AI](https://codelabs.developers.google.com/alloydb-ai-embedding#0)
