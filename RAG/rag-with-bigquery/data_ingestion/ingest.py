@@ -76,8 +76,7 @@ def main():
   )
   parser.add_argument(
     "--source_dir",
-    default="../source_documents/",
-    help="Directory containing the source text files (e.g., *.txt, *.md). Defaults to ../source_documents/",
+    help="Directory with source documents.",
   )
   args = parser.parse_args()
 
@@ -85,12 +84,17 @@ def main():
   assert args.location, "Location must be provided via --location argument or LOCATION environment variable."
   assert args.dataset, "Dataset name must be provided via --dataset argument or BIGQUERY_DATASET environment variable."
 
+  source_dir = args.source_dir
+  if not source_dir:
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    source_dir = os.path.join(script_dir, '..', 'source_documents')
+
   ingest_documents(
       project_id=args.project_id,
       location=args.location,
       dataset=args.dataset,
       table_name=args.table_name,
-      source_dir=args.source_dir
+      source_dir=source_dir
   )
 
 if __name__ == "__main__":

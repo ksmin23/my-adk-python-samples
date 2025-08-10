@@ -89,8 +89,7 @@ def main():
   )
   parser.add_argument(
     "--source_dir",
-    default="../source_documents/",
-    help="Directory containing the source text files (e.g., *.txt, *.md). Defaults to ../source_documents/",
+    help="Directory with source documents.",
   )
   args = parser.parse_args()
 
@@ -98,12 +97,17 @@ def main():
   assert args.user, "Database user must be provided via --user argument or DB_USER environment variable."
   assert args.password, "Database password must be provided via --password argument or DB_PASSWORD environment variable."
 
+  source_dir = args.source_dir
+  if not source_dir:
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    source_dir = os.path.join(script_dir, '..', 'source_documents')
+
   ingest_documents(
     database=args.database,
     table_name=args.table_name,
     user=args.user,
     password=args.password,
-    source_dir=args.source_dir
+    source_dir=source_dir
   )
 
 if __name__ == "__main__":
