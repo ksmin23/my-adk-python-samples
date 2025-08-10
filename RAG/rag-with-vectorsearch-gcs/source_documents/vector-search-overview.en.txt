@@ -1,0 +1,15 @@
+Vertex AI Vector Search (formerly known as Vertex AI Matching Engine) provides a high-scale, low-latency vector database. It finds the most similar vectors to a query vector from a large corpus of vectors. This is a key component for building Retrieval-Augmented Generation (RAG) systems, recommendation engines, and other applications that rely on semantic similarity.
+
+How Vector Search Works
+
+Vector Search uses approximate nearest neighbor (ANN) algorithms to find similar vectors quickly, even in very large datasets. Instead of performing an exhaustive search, which would be too slow, it uses an index to partition the vectors into clusters. When a query comes in, it intelligently searches only a subset of these clusters, dramatically speeding up the search process while maintaining high accuracy.
+
+You first create an index of your vectors. These vectors are typically embeddings generated from text, images, or other data using a model like `text-embedding-005`. Once the index is created, you deploy it to an endpoint, which you can then query to get the nearest neighbors for a given vector.
+
+Key Features
+
+- **High Scale and Low Latency:** Designed to handle billions of vectors with millisecond query latency.
+- **Fully Managed:** As a managed service, it handles the underlying infrastructure, so you can focus on your application.
+- **Batch and Streaming Updates:** Supports both batch indexing for large initial loads and streaming updates to keep the index fresh with new data.
+- **VPC-SC and Private Endpoints:** Provides security and data privacy by allowing you to keep your data and queries within your Virtual Private Cloud (VPC).
+- **Filtering:** Allows you to apply filters to your vector search queries to narrow down the results based on metadata.
