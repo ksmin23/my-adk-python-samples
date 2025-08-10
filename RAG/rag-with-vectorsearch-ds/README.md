@@ -25,11 +25,11 @@ This pattern is used for handling extremely large-scale vector data (billions of
 
 ### How It Works
 
- - Store Ground Truth Data: The original data is still stored in Firestore to ensure data consistency and easy management.
- - Generate Embeddings: Create vector embeddings of the data using the Vertex AI Embedding API.
- - Build Index: Upload the generated vector embeddings and their corresponding data IDs to Vertex AI Vector Search to build a dedicated index.
- - Primary Search (Get IDs): When a user makes a search request, the application first queries Vertex AI Vector Search to get a list of IDs for the most similar data points.
- - Secondary Lookup (Get Data): The application then uses these returned IDs to look up the full, original data from Firestore to present to the user.
+ - **Store Ground Truth Data**: The original data is still stored in Firestore to ensure data consistency and easy management.
+ - **Generate Embeddings**: Create vector embeddings of the data using the Vertex AI Embedding API.
+ - **Build Index**: Upload the generated vector embeddings and their corresponding data IDs to Vertex AI Vector Search to build a dedicated index.
+ - **Primary Search (Get IDs)**: When a user makes a search request, the application first queries Vertex AI Vector Search to get a list of IDs for the most similar data points.
+ - **Secondary Lookup (Get Data)**: The application then uses these returned IDs to look up the full, original data from Firestore to present to the user.
 
 ### Architecture Diagram
 
