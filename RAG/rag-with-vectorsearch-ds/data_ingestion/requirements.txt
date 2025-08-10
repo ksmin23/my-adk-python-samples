@@ -1,0 +1,8 @@
+google-cloud-aiplatform==1.104.0
+langchain-google-vertexai==2.0.27
+langchain-core==0.3.68
+langchain-text-splitters==0.3.8
+langchain-community==0.3.27
+unstructured[md]==0.18.11
+python-dotenv==1.0.1
+google-cloud-datastore==2.21.0
