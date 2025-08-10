@@ -189,7 +189,7 @@ adk run rag_with_bigquery
 You can also interact with the agent through a web interface using the `adk web` command.
 
 ```bash
-adk web rag_with_bigquery
+adk web
 ```
 
 **Screenshot:**

@@ -85,8 +85,7 @@ def main():
   )
   parser.add_argument(
     "--source_dir",
-    default="../source_documents/",
-    help="Directory containing the source text files (e.g., *.txt, *.md). Defaults to ../source_documents/",
+    help="Directory with source documents.",
   )
   args = parser.parse_args()
 
@@ -97,11 +96,16 @@ def main():
     args.database_id
   ), "Database ID must be provided via --database_id argument or SPANNER_DATABASE environment variable."
 
+  source_dir = args.source_dir
+  if not source_dir:
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    source_dir = os.path.join(script_dir, '..', 'source_documents')
+
   ingest_documents(
     instance_id=args.instance_id,
     database_id=args.database_id,
     table_name=args.table_name,
-    source_dir=args.source_dir,
+    source_dir=source_dir,
   )
 
 

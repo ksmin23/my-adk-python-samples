@@ -102,8 +102,7 @@ def main():
   )
   parser.add_argument(
     "--source_dir",
-    default="../source_documents/",
-    help="Directory containing the source text files (e.g., *.txt, *.md). Defaults to ../source_documents/",
+    help="Directory with source documents.",
   )
   args = parser.parse_args()
 
@@ -117,13 +116,18 @@ def main():
     args.bucket_name
   ), "Bucket name must be provided via --bucket_name argument or BUCKET_NAME environment variable."
 
+  source_dir = args.source_dir
+  if not source_dir:
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    source_dir = os.path.join(script_dir, '..', 'source_documents')
+
   ingest_documents(
     project_id=args.project_id,
     location=args.location,
     bucket_name=args.bucket_name,
     index_id=args.index_id,
     endpoint_id=args.endpoint_id,
-    source_dir=args.source_dir,
+    source_dir=source_dir,
   )
 
 
