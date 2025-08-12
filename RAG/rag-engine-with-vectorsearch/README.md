@@ -44,7 +44,7 @@ This project uses the managed Vertex AI RAG Engine to simplify the retrieval pro
                                                                                                     |
                                                                                                     |
                                                                                                     |
-                                                                                                    | (Uses)
+                                                                                                    |
                                                                                                     v
                                                                                     +---------------------------+
                                                                                     | Vertex AI Vector Search   |
@@ -147,7 +147,10 @@ The script will output the **Index ID** and **Endpoint ID**. **Save these values
 Now, you will create a RAG Corpus and ingest documents into it.
 
 **Run the data ingestion script:**
-The `ingest.py` script creates the RAG Corpus, links it to your Vector Search index, and imports documents. This example uses a sample of Alphabet earnings reports that's uploaded to a public GCS bucket.
+The `ingest.py` script can create a new RAG Corpus or add documents to an existing one.
+
+**Scenario 1: Create a new corpus and ingest documents**
+This example creates a new corpus using a sample of Alphabet earnings reports from a public GCS bucket. You must provide the IDs for the backend Vector Search index and endpoint you created earlier.
 
 ```bash
 # From the data_ingestion directory
@@ -159,7 +162,19 @@ python ingest.py \
   --corpus_display_name="my-adk-rag-corpus" \
   --gcs_source_uri="gs://cloud-samples-data/gen-app-builder/search/alphabet-investor-pdfs"
 ```
-This script will output the **RAG Corpus resource name**. Save this value for the next step.
+This script will output the new **RAG Corpus resource name**. Save this value for the next step.
+
+**Scenario 2: Ingest documents into an existing corpus**
+If you already have a corpus, you can add more documents to it using the `--corpus_name` flag.
+
+```bash
+# From the data_ingestion directory
+python ingest.py \
+  --project_id="$PROJECT_ID" \
+  --location="$LOCATION" \
+  --corpus_name="projects/your-project-number/locations/your-location/ragCorpora/your-corpus-id" \
+  --gcs_source_uri="gs://your-bucket/path/to/new-docs/"
+```
 
 **Grant RAG Engine GCS Access (For Your Own Data):**
 If you want to use your own documents from a private GCS bucket, you must grant the `Storage Object Viewer` role to the Vertex RAG service account to allow it to read your files.
@@ -305,6 +320,7 @@ gsutil rm -r gs://$GOOGLE_CLOUD_STORAGE_BUCKET
 
 ## References
 
-- [Vertex AI RAG Engine Documentation](https://cloud.google.com/vertex-ai/docs/rag)
+- [Vertex AI RAG Engine Documentation](https://cloud.google.com/vertex-ai/docs/generative-ai/rag/overview)
 - [Agent Development Kit (ADK) Documentation](https://cloud.google.com/adk/docs)
-- [Vertex AI Vector Search Documentation](https://cloud.google.com/vertex-ai/docs/vector-search)
+- [Vertex AI Vector Search Documentation](https://cloud.google.com/vertex-ai/docs/vector-search/overview)
+- [Generative AI RAG Engine with Vector Search Notebook](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/gemini/rag-engine/rag_engine_vector_search.ipynb)
