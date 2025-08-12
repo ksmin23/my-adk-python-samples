@@ -36,7 +36,7 @@ This project uses the managed Vertex AI RAG Engine to simplify the retrieval pro
 ```text
 +--------------+   (1) Query    +----------------------------+   (2) Retrieve Context  +-------------------------+
 |              | -------------> |      ADK Agent             | ----------------------> |   Vertex AI RAG Engine  |
-|  User/Client |              | (on Vertex AI Agent Engine)  |                         |   (RAG Corpus)          |
+|  User/Client |                |(on Vertex AI Agent Engine) |                         |   (RAG Corpus)          |
 |              | <------------- |                            | <---------------------- |                         |
 +--------------+  (4) Response  +----------------------------+   (3) Return Context    +-------------------------+
                                                                                                     |
