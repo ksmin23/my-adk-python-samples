@@ -1,0 +1,12 @@
+# Agent Framework
+google-adk==1.5.0
+python-dotenv==1.0.1
+
+# LangChain and Vertex AI
+langchain==0.3.26
+langchain-core==0.3.68
+langchain-google-vertexai==2.0.27
+google-cloud-datastore==2.21.0
+
+# For local testing and running
+google-auth==2.40.3
