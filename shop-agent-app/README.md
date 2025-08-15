@@ -176,3 +176,4 @@ The agent will use the `search_products` tool to query the catalog and return th
 - [Vertex AI Vector Search](https://goo.gle/3T5xxK5)
 - [Shopper's Concierge demo video](https://goo.gle/4jRbMJb)
 - [Shopper's Concierge sample notebook](https://goo.gle/4kMkxot)
+- [Deploying ADK agent with MCP tools on VertexAI Agent Engine](https://github.com/googleapis/python-aiplatform/issues/5372#issuecomment-3181870896)
