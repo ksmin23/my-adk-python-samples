@@ -1,6 +1,3 @@
-# fastmcp==2.10.4
 google-adk==1.10.0
-# google-cloud-retail==2.3.0
 python-dotenv==1.1.1
-# google-auth==2.40.3
 requests==2.32.4
