@@ -3,6 +3,7 @@
 # vim: tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
 import json
+import os
 import requests
 from typing import Any, Dict, List
 
@@ -55,7 +56,7 @@ def find_shopping_items(queries: List[str]) -> List[Dict[str, Any]]:
     dictionary containing details like 'id', 'name', 'description',
     and 'img_url'.
   """
-  url = "https://www.ac0.cloudadvocacyorg.joonix.net/api/query"
+  url = os.environ.get("SHOPPER_SEARCH_API_URL", "https://www.ac0.cloudadvocacyorg.joonix.net/api/query")
 
   items = []
   for query in queries:
