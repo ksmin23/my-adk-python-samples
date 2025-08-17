@@ -73,9 +73,9 @@ def find_shopping_items(queries: List[str]) -> List[Dict[str, Any]]:
     if result and "items" in result:
       items.extend(result["items"])
 
-  logging.info("-----")
-  logging.info(f"User queries: {queries}")
-  logging.info(f"Found: {len(items)} items")
-  logging.info("-----")
+  logging.debug("-----")
+  logging.debug(f"User queries: {queries}")
+  logging.debug(f"Found: {len(items)} items")
+  logging.debug("-----")
 
   return items
