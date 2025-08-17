@@ -3,9 +3,14 @@
 # vim: tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
 import json
+import logging
 import os
 import requests
 from typing import Any, Dict, List
+
+# Configure logger
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 def call_vector_search(url: str, query: str, rows: int | None = None) -> Dict | None:
   """
@@ -40,7 +45,7 @@ def call_vector_search(url: str, query: str, rows: int | None = None) -> Dict | 
     response.raise_for_status()  # Raise an exception for bad status codes
     return response.json()
   except requests.exceptions.RequestException as e:
-    print(f"Error calling the API: {e}")
+    logging.error(f"Error calling the API: {e}")
     return None
 
 
@@ -68,9 +73,9 @@ def find_shopping_items(queries: List[str]) -> List[Dict[str, Any]]:
     if result and "items" in result:
       items.extend(result["items"])
 
-  print("-----")
-  print(f"User queries: {queries}")
-  print(f"Found: {len(items)} items")
-  print("-----")
+  logging.info("-----")
+  logging.info(f"User queries: {queries}")
+  logging.info(f"Found: {len(items)} items")
+  logging.info("-----")
 
   return items
