@@ -287,7 +287,7 @@ if __name__ == "__main__":
     if not all([project, loc, agent]):
         print("Error: GOOGLE_CLOUD_PROJECT, GOOGLE_CLOUD_LOCATION, and AGENT_ENGINE_ID environment variables must be set.")
     else:
-        query = "What are the key business segments mentioned in Alphabet's 2024 Q4 earning releases?"
+        query = "What are the key business segments mentioned in Alphabet's 2024 Q4 Alphabet earning releases?"
         query_remote_agent(project, loc, agent, query)
 ```
 
