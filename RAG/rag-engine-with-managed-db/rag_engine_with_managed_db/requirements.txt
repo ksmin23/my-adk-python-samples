@@ -1,0 +1,10 @@
+# Agent Framework
+google-adk==1.10.0
+python-dotenv==1.0.1
+
+# Google AI
+google-cloud-aiplatform==1.108.0
+
+# For local testing and running
+google-auth==2.40.3
+llama-index==0.13.1
