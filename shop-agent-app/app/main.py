@@ -108,31 +108,12 @@ def chat_with_agent(user_input, history, session_state):
     logging.info(f"New session created for user '{user_id}': {session_id}")
 
   # Vertex AI 에이전트 호출
-  response_output, recommended_products = query_vertex_agent(user_input, user_id, session_id)
-
-  # 추천 상품이 있는 경우, 마크다운 형식으로 변환하여 답변에 추가
-  if recommended_products:
-    response_output += "\n\n--- \n**추천 상품:**"
-    for product in recommended_products:
-      product_name = product.get("name", "N/A")
-      description = product.get("description", "No description available.")
-      img_url = product.get("img_url")
-
-      response_output += f"\n\n**{product_name}**\n"
-      response_output += f"{description}\n"
-      if img_url:
-        # 마크다운 이미지 태그 추가
-        response_output += f"![{product_name}]({img_url})\n"
+  response_output, _ = query_vertex_agent(user_input, user_id, session_id)
 
   # 사용자 입력과 최종적으로 구성된 답변을 기록에 추가
   history.append((user_input, response_output))
 
-  recommended_products_df = pd.DataFrame()
-  if recommended_products:
-    # API 응답에서 받은 상품 목록으로 데이터프레임 바로 생성
-    recommended_products_df = pd.DataFrame(recommended_products)
-
-  return history, recommended_products_df, session_state
+  return history, session_state
 
 # Gradio UI 구성
 with gr.Blocks(theme=gr.themes.Soft(), title="AI Shopping Assistant") as demo:
@@ -158,21 +139,16 @@ with gr.Blocks(theme=gr.themes.Soft(), title="AI Shopping Assistant") as demo:
     )
     submit_btn = gr.Button("전송", variant="primary", scale=1)
 
-  gr.Markdown("### 추천 상품 목록")
-  product_recommendations = gr.DataFrame(
-    label="추천 상품"
-  )
-
   # 이벤트 핸들러
   txt.submit(
     chat_with_agent,
     [txt, chatbot, session_state],
-    [chatbot, product_recommendations, session_state]
+    [chatbot, session_state]
   )
   submit_btn.click(
     chat_with_agent,
     [txt, chatbot, session_state],
-    [chatbot, product_recommendations, session_state]
+    [chatbot, session_state]
   )
 
 if __name__ == "__main__":
