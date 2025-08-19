@@ -14,26 +14,26 @@ from dotenv import load_dotenv
 # Configure logger
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# .env 파일에서 환경 변수 로드
+# Load environment variables from .env file
 load_dotenv()
 
-# --- Vertex AI Agent Engine 설정 ---
-# 환경 변수에서 Vertex AI 관련 정보 가져오기
+# --- Vertex AI Agent Engine Configuration ---
+# Get Vertex AI related information from environment variables
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION")
 AGENT_ENGINE_ID = os.getenv("AGENT_ENGINE_ID")
 
-# 필수 환경 변수 확인
+# Check for required environment variables
 if not all([PROJECT_ID, LOCATION, AGENT_ENGINE_ID]):
   raise ValueError(
     "Error: GOOGLE_CLOUD_PROJECT, GOOGLE_CLOUD_LOCATION, and "
     "AGENT_ENGINE_ID environment variables must be set."
   )
 
-# Vertex AI 초기화
+# Initialize Vertex AI
 vertexai.init(project=PROJECT_ID, location=LOCATION)
 
-# 배포된 에이전트 로드
+# Load the deployed agent
 try:
   remote_agent = agent_engines.get(AGENT_ENGINE_ID)
 except Exception as e:
@@ -41,23 +41,23 @@ except Exception as e:
 # ------------------------------------
 
 def query_vertex_agent(user_query, user_id, session_id):
-  """Vertex AI Agent Engine에 쿼리를 보내고 응답을 파싱하는 함수"""
+  """Sends a query to the Vertex AI Agent Engine and parses the response."""
   logging.info(f"Querying Vertex AI agent for user '{user_id}' in session '{session_id}': '{user_query}'...")
 
   response_text = ""
   recommended_products = []
 
-  # stream_query를 사용하여 실시간으로 응답 받기
+  # Use stream_query to receive responses in real-time
   for event in remote_agent.stream_query(
     user_id=user_id,
     session_id=session_id,
     message=user_query
   ):
-    # 텍스트 응답 추출
+    # Extract text response
     if event.get('content', {}).get('parts', [{}])[0].get('text'):
       response_text += event['content']['parts'][0]['text']
 
-    # 도구 호출 결과에서 추천 상품 정보 추출
+    # Extract recommended product information from the tool call result
     if 'content' in event and 'parts' in event['content']:
       for part in event['content']['parts']:
         if 'function_response' in part:
@@ -73,7 +73,7 @@ def query_vertex_agent(user_query, user_id, session_id):
 
   logging.debug(f"Full response text: {response_text}")
 
-  # ID를 기준으로 중복 상품 제거
+  # Remove duplicate products based on ID
   unique_products = []
   seen_ids = set()
   for product in recommended_products:
@@ -88,15 +88,15 @@ def query_vertex_agent(user_query, user_id, session_id):
 
 def chat_with_agent(user_input, history, session_state):
   """
-  사용자 입력에 대해 Vertex AI 에이전트와 대화하고 결과를 반환하는 함수
+  Handles the conversation with the Vertex AI agent and returns the result.
   """
   history = history or []
 
-  # 세션 상태에서 user_id와 session_id 가져오기
+  # Get user_id and session_id from the session state
   user_id = session_state.get("user_id")
   session_id = session_state.get("session_id")
 
-  # 세션이 시작되지 않았다면 새로 생성
+  # If a session has not started, create a new one
   if not user_id:
     user_id = f"gradio_user_{uuid.uuid4()}"
     session_state["user_id"] = user_id
@@ -107,15 +107,15 @@ def chat_with_agent(user_input, history, session_state):
     session_state["session_id"] = session_id
     logging.info(f"New session created for user '{user_id}': {session_id}")
 
-  # Vertex AI 에이전트 호출
+  # Call the Vertex AI agent
   response_output, _ = query_vertex_agent(user_input, user_id, session_id)
 
-  # 사용자 입력과 최종적으로 구성된 답변을 기록에 추가
+  # Add user input and the final response to the history
   history.append((user_input, response_output))
 
   return history, session_state
 
-# Gradio UI 구성
+# Gradio UI Configuration
 with gr.Blocks(theme=gr.themes.Soft(), title="AI Shopping Assistant") as demo:
   session_state = gr.State({})
 
@@ -123,23 +123,23 @@ with gr.Blocks(theme=gr.themes.Soft(), title="AI Shopping Assistant") as demo:
     """
     # AI Shopping Assistant
     
-    무엇을 도와드릴까요? 찾고 있는 상품에 대해 자유롭게 질문해주세요.
-    (예: "가볍고 오래가는 노트북 추천해줘")
+    How can I help you? Feel free to ask about the products you're looking for.
+    (e.g., "Recommend a light and long-lasting laptop")
     """
   )
 
-  chatbot = gr.Chatbot(label="채팅창")
+  chatbot = gr.Chatbot(label="Chat")
 
   with gr.Row():
     txt = gr.Textbox(
       show_label=False,
-      placeholder="궁금한 점을 입력하세요...",
+      placeholder="Enter your question here...",
       container=False,
       scale=8
     )
-    submit_btn = gr.Button("전송", variant="primary", scale=1)
+    submit_btn = gr.Button("Send", variant="primary", scale=1)
 
-  # 이벤트 핸들러
+  # Event Handlers
   txt.submit(
     chat_with_agent,
     [txt, chatbot, session_state],
