@@ -1,3 +1,7 @@
 google-adk==1.10.0
 python-dotenv==1.0.0
+# Package for using the Google Maps Places API (Legacy)
 googlemaps==4.10.0
+# Packages for using the Google Maps Places API (New)
+# google-geo-type==0.3.13
+# google-maps-places==0.2.2
