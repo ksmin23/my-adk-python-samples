@@ -26,20 +26,20 @@ The agent uses a simple, direct architecture where the ADK agent processes the u
      v
 +-------------------------------------------------+
 | Google Cloud / Local Environment                |
-|
+|                                                 | 
 |  +-------------------------------------------+  |
 |  | ADK Agent (restaurant_finder_agent)       |  |
 |  |                                           |  |
-|  |  - Processes user input                   |
-|  |  - Calls the `find_restaurants` tool      |
+|  |  - Processes user input                   |  |  
+|  |  - Calls the `find_restaurants` tool      |  |  
 |  |                                           |  |
 |  +-------------------------------------------+  |
 |                 |                               |
 |                 | 2. API Call with search query |
 |                 v                               |
 |  +-------------------------------------------+  |
-|  | Google Maps Platform API                  |
-|  | (Places API)                              |
+|  | Google Maps Platform API                  |  |  
+|  | (Places API)                              |  |  
 |  +-------------------------------------------+  |
 |                                                 |
 +-------------------------------------------------+
