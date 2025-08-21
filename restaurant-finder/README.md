@@ -26,20 +26,20 @@ The agent uses a simple, direct architecture where the ADK agent processes the u
      v
 +-------------------------------------------------+
 | Google Cloud / Local Environment                |
-|                                                 |  
+|
 |  +-------------------------------------------+  |
 |  | ADK Agent (restaurant_finder_agent)       |  |
 |  |                                           |  |
-|  |  - Processes user input                   |  |  
-|  |  - Calls the `find_restaurants` tool      |  |  
+|  |  - Processes user input                   |
+|  |  - Calls the `find_restaurants` tool      |
 |  |                                           |  |
 |  +-------------------------------------------+  |
 |                 |                               |
 |                 | 2. API Call with search query |
 |                 v                               |
 |  +-------------------------------------------+  |
-|  | Google Maps Platform API                  |  | 
-|  | (Places API)                              |  |  
+|  | Google Maps Platform API                  |
+|  | (Places API)                              |
 |  +-------------------------------------------+  |
 |                                                 |
 +-------------------------------------------------+
@@ -70,8 +70,37 @@ The agent uses a simple, direct architecture where the ADK agent processes the u
 ### 3. Configuration
 
 - **Set up your Google Maps API Key**:
-    1.  This agent requires a Google Maps Platform API key with the **Places API** and **Geocoding API** enabled.
+    1.  This agent requires a Google Maps Platform API key with the following APIs enabled:
+        -   **Address Validation API** (`addressvalidation.googleapis.com`)
+        -   **Directions API** (`directions-backend.googleapis.com`)
+        -   **Distance Matrix API** (`distance-matrix-backend.googleapis.com`)
+        -   **Maps Elevation API** (`elevation-backend.googleapis.com`)
+        -   **Geocoding API** (`geocoding-backend.googleapis.com`)
+        -   **Geolocation API** (`geolocation.googleapis.com`)
+        -   **Places API** (`places-backend.googleapis.com`)
+        -   **Places API (New)** (`places.googleapis.com`)
+        -   **Roads API** (`roads.googleapis.com`)
+        -   **Routes API** (`routes.googleapis.com`)
+        -   **Maps Static API** (`static-maps-backend.googleapis.com`)
+        -   **Time Zone API** (`timezone-backend.googleapis.com`)
     2.  Follow the [official guide](https://developers.google.com/maps/gmp-get-started) to create a project, enable the APIs, and get your API key. Make sure to also [link a billing account](https://cloud.google.com/billing/docs/how-to/manage-billing-account) to your project, which is required to use the APIs.
+
+        You can enable all the necessary APIs at once by running the following `gcloud` command:
+        ```bash
+        gcloud services enable \
+            addressvalidation.googleapis.com \
+            directions-backend.googleapis.com \
+            distance-matrix-backend.googleapis.com \
+            elevation-backend.googleapis.com \
+            geocoding-backend.googleapis.com \
+            geolocation.googleapis.com \
+            places-backend.googleapis.com \
+            places.googleapis.com \
+            roads.googleapis.com \
+            routes.googleapis.com \
+            static-maps-backend.googleapis.com \
+            timezone-backend.googleapis.com
+        ```
     3.  Once you have your key, create a `.env` file in the `restaurant-finder/restaurant_agent` directory by copying the example file:
         ```bash
         cp .env.example .env
