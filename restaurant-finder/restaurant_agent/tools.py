@@ -70,22 +70,23 @@ def find_restaurants_in_google_maps_v2(query: str, language_code: str = "ko", re
     )
 
     # Define which fields to return for efficiency
-    field_mask = "places.rating,places.formattedAddress,places.displayName"
+    field_mask = "places.rating,places.formattedAddress,places.displayName,places.googleMapsUri"
 
     response = client.search_text(request=request, metadata=[("x-goog-fieldmask", field_mask)])
 
     restaurants = []
     for place in response.places:
-        restaurants.append({
-            "name": place.display_name.text,
-            "address": place.formatted_address,
-            "rating": place.rating if place.rating else 'N/A'
-        })
+      restaurants.append({
+        "name": place.display_name.text,
+        "address": place.formatted_address,
+        "rating": place.rating if place.rating else 'N/A',
+        "map_uri": place.google_maps_uri
+      })
 
     if restaurants:
-        return json.dumps(restaurants)
+      return json.dumps(restaurants)
     else:
-        return json.dumps({"message": "No restaurants found matching your criteria."})
+      return json.dumps({"message": "No restaurants found matching your criteria."})
 
   except Exception as e:
     print(f"An error occurred with Places API v2: {e}")

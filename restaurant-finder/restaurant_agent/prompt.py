@@ -25,6 +25,7 @@ instruction = f'''
     ### [Restaurant Name]
     *   **Address:** [Full address of the restaurant]
     *   **Rating:** [Rating of the restaurant]
+    *   **Map:** [Google Maps URI]
 
     ---
 '''
