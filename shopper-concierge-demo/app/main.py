@@ -121,21 +121,26 @@ with gr.Blocks(theme=gr.themes.Soft(), title="AI Shopping Assistant") as demo:
 
   gr.Markdown(
     """
-    # AI Shopping Assistant
+    # AI Shopping Assistant 🤖
     
     How can I help you? Feel free to ask about the products you're looking for.
     (e.g., "Recommend a light and long-lasting laptop")
     """
   )
 
-  chatbot = gr.Chatbot(label="Chat")
+  chatbot = gr.Chatbot(
+    value=[(None, 'Hello! How can I help you find the perfect product today?')],
+    elem_id="chatbot",
+    bubble_full_width=False,
+    height=500
+  )
 
   with gr.Row():
     txt = gr.Textbox(
       show_label=False,
-      placeholder="Enter your question here...",
+      placeholder="Enter your message here...",
       container=False,
-      scale=8
+      scale=10
     )
     submit_btn = gr.Button("Send", variant="primary", scale=1)
 
