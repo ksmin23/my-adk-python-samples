@@ -118,7 +118,7 @@ You can interact with the agent locally using the ADK web interface.
 2.  Run the agent using the `adk web` command:
     ```bash
     # From the restaurant-finder directory
-    adk web .
+    adk web
     ```
 3.  The command will start a local web server. Open the provided URL in your browser to interact with the agent.
 
