@@ -116,6 +116,7 @@ This repository contains additional RAG agent implementations that demonstrate i
 ## References
 
 -   [ADK Official Docs](https://google.github.io/adk-docs/)
+    -   [ADK Python Repository](https://github.com/google/adk-python)
 -   [ADK Samples Repo](https://github.com/google/adk-samples)
 -   [Agentic Design Patterns](https://docs.google.com/document/d/1rsaK53T3Lg5KoGwvf8ukOUvbELRtH-V0LnOIFDxBryE/preview?tab=t.0#heading=h.pxcur8v2qagu)
 -   [ADK Web Book by Amulya Bhatia](https://iamulya.one/tags/agent-development-kit/)
