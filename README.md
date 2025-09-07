@@ -32,7 +32,27 @@ For detailed setup and execution instructions, please see the [GCP Release Notes
 
 For detailed setup and execution instructions, please see the [Shop Search Agent README](./shop-agent-app/README.md).
 
-### 3. Agentic RAG
+### 3. Restaurant Finder Agent
+
+-   **Directory**: [`restaurant-finder/`](./restaurant-finder/)
+-   **Description**: A conversational AI agent that helps users find restaurants based on a specific dish or ingredient, leveraging the Google Maps Platform API.
+-   **Features**:
+    -   Demonstrates how an agent can use external tools (Google Maps API) to answer user queries.
+    -   Provides real-time restaurant information.
+
+For detailed setup and execution instructions, please see the [Restaurant Finder Agent README](./restaurant-finder/README.md).
+
+### 4. Shopper's Concierge Agent
+
+-   **Directory**: [`shopper-concierge-demo/`](./shopper-concierge-demo/)
+-   **Description**: An advanced shopping assistant that uses a sub-agent for research to provide more relevant product recommendations.
+-   **Features**:
+    -   Showcases a multi-agent architecture where a primary agent delegates tasks to a specialized sub-agent.
+    -   Includes a Gradio web interface for a complete user experience.
+
+For detailed setup and execution instructions, please see the [Shopper's Concierge Agent README](./shopper-concierge-demo/README.md).
+
+### 5. Agentic RAG
 
 This section includes agents that implement the Retrieval-Augmented Generation (RAG) pattern using different Google Cloud database services for vector search.
 
@@ -68,3 +88,34 @@ For detailed setup and execution instructions, please see the [RAG with BigQuery
     -   Provides instructions for local execution and deployment to Vertex AI Agent Engine.
 
 For detailed setup and execution instructions, please see the [RAG with Spanner Agent README](./RAG/rag-with-spanner/README.md).
+
+#### More RAG Agents
+
+This repository contains additional RAG agent implementations that demonstrate integration with various Google Cloud services. Below is a list of other available RAG agents:
+
+-   **RAG Engine with Managed DB**:
+    -   **Directory**: [`RAG/rag-engine-with-managed-db/`](./RAG/rag-engine-with-managed-db/)
+    -   **Description**: An agent that leverages the managed Vertex AI RAG Engine with its own fully managed database, eliminating the need to manage a separate Vector Search index.
+    -   **README**: [RAG Engine with Managed DB README](./RAG/rag-engine-with-managed-db/README.md)
+
+-   **RAG Engine with Vector Search**:
+    -   **Directory**: [`RAG/rag-engine-with-vectorsearch/`](./RAG/rag-engine-with-vectorsearch/)
+    -   **Description**: An agent that uses the managed Vertex AI RAG Engine with a Vertex AI Vector Search index as its backend for efficient, scalable document retrieval.
+    -   **README**: [RAG Engine with Vector Search README](./RAG/rag-engine-with-vectorsearch/README.md)
+
+-   **RAG with Vector Search and Datastore**:
+    -   **Directory**: [`RAG/rag-with-vectorsearch-ds/`](./RAG/rag-with-vectorsearch-ds/)
+    -   **Description**: An agent that uses Vertex AI Vector Search as the vector store and Firestore in Datastore mode as the document store.
+    -   **README**: [RAG with Vector Search and Datastore README](./RAG/rag-with-vectorsearch-ds/README.md)
+
+-   **RAG with Vector Search and GCS**:
+    -   **Directory**: [`RAG/rag-with-vectorsearch-gcs/`](./RAG/rag-with-vectorsearch-gcs/)
+    -   **Description**: An agent that uses Vertex AI Vector Search as the vector store and Google Cloud Storage (GCS) as the document store.
+    -   **README**: [RAG with Vector Search and GCS README](./RAG/rag-with-vectorsearch-gcs/README.md)
+
+## References
+
+-   [ADK Official Docs](https://google.github.io/adk-docs/)
+-   [ADK Samples Repo](https://github.com/google/adk-samples)
+-   [Agentic Design Patterns](https://docs.google.com/document/d/1rsaK53T3Lg5KoGwvf8ukOUvbELRtH-V0LnOIFDxBryE/preview?tab=t.0#heading=h.pxcur8v2qagu)
+-   [ADK Web Book by Amulya Bhatia](https://iamulya.one/tags/agent-development-kit/)
