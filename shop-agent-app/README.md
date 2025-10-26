@@ -147,7 +147,7 @@ You can deploy both the agent and its backend MCP server to Cloud Run for a scal
         python deploy_to_cloud_run.py --agent-folder=shop-agent-app/shop_agent \
             --project=$GOOGLE_CLOUD_PROJECT \
             --region=$GOOGLE_CLOUD_LOCATION \
-            --service_name="shop-agent-service" \
+            --service-name="shop-agent-service" \
             --vpc-egress="all-traffic" \
             --network=$VPC_NETWORK \
             --subnet=$VPC_SUBNET \
