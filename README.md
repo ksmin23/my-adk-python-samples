@@ -113,6 +113,21 @@ This repository contains additional RAG agent implementations that demonstrate i
     -   **Description**: An agent that uses Vertex AI Vector Search as the vector store and Google Cloud Storage (GCS) as the document store.
     -   **README**: [RAG with Vector Search and GCS README](./RAG/rag-with-vectorsearch-gcs/README.md)
 
+### 6. Agent Memory
+
+This section includes agents that demonstrate how to manage agent memory and session state.
+
+#### ADK Redis Session Service
+
+-   **Directory**: [`agent-memory/redis-session-service/`](./agent-memory/redis-session-service/)
+-   **Description**: An agent that demonstrates how to use Redis for session state management, allowing for scalable and persistent user sessions.
+-   **Features**:
+    -   Integrates a custom session service with ADK.
+    -   Persists conversation state in a Redis database.
+    -   Includes instructions for local execution and deployment to Cloud Run.
+
+For detailed setup and execution instructions, please see the [ADK Redis Session Service README](./agent-memory/redis-session-service/README.md).
+
 ## References
 
 -   [ADK Official Docs](https://google.github.io/adk-docs/)
