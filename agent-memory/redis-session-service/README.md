@@ -74,7 +74,7 @@ To run this agent, you will need:
     Start the ADK web server, pointing to the agent directory and specifying the Redis session service URI. The `adk_cli.py` script ensures that the `redis://` protocol is recognized.
 
     ```bash
-    uv run python adk_cli.py web --agents_dir=./redis_session_service --session_service_uri="redis://localhost:6379"
+    uv run python adk_cli.py web --session_service_uri="redis://localhost:6379" redis_session_service
     ```
 
     Navigate to `127.0.0.1:8000` in your browser to interact with the agent.
@@ -101,7 +101,56 @@ As you interact with the agent, its session state will be stored in your Redis d
 
 This will return a JSON object containing the session state, including the conversation history.
 
+## Deploying to Cloud Run
+
+You can deploy the agent to Cloud Run for a scalable setup. This requires a Redis instance accessible from your Cloud Run service.
+
+### 1. Prepare Redis
+
+Before deploying, you need a Redis instance. For production, it's recommended to use a managed service like [Google Cloud Memorystore for Redis](https://cloud.google.com/memorystore/docs/redis).
+
+- Create a Memorystore for Redis instance within the same VPC network you plan to use for Cloud Run.
+- Once created, note its IP address and port. Your Redis URI will be `redis://<redis_ip_address>:<redis_port>`.
+
+### 2. Deploy the Agent
+
+- **Authenticate with Google Cloud**:
+    ```bash
+    gcloud auth login
+    ```
+- **Set Environment Variables**:
+    ```bash
+    export GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
+    export GOOGLE_CLOUD_LOCATION="us-central1"
+    # The Redis instance must be accessible from this VPC
+    export VPC_NETWORK="your-vpc-network"
+    export VPC_SUBNET="your-private-subnet-for-redis"
+    # The Redis URI from the previous step
+    export REDIS_URI="redis://<your-redis-ip>:<your-redis-port>"
+    ```
+- **Run the Deployment Script**:
+    From the project root directory (`./my-adk-python-samples`), run the following command. The script handles containerization and deployment. The `--run-command` argument is used to start the ADK server with the correct Redis session URI.
+    ```bash
+    python deploy_to_cloud_run.py --agent-folder=agent-memory/redis-session-service/redis_session_service \
+        --project=$GOOGLE_CLOUD_PROJECT \
+        --region=$GOOGLE_CLOUD_LOCATION \
+        --service-name="redis-session-agent" \
+        --vpc-egress="all-traffic" \
+        --network=$VPC_NETWORK \
+        --subnet=$VPC_SUBNET \
+        --with-ui \
+        --allow-unauthenticated \
+        --log-level DEBUG \
+        --adk-cli-path=agent-memory/redis-session-service/adk_cli.py \
+        --session-service-uri="$REDIS_URI" 
+    ```
+- The `--vpc-egress` flag configures the necessary Serverless VPC Access Connector so the agent can communicate with the Redis instance on your VPC.
+- Once complete, the script will provide a public URL to access your agent.
+
 ## References
 
 - [(adk-python) Support to configure Redis as the session storage](https://github.com/google/adk-python/issues/938#issuecomment-3429871364)
 - [ADK Python Community Contributions](https://github.com/google/adk-python-community)
+- 📓 [Get started with Memory Bank on ADK](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/agents/agent_engine/memory_bank/get_started_with_memory_bank_on_adk.ipynb)
+- 🎥 [How to build AI agents with memory](https://youtu.be/sMtrelDNxIc?si=sw_-ALjIP93DjtED)
+- [Remember this: Agent state and memory with ADK (2025-08-02)](https://cloud.google.com/blog/topics/developers-practitioners/remember-this-agent-state-and-memory-with-adk?hl=en)

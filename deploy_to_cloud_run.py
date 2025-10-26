@@ -10,6 +10,9 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from typing import Optional
+
+from packaging.version import parse
 
 try:
   import google.adk
@@ -29,6 +32,9 @@ logging.basicConfig(
 
 _DOCKERFILE_TEMPLATE = """
 FROM python:3.11-slim
+
+RUN apt-get update && apt-get install -y git
+
 WORKDIR /app
 
 # Create a non-root user
@@ -49,9 +55,11 @@ RUN pip install google-adk=={adk_version}
 COPY "agents/{app_name}/" "/app/agents/{app_name}/"
 {install_agent_deps}
 
+{install_custom_adk_script}
+
 EXPOSE {port}
 
-CMD adk {command} --port={port} {host_option} {service_option} "/app/agents"
+CMD adk {command} --port={port} {host_option} {service_option} {trace_to_cloud_option} "/app/agents"
 """
 
 def _get_default_project_id():
@@ -66,6 +74,26 @@ def _get_default_project_id():
     return result.stdout.strip()
   except (subprocess.CalledProcessError, FileNotFoundError):
     return None
+
+
+def _get_service_option(
+  adk_version: str,
+  session_uri: Optional[str],
+  artifact_uri: Optional[str],
+  memory_uri: Optional[str],
+) -> str:
+  """Returns service option string based on adk_version."""
+  parsed_version = parse(adk_version)
+  assert parsed_version >= parse('1.3.0')
+  session_option = (
+    f'--session_service_uri={session_uri}' if session_uri else ''
+  )
+  artifact_option = (
+    f'--artifact_service_uri={artifact_uri}' if artifact_uri else ''
+  )
+  memory_option = f'--memory_service_uri={memory_uri}' if memory_uri else ''
+  return f'{session_option} {artifact_option} {memory_option}'
+
 
 def main():
   """Runs the main deployment logic."""
@@ -108,35 +136,68 @@ def main():
     help=f"ADK version to install. (Default: {default_adk_version})",
   )
   parser.add_argument(
-    "--with-ui",
+    "--adk-cli-path",
+    help="Optional. Custom adk cli script path.",
+  )
+  parser.add_argument(
+    "--trace-to-cloud",
     action="store_true",
-    help="Deploy with the web UI (sets command to 'web').",
+    help="Optional. Whether to enable Cloud Trace for cloud run.",
+  )
+  parser.add_argument(
+    "--session-service-uri",
+    dest="session_service_uri",
+    help=("Optional. The URI of the session service."
+          "\n- Use 'agentengine://<agent_engine>' to connect to Agent Engine sessions."
+          "\n- Use 'sqlite://<path_to_sqlite_file>' to connect to a SQLite DB."
+          "\n- Use 'redis://<redis_host>:<port>' to connect to a redis.")
+  )
+  parser.add_argument(
+    "--memory-service-uri",
+    dest="memory_service_uri",
+    help=("Optional. The URI of the memory service."
+          "\n- Use 'rag://<rag_corpus_id>' to connect to Vertex AI Rag Memory Service."
+          "\n- Use 'agentengine://<agent_engine>' to connect to Agent Engine sessions.")
   )
   parser.add_argument(
     "--artifact-uri",
     dest="artifact_service_uri",
-    help="Artifact service URI (e.g., GCS bucket path).",
+    help="Optional. The URI of the artifact service, supported URIs: gs://<bucket name> for GCS artifact service.",
+  )
+  parser.add_argument(
+    "--with-ui",
+    action="store_true",
+    help="Optional. Deploy with the web UI (sets command to 'web').",
+  )
+  parser.add_argument(
+    "--allow-unauthenticated",
+    action="store_true",
+    help="Optional. Enable allowing unauthenticated access to the service.",
   )
   parser.add_argument(
     "--log-level",
-    default="info",
-    choices=["debug", "info", "warning", "error", "critical"],
-    help="Log level for the gcloud deployment verbosity. (Default: info)"
+    default="INFO",
+    choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+    help="Optional. Log level for the gcloud deployment verbosity. (Default: info)"
   )
+  # Network Configuration
   parser.add_argument(
     "--vpc-egress",
     default="all-traffic",
     choices=["all-traffic", "private-ranges-only"],
-    help="VPC Egress setting. (Default: all-traffic)"
+    help="Optional. VPC Egress setting. (Default: all-traffic)"
   )
-  # Network Configuration
+  parser.add_argument(
+    "--vpc-connector",
+    help="Optional. Set a VPC connector for this resource."
+  )
   parser.add_argument(
     "--network",
-    help="VPC Network for the service."
+    help="Optional. VPC Network for the service."
   )
   parser.add_argument(
     "--subnet",
-    help="VPC Subnet for the service. Requires --network."
+    help="Optional. VPC Subnet for the service. Requires --network."
   )
 
   args = parser.parse_args()
@@ -171,15 +232,33 @@ def main():
   logging.info("--------------------------------")
 
   temp_folder = tempfile.mkdtemp(prefix="adk_deploy_")
-  atexit.register(lambda: (logging.info(f"Cleaning up the temp folder: {temp_folder}"), shutil.rmtree(temp_folder)))
+  # atexit.register(lambda: (logging.info(f"Cleaning up the temp folder: {temp_folder}"), shutil.rmtree(temp_folder)))
 
   logging.info(f"Start generating Cloud Run source files in {temp_folder}")
   agent_src_path = os.path.join(temp_folder, "agents", app_name)
   os.makedirs(agent_src_path)
 
+  ignore_patterns = None
+  ae_ignore_path = os.path.join(args.agent_folder, '.ae_ignore')
+  if os.path.exists(ae_ignore_path):
+    logging.info(f'Ignoring files matching the patterns in {ae_ignore_path}')
+    with open(ae_ignore_path, 'r') as f:
+      patterns = [pattern.strip() for pattern in f.readlines()]
+      ignore_patterns = shutil.ignore_patterns(*patterns)
   logging.info("Copying agent source code...")
-  shutil.copytree(args.agent_folder, agent_src_path, dirs_exist_ok=True)
+  shutil.copytree(args.agent_folder, agent_src_path, dirs_exist_ok=True, ignore=ignore_patterns)
   logging.info("Copying agent source code complete.")
+
+  install_custom_adk_script = ""
+  if args.adk_cli_path:
+    logging.info("Copying custom adk script...")
+    shutil.copy(args.adk_cli_path, os.path.join(os.path.dirname(agent_src_path), "adk"))
+    install_custom_adk_script = (
+      "# Copy custom adk script into /home/myuser/.local/bin"
+      '''\nCOPY "agents/adk" "/home/myuser/.local/bin/"'''
+      # '''\nRUN chmod +x /home/myuser/.local/bin/adk'''
+    )
+    logging.info("Copying custom adk script complete.")
 
   install_agent_deps = ""
   if os.path.exists(os.path.join(agent_src_path, "requirements.txt")):
@@ -188,6 +267,14 @@ def main():
   command = "web" if args.with_ui else "api_server"
   host_option = '--host=0.0.0.0' if args.adk_version > '0.5.0' else ''
   service_option = f'--artifact_service_uri={args.artifact_service_uri}' if args.artifact_service_uri else ''
+  trace_to_cloud_option = '--trace_to_cloud' if args.trace_to_cloud else ''
+
+  service_option = _get_service_option(
+    adk_version=args.adk_version,
+    session_uri=args.session_service_uri,
+    artifact_uri=args.artifact_service_uri,
+    memory_uri=args.memory_service_uri,
+  )
 
   dockerfile_content = _DOCKERFILE_TEMPLATE.format(
     gcp_project_id=args.project,
@@ -195,16 +282,17 @@ def main():
     adk_version=args.adk_version,
     app_name=app_name,
     install_agent_deps=install_agent_deps,
+    install_custom_adk_script=install_custom_adk_script,
     port=args.port,
     command=command,
     host_option=host_option,
     service_option=service_option,
+    trace_to_cloud_option=trace_to_cloud_option,
   )
 
   dockerfile_path = os.path.join(temp_folder, "Dockerfile")
   with open(dockerfile_path, "w", encoding="utf-8") as f:
-    f.write(dockerfile_content.strip())
-  
+    f.write(dockerfile_content.strip())  
   logging.info(f"Creating Dockerfile complete: {dockerfile_path}")
 
   logging.info("Deploying to Cloud Run...")
@@ -221,6 +309,10 @@ def main():
       "--verbosity", gcloud_log_level,
       "--vpc-egress", args.vpc_egress,
     ]
+    if args.allow_unauthenticated:
+      deploy_command.extend(["--allow-unauthenticated"])
+    if args.vpc_connector:
+      deploy_command.extend(["--vpc-connector", args.vpc_connector])
     if args.network:
       deploy_command.extend(["--network", args.network])
     if args.subnet:
@@ -230,7 +322,7 @@ def main():
     subprocess.run(deploy_command, check=True)
 
     logging.info("Deployment to Cloud Run successful!")
-    
+
     service_url_command = [
       "gcloud", "run", "services", "describe", args.service_name,
       "--project", args.project,

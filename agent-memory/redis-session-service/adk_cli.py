@@ -11,7 +11,7 @@ def redis_session_service_factory(uri: str, **kwargs):
   """Factory for creating a RedisSessionService."""
   kwargs_copy = kwargs.copy()
   kwargs_copy.pop("agents_dir", None)
-  return redis_session_service.RedisSessionService(**kwargs_copy)
+  return redis_session_service.RedisSessionService(uri=uri, **kwargs_copy)
 
 
 """Registers custom services with the ADK global registry."""
