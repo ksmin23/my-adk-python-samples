@@ -154,3 +154,4 @@ Before deploying, you need a Redis instance. For production, it's recommended to
 - 📓 [Get started with Memory Bank on ADK](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/agents/agent_engine/memory_bank/get_started_with_memory_bank_on_adk.ipynb)
 - 🎥 [How to build AI agents with memory](https://youtu.be/sMtrelDNxIc?si=sw_-ALjIP93DjtED)
 - [Remember this: Agent state and memory with ADK (2025-08-02)](https://cloud.google.com/blog/topics/developers-practitioners/remember-this-agent-state-and-memory-with-adk?hl=en)
+- 📦 [Redis Agent Memory Server](https://github.com/redis/agent-memory-server): A memory layer for AI agents using Redis as the vector database.
