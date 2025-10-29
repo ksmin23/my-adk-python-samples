@@ -30,10 +30,10 @@ class RedisMemoryService(BaseMemoryService):
   def __init__(
       self,
       uri: str,
-      index_name: str = "adk_app_memory",
+      index_name: str = "memory",
       embedding_model_name: str = "gemini-embedding-001",
       similarity_top_k: int = 10,
-      ttl: int = 3600
+      ttl: int = 86400
   ):
     """Initializes a RedisMemoryService.
 
@@ -42,7 +42,9 @@ class RedisMemoryService(BaseMemoryService):
         index_name: The name of the Redis search index.
         embedding_model_name: The name of the embedding model to use.
         similarity_top_k: The number of contexts to retrieve.
+        ttl: The time-to-live for memory entries in Redis in seconds.
     """
+
     self._redis_url = uri
     self._index_name = index_name
     self._embeddings = VertexAIEmbeddings(model_name=embedding_model_name)

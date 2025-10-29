@@ -80,8 +80,16 @@ To run this agent, you will need:
     Start the ADK web server, pointing to the agent directory and specifying the Redis session service URI. The `adk_cli.py` script ensures that the `redis://` protocol is recognized.
 
     ```bash
-    uv run python adk_cli.py web --memory_service_uri="redis://localhost:6379" redis_memory_service
+    uv run python adk_cli.py web \
+        --memory_service_uri="redis://localhost:6379?index_name=memory&embedding_model_name=gemini-embedding-001&similarity_top_k=10&ttl=86400" \
+        redis_memory_service
     ```
+
+    *   `--memory_service_uri`: The URI for the `RedisMemoryService`. Query parameters can be used to configure the service:
+        *   `index_name`: The name of the Redis search index (default: `memory`).
+        *   `embedding_model_name`: The name of the embedding model to use (default: `gemini-embedding-001`).
+        *   `similarity_top_k`: The number of contexts to retrieve during a search (default: `10`).
+        *   `ttl`: The time-to-live for memory entries in Redis, in seconds (default: `86400` seconds, i.e., 24 hours).
 
     Navigate to `127.0.0.1:8000` in your browser to interact with the agent.
 
