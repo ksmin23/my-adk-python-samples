@@ -1,8 +1,10 @@
 # ADK Redis Memory Service Example
 
-This project contains a sample agent built with [ADK Python](https://google.github.io/adk-docs/) that demonstrates how to use Redis for session state management.
+This project contains a sample agent built with [ADK Python](https://google.github.io/adk-docs/) that demonstrates how to implement a custom long-term memory service using Redis.
 
-This sample agent shows how you can integrate a custom session service with the ADK to persist conversation state in a Redis database. This allows for scalable and persistent user sessions.
+ADK's memory services provide an interface for creating and searching for memories across user sessions. This project implements a custom `MemoryService` that adheres to ADK's `BaseMemoryService` interface, using Redis's Vector Search feature as the backend for this searchable, long-term knowledge store.
+
+This approach leverages the concepts of the [Vertex AI Agent Engine Memory Bank](https://docs.cloud.google.com/agent-builder/agent-engine/memory-bank/overview), allowing the agent to dynamically generate and access personalized long-term memories. This enhances personalization and creates continuity across multiple conversations with a user.
 
 ---
 
