@@ -19,9 +19,9 @@ The project is organized as follows:
 └── redis_session_service
     ├── __init__.py
     ├── agent.py
+    ├── .env.example
     ├── log_tools.py
-    ├── requirements.txt
-    └── .env.example
+    └── requirements.txt
 ```
 
 - `adk_cli.py`: A custom command-line interface script that registers the Redis session service with the ADK.
@@ -142,7 +142,7 @@ Before deploying, you need a Redis instance. For production, it's recommended to
         --allow-unauthenticated \
         --log-level DEBUG \
         --adk-cli-path=agent-memory/redis-session-service/adk_cli.py \
-        --session-service-uri="$REDIS_URI" 
+        --session-service-uri="$REDIS_URI"
     ```
 - The `--vpc-egress` flag configures the necessary Serverless VPC Access Connector so the agent can communicate with the Redis instance on your VPC.
 - Once complete, the script will provide a public URL to access your agent.

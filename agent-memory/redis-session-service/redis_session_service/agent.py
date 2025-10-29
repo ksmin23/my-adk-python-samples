@@ -28,6 +28,10 @@ async def auto_save_session_to_memory_callback(callback_context: CallbackContext
   # be used as the data source for memory generation.
   inv_ctx = getattr(callback_context, "_invocation_context")
   memory_service = inv_ctx.memory_service
+  if not memory_service:
+    logger.warning("⚠️ Memory Service not set, cannot save to memory")
+    return
+
   await memory_service.add_session_to_memory(
     inv_ctx.session
   )
