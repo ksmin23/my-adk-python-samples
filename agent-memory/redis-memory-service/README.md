@@ -103,18 +103,21 @@ As you interact with the agent, its long-term memories will be stored in your Re
     ```
 
 2.  **List all RediSearch indexes**:
+
     Use `FT._LIST` to see all active RediSearch indexes. This will show the `index_name` you configured (e.g., `memory`).
     ```bash
     FT._LIST
     ```
 
 3.  **Get information about a specific index**:
+
     Use `FT.INFO <index_name>` to get detailed information about your memory index.
     ```bash
     FT.INFO memory
     ```
 
 4.  **Find stored keys using SCAN**:
+
     To find the keys stored for your memories, use the `SCAN` command with a `MATCH` pattern based on your `index_name`. This is safer than `KEYS` for production environments.
     ```bash
     SCAN 0 MATCH memory:* COUNT 10
@@ -122,6 +125,7 @@ As you interact with the agent, its long-term memories will be stored in your Re
     (Replace `memory` with your configured `index_name` if different.)
 
 5.  **Get the data for a specific memory**:
+
     Once you have a key (e.g., `memory:some_hash_id`), you can retrieve its content using `HGETALL`.
     ```bash
     HGETALL "<index_name>:<hash_id>"
