@@ -1,0 +1,3 @@
+python-dotenv==1.0.0
+google-adk-community@git+https://github.com/google/adk-python-community.git
+langchain-redis==0.2.4
