@@ -95,24 +95,38 @@ To run this agent, you will need:
 
 ## Inspecting Session Data
 
-As you interact with the agent, its session state will be stored in your Redis database. You can inspect this data using the `redis-cli`.
+As you interact with the agent, its long-term memories will be stored in your Redis database. You can inspect this data using the `redis-cli`.
 
 1.  **Connect to Redis**:
     ```bash
     redis-cli
     ```
 
-2.  **List all keys** to find the keys stored in the memory:
-    ```
-    KEYS "*"
-    ```
-
-3.  **Get the data for a specific memory**:
-    ```
-    HGET "<index_name>:<key>"
+2.  **List all RediSearch indexes**:
+    Use `FT._LIST` to see all active RediSearch indexes. This will show the `index_name` you configured (e.g., `memory`).
+    ```bash
+    FT._LIST
     ```
 
-This will return a JSON object containing the session state, including the conversation history.
+3.  **Get information about a specific index**:
+    Use `FT.INFO <index_name>` to get detailed information about your memory index.
+    ```bash
+    FT.INFO memory
+    ```
+
+4.  **Find stored keys using SCAN**:
+    To find the keys stored for your memories, use the `SCAN` command with a `MATCH` pattern based on your `index_name`. This is safer than `KEYS` for production environments.
+    ```bash
+    SCAN 0 MATCH memory:* COUNT 10
+    ```
+    (Replace `memory` with your configured `index_name` if different.)
+
+5.  **Get the data for a specific memory**:
+    Once you have a key (e.g., `memory:some_hash_id`), you can retrieve its content using `HGETALL`.
+    ```bash
+    HGETALL "<index_name>:<hash_id>"
+    ```
+    This will return the JSON object containing the memory entry, including the embedded content and metadata.
 
 ## Deploying to Cloud Run
 
