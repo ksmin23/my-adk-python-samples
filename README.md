@@ -128,6 +128,17 @@ This section includes agents that demonstrate how to manage agent memory and ses
 
 For detailed setup and execution instructions, please see the [ADK Redis Session Service README](./agent-memory/redis-session-service/README.md).
 
+#### ADK Redis Memory Service
+
+-   **Directory**: [`agent-memory/redis-memory-service/`](./agent-memory/redis-memory-service/)
+-   **Description**: An agent demonstrating a custom long-term memory service using Redis. It leverages Redis's Vector Search for searchable, personalized memories, enhancing continuity across user conversations.
+-   **Features**:
+    -   Demonstrates implementing a custom long-term memory service using Redis.
+    -   Leverages Redis's Vector Search for searchable, long-term knowledge storage.
+    -   Enhances personalization and continuity across user conversations.
+
+For detailed setup and execution instructions, please see the [ADK Redis Memory Service README](./agent-memory/redis-memory-service/README.md).
+
 ## References
 
 -   [ADK Official Docs](https://google.github.io/adk-docs/)
