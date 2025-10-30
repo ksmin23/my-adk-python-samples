@@ -176,6 +176,11 @@ Before deploying, you need a Redis instance. For production, it's recommended to
         --session-service-uri="$REDIS_URI" \
         --memory-service-uri="$REDIS_URI"
     ```
+
+- To customize the default settings for `--memory-service-uri`, you can append query parameters to the Redis URI, as shown in the example below:
+    ```
+    --memory-service-uri="$REDIS_URI?index_name=memory&embedding_model_name=gemini-embedding-001&similarity_top_k=10&ttl=86400"
+    ```
 - The `--vpc-egress` flag configures the necessary Serverless VPC Access Connector so the agent can communicate with the Redis instance on your VPC.
 - Once complete, the script will provide a public URL to access your agent.
 
