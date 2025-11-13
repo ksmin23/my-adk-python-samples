@@ -113,7 +113,17 @@ This repository contains additional RAG agent implementations that demonstrate i
     -   **Description**: An agent that uses Vertex AI Vector Search as the vector store and Google Cloud Storage (GCS) as the document store.
     -   **README**: [RAG with Vector Search and GCS README](./RAG/rag-with-vectorsearch-gcs/README.md)
 
-### 6. Agent Memory
+### 6. ADK BigQuery Logging Plugin Example
+
+-   **Directory**: [`plugins/bigquery-logging-plugin/`](./plugins/bigquery-logging-plugin/)
+-   **Description**: A sample agent demonstrating how to use the `BigQueryAgentAnalyticsPlugin` to log agent interactions and analytics to Google BigQuery. This enables monitoring agent performance, debugging issues, and gaining insights into user interactions.
+-   **Features**:
+    -   Captures events such as tool calls, agent responses, and errors.
+    -   Stores analytics data in a structured BigQuery table.
+
+For detailed setup and execution instructions, please see the [ADK BigQuery Logging Plugin Example README](./plugins/bigquery-logging-plugin/README.md).
+
+### 7. Agent Memory
 
 This section includes agents that demonstrate how to manage agent memory and session state.
 
