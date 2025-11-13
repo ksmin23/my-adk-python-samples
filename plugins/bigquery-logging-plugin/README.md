@@ -43,7 +43,26 @@ To run this agent, you will need:
 
 1.  **Clone this repository** and navigate to the `plugins/bigquery-logging-plugin` subdirectory.
 
-2.  **Set up environment variables**:
+2.  **Authenticate with Google Cloud**:
+
+    Run the following command to authenticate your `gcloud` CLI for application default credentials. This is necessary to create BigQuery datasets.
+
+    ```bash
+    gcloud auth application-default login
+    ```
+
+3.  **Create a BigQuery dataset**:
+
+    Use the [`bq` CLI](https://docs.cloud.google.com/bigquery/docs/reference/bq-cli-reference) to create a BigQuery dataset. Replace `your-gcp-project-id`, `your-bigquery-dataset-id`, and `your-gcp-location` with your actual project ID, desired dataset ID, and Google Cloud location (e.g., `us-central1`).
+
+    ```bash
+    bq mk \
+       --dataset_id your-bigquery-dataset-id \
+       --location your-gcp-location \
+       --project_id your-gcp-project-id
+    ```
+
+4.  **Set up environment variables** (after creating the dataset):
 
     Copy the `.env.example` file to `.env` and fill in your Google Cloud project details.
 
@@ -61,7 +80,7 @@ To run this agent, you will need:
     BIGQUERY_TABLE='agent_events'
     ```
 
-3.  **Install dependencies**:
+5.  **Install dependencies**:
 
     Create a virtual environment and install the required packages from the root of the repository.
 
@@ -72,7 +91,7 @@ To run this agent, you will need:
     ```
     *Note: You may need to adjust the path to the `requirements.txt` file based on the project structure.*
 
-4.  **Run the ADK web UI**:
+6.  **Run the ADK web UI**:
 
     Start the ADK web server, pointing to the agent directory.
 
@@ -97,10 +116,12 @@ As you interact with the agent, analytics data will be logged to the specified B
     LIMIT 100;
     ```
 
-This will show you the structured logs of the agent's operations, including tool inputs and outputs, and agent responses.
+    This will show you the structured logs of the agent's operations, including tool inputs and outputs, and agent responses.
+    ![](./assets/bigquery_logging_plugin-bq_table_preview.png)
 
 ## References
 
 - [ADK Python Plugins](https://google.github.io/adk-docs/plugins/#how-do-plugins-work)
-- [ADK Python: feat(plugins): add BigQueryAgentAnalyticsPlugin](https://github.com/google/adk-python/commit/b7dbfed4a3d4a0165e2c6e51594d1f547bec89d3)
+- [ADK Python: feat(plugins): add BigQueryAgentAnalyticsPlugin (v.1.18.0)](https://github.com/google/adk-python/commit/b7dbfed4a3d4a0165e2c6e51594d1f547bec89d3)
 - [ADK Python Prebuilt Plugins](https://google.github.io/adk-docs/plugins/#prebuilt-plugins)
+- [BigQuery CLI Reference](https://docs.cloud.google.com/bigquery/docs/reference/bq-cli-reference)
