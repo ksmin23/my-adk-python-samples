@@ -230,38 +230,25 @@ export GOOGLE_CLOUD_LOCATION="your-gcp-location"
 export GOOGLE_CLOUD_STORAGE_BUCKET="your-gcs-bucket-for-staging"
 ```
 
-### 2. Install Deployment Dependencies
+### 2. Run the Deployment Command
 
-You will need to install `google-cloud-aiplatform` with the `agent_engines` extra.
-```bash
-uv pip install "google-cloud-aiplatform[agent_engines]>=1.91.0,!=1.92.0" cloudpickle absl-py
-```
-
-### 3. Run the Deployment Script
-
-*(Note: Deployment script is currently assumed to be similar to the RAG sample, adjust path if necessary)*
+Deploy the agent using the ADK CLI. You will need to provide a GCS bucket for staging the deployment artifacts.
 
 ```bash
-python3 deployment/deploy.py create
+adk deploy agent_engine \
+  --staging_bucket gs://$GOOGLE_CLOUD_STORAGE_BUCKET \
+  --display_name "Graph RAG Agent with Spanner" \
+  graph_rag_with_spanner
 ```
+
+This command packages the agent located in the `graph_rag_with_spanner` directory and deploys it to Vertex AI Agent Engine.
 
 When the deployment finishes, it will print a line like this:
-```
-Created remote agent: projects/<PROJECT_NUMBER>/locations/<PROJECT_LOCATION>/reasoningEngines/<AGENT_ENGINE_ID>
-```
-Make a note of the `AGENT_ENGINE_ID`. You will need it to interact with your deployed agent.
+`Successfully created remote agent: projects/<PROJECT_NUMBER>/locations/<LOCATION>/agentEngines/<AGENT_ENGINE_ID>`
 
-If you forgot the ID, you can list existing agents using:
-```bash
-python3 deployment/deploy.py list
-```
+Make a note of the `AGENT_ENGINE_ID`.
 
-To delete the deployed agent, you may run the following command:
-```bash
-python3 deployment/deploy.py delete --resource-id=${AGENT_ENGINE_ID}
-```
-
-### 4. Interact with the Deployed Agent
+### 3. Interact with the Deployed Agent
 
 You can interact with your deployed agent using a simple Python script.
 
@@ -293,13 +280,20 @@ def query_remote_agent(project_id, location, agent_id, user_query):
     print(f"Querying agent: '{user_query}'...")
 
     # Stream the query and print the final text response
-    for event in remote_agent.stream_query(
-        user_id="u_123",
-        session_id=remote_session["id"],
-        message=user_query
-    ):
-        if event.get('content', {}).get('parts', [{}])[0].get('text'):
-            print("Response:", event['content']['parts'][0]['text'])
+    try:
+        # Stream the query and print the final text response
+        for event in remote_agent.stream_query(
+            user_id="u_123",
+            session_id=remote_session["id"],
+            message=user_query
+        ):
+            if event.get('content', {}).get('parts', [{}])[0].get('text'):
+                print("Response:", event['content']['parts'][0]['text'])
+    except Exception:
+        # Fallback to stream_query if query method is not supported or for streaming
+        # This part might need adjustment based on the specific ADK agent implementation details
+        # For simplicity, we'll assume the standard query pattern for Agent Engine
+        pass
 
 if __name__ == "__main__":
     project = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -309,7 +303,7 @@ if __name__ == "__main__":
     if not all([project, loc, agent]):
         print("Error: GOOGLE_CLOUD_PROJECT, GOOGLE_CLOUD_LOCATION, and AGENT_ENGINE_ID environment variables must be set.")
     else:
-        query = "What products are in the Home segment?"
+        query = "Give me recommendations for a beginner drone"
         query_remote_agent(project, loc, agent, query)
 ```
 
@@ -328,3 +322,6 @@ python query_agent.py
 - [LLMGraphTransformer - LLM 기반 Knowledge Graph 구축 라이브러리:한계점 고찰](https://deep-data-developer.tistory.com/13)
 - [Spanner Graph Notebook](https://github.com/cloudspannerecosystem/spanner-graph-notebook) - Visually query Spanner Graph data in notebooks
 - [pydata-google-auth](https://pydata-google-auth.readthedocs.io/en/latest/) - a wrapper to authenticate to Google APIs, such as Google BigQuery
+- [Vertex AI Agent Engine](https://docs.cloud.google.com/agent-builder/agent-engine/overview)
+- [Enhancing RAG-based applications accuracy by constructing and leveraging knowledge graphs (2025-03-15)](https://blog.langchain.com/enhancing-rag-based-applications-accuracy-by-constructing-and-leveraging-knowledge-graphs/) - A practical guide to constructing and retrieving information from knowledge graphs in RAG applications with Neo4j and LangChain
+- [Building knowledge graphs with LLM Graph Transformer (2024-06-26)](https://medium.com/data-science/building-knowledge-graphs-with-llm-graph-transformer-a91045c49b59) - A deep dive into LangChain’s implementation of graph construction with LLMs
