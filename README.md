@@ -113,7 +113,21 @@ This repository contains additional RAG agent implementations that demonstrate i
     -   **Description**: An agent that uses Vertex AI Vector Search as the vector store and Google Cloud Storage (GCS) as the document store.
     -   **README**: [RAG with Vector Search and GCS README](./RAG/rag-with-vectorsearch-gcs/README.md)
 
-### 6. ADK BigQuery Logging Plugin Example
+### 6. Graph RAG
+
+This section includes agents that implement the Graph Retrieval-Augmented Generation (Graph RAG) pattern.
+
+#### Graph RAG with Spanner
+
+-   **Directory**: [`Graph-RAG/graph-rag-with-spanner/`](./Graph-RAG/graph-rag-with-spanner/)
+-   **Description**: An agent that implements the Graph RAG pattern using Google Cloud Spanner Graph for knowledge graph storage and retrieval.
+-   **Features**:
+    -   Demonstrates using Spanner Graph as a knowledge graph store.
+    -   Includes data ingestion scripts using `LLMGraphTransformer` to extract nodes and relationships from documents.
+    -   Leverages concise retrieval using `SpannerGraphStore`.
+-   **README**: [Graph RAG with Spanner README](./Graph-RAG/graph-rag-with-spanner/README.md)
+
+### 7. ADK BigQuery Logging Plugin Example
 
 -   **Directory**: [`plugins/bigquery-logging-plugin/`](./plugins/bigquery-logging-plugin/)
 -   **Description**: A sample agent demonstrating how to use the `BigQueryAgentAnalyticsPlugin` to log agent interactions and analytics to Google BigQuery. This enables monitoring agent performance, debugging issues, and gaining insights into user interactions.
@@ -123,7 +137,7 @@ This repository contains additional RAG agent implementations that demonstrate i
 
 For detailed setup and execution instructions, please see the [ADK BigQuery Logging Plugin Example README](./plugins/bigquery-logging-plugin/README.md).
 
-### 7. Agent Memory
+### 8. Agent Memory
 
 This section includes agents that demonstrate how to manage agent memory and session state.
 
