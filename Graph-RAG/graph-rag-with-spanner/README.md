@@ -319,9 +319,9 @@ python query_agent.py
 - [Spanner Graph Retrievers Usage (Jupyter Notebook)](https://github.com/googleapis/langchain-google-spanner-python/blob/main/docs/graph_rag.ipynb)
 - [Spanner Graph Store Usage (Jupyter Notebook)](https://github.com/googleapis/langchain-google-spanner-python/blob/main/docs/graph_store.ipynb)
 - [IAM for Spanner](https://cloud.google.com/spanner/docs/iam)
-- [LLMGraphTransformer - LLM 기반 Knowledge Graph 구축 라이브러리:한계점 고찰](https://deep-data-developer.tistory.com/13)
 - [Spanner Graph Notebook](https://github.com/cloudspannerecosystem/spanner-graph-notebook) - Visually query Spanner Graph data in notebooks
 - [pydata-google-auth](https://pydata-google-auth.readthedocs.io/en/latest/) - a wrapper to authenticate to Google APIs, such as Google BigQuery
 - [Vertex AI Agent Engine](https://docs.cloud.google.com/agent-builder/agent-engine/overview)
+- [GraphRAG in Practice: How to Build Cost-Efficient High-Recall Retrieval Systems (2025-12-09)](https://towardsdatascience.com/graphrag-in-practice-how-to-build-cost-efficient-high-recall-retrieval-systems/)
 - [Enhancing RAG-based applications accuracy by constructing and leveraging knowledge graphs (2025-03-15)](https://blog.langchain.com/enhancing-rag-based-applications-accuracy-by-constructing-and-leveraging-knowledge-graphs/) - A practical guide to constructing and retrieving information from knowledge graphs in RAG applications with Neo4j and LangChain
 - [Building knowledge graphs with LLM Graph Transformer (2024-06-26)](https://medium.com/data-science/building-knowledge-graphs-with-llm-graph-transformer-a91045c49b59) - A deep dive into LangChain’s implementation of graph construction with LLMs
