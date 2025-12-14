@@ -202,6 +202,7 @@ def main():
 
     # 3.a. Transform to Graph Documents
     print("Initializing LLMGraphTransformer...")
+
     # Note: We use ChatVertexAI because LLMGraphTransformer requires native function calling support
     # when 'node_properties' are provided. Using VertexAI would raise:
     # ValueError: The 'node_properties' and 'relationship_properties' parameters cannot be used
@@ -236,8 +237,10 @@ def main():
     
     print(f"Converted to {len(graph_documents)} graph documents.")
 
-    # 3.b. Post-process extracted nodes and edges
+    # 3.b. Post-process extracted nodes and edges. Update the graph via post-processing if necessary.
     print("Post-processing graph documents...")
+
+    # Apply your domain knowledge to clean up and make desired fixes to the generated graph in the earlier step.
     products = prune_invalid_products(graph_documents)
     prune_invalid_segments(graph_documents, set(["Home", "Office", "Fitness"]))
     prune_unwanted_relationships(graph_documents, "IN_CATEGORY", "Bundle", "Category")
