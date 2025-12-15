@@ -222,14 +222,14 @@ adk web
 
 <br>
 
-<table align="center" style="border: none;">
+<table align="center" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td align="center" valign="bottom" style="border: none;">
+    <td align="center" valign="bottom" width="50%">
       <img src="assets/retail_graph_in_spanner.png" alt="Retail Graph in Spanner" width="100%">
       <br>
       <b>Figure 2:</b> Retail Graph in Spanner
     </td>
-    <td align="center" valign="bottom" style="border: none;">
+    <td align="center" valign="bottom" width="50%">
       <img src="assets/retail_product_detail.png" alt="Retail Product Detail" width="100%">
       <br>
       <b>Figure 3:</b> Retail Product Detail
