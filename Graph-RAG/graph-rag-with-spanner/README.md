@@ -214,7 +214,28 @@ adk web
 ```
 **Screenshot:**
 
-![ADK Web Interface for Graph RAG with Spanner](assets/graph-rag-with-spanner.png)
+<div align="center">
+  <img src="assets/graph-rag-with-spanner.png" alt="ADK Web Interface for Graph RAG with Spanner" width="90%">
+  <br>
+  <b>Figure 1:</b> ADK Web Interface for Graph RAG with Spanner
+</div>
+
+<br>
+
+<table align="center" style="border: none;">
+  <tr>
+    <td align="center" valign="bottom" style="border: none;">
+      <img src="assets/retail_graph_in_spanner.png" alt="Retail Graph in Spanner" width="100%">
+      <br>
+      <b>Figure 2:</b> Retail Graph in Spanner
+    </td>
+    <td align="center" valign="bottom" style="border: none;">
+      <img src="assets/retail_product_detail.png" alt="Retail Product Detail" width="100%">
+      <br>
+      <b>Figure 3:</b> Retail Product Detail
+    </td>
+  </tr>
+</table>
 
 ## Deployment
 
