@@ -171,9 +171,9 @@ The agent can discover and use tools across various Google Cloud services. Here 
 
 ## References
 
-- [Implementing Anthropic-style Dynamic Tool Search Tool](https://medium.com/google-cloud/implementing-anthropic-style-dynamic-tool-search-tool-f39d02a35139)
-- [ADK Documentation: Callbacks - Observe, Customize, and Control Agent Behavior](https://google.github.io/adk-docs/callbacks/)
-- [Tutorial: Getting Started with Google MCP Services](https://medium.com/google-cloud/tutorial-getting-started-with-google-mcp-services-60b23b22a0e7)
+- [Implementing Anthropic-style Dynamic Tool Search Tool (2025-11-29)](https://medium.com/google-cloud/implementing-anthropic-style-dynamic-tool-search-tool-f39d02a35139)
+- [Google ADK Documentation: Callbacks - Observe, Customize, and Control Agent Behavior](https://google.github.io/adk-docs/callbacks/)
+- [Tutorial: Getting Started with Google MCP Services (2025-12-11)](https://medium.com/google-cloud/tutorial-getting-started-with-google-mcp-services-60b23b22a0e7)
 - [Google Cloud MCP Overview](https://docs.cloud.google.com/mcp/overview)
     - [Google Cloud MCP Supported Products](https://docs.cloud.google.com/mcp/supported-products)
     - [Google Cloud MCP GitHub repository](https://github.com/Google/mcp)
