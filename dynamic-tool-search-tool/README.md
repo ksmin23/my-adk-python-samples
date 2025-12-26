@@ -59,6 +59,11 @@ The agent uses a dynamic injection flow where the primary agent discovers tools 
 - Python 3.10+
 - `uv` (or `pip` and `venv`)
 - A Google Cloud Project with Billing enabled.
+- **Enable MCP servers**: Enable the Google Cloud MCP servers for the services you want to use (e.g., Maps, BigQuery).
+    ```bash
+    gcloud beta services mcp enable <SERVICE> --project=<PROJECT_ID>
+    ```
+    *Refer to the [Supported products](https://docs.cloud.google.com/mcp/supported-products) for a list of available services and [Enable or disable MCP servers](https://docs.cloud.google.com/mcp/enable-disable-mcp-servers) for detailed instructions.*
 
 ### 2. Installation
 
@@ -137,3 +142,6 @@ You can interact with the agent locally using the ADK web interface.
 - [Implementing Anthropic-style Dynamic Tool Search Tool](https://medium.com/google-cloud/implementing-anthropic-style-dynamic-tool-search-tool-f39d02a35139)
 - [Tutorial: Getting Started with Google MCP Services](https://medium.com/google-cloud/tutorial-getting-started-with-google-mcp-services-60b23b22a0e7)
 - [Google Cloud MCP Overview](https://docs.cloud.google.com/mcp/overview)
+    - [Google Cloud MCP Supported Products](https://docs.cloud.google.com/mcp/supported-products)
+    - [Google Cloud MCP GitHub repository](https://github.com/Google/mcp)
+    - [Google Cloud MCP Enable/Disable MCP Servers](https://docs.cloud.google.com/mcp/enable-disable-mcp-servers)
