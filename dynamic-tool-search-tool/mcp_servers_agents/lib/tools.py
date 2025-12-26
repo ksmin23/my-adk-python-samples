@@ -13,6 +13,8 @@ load_dotenv()
 # Google Managed MCP Endpoints
 MAPS_MCP_URL = "https://mapstools.googleapis.com/mcp"
 BIGQUERY_MCP_URL = "https://bigquery.googleapis.com/mcp"
+COMPUTE_MCP_URL = "https://compute.googleapis.com/mcp"
+GKE_MCP_URL = "https://container.googleapis.com/mcp"
 
 MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "no_api_found")
 
@@ -24,29 +26,27 @@ google_maps_toolset = MCPToolset(
   )
 )
 
-def get_bigquery_toolset():
-  """Initializes BigQuery toolset with OAuth."""
+def get_authenticated_toolset(url: str, scopes: List[str]):
+  """Initializes a toolset with OAuth for Google Cloud MCP services."""
   try:
-    credentials, project_id = google.auth.default(
-        scopes=["https://www.googleapis.com/auth/bigquery"]
-    )
+    credentials, project_id = google.auth.default(scopes=scopes)
     request = google.auth.transport.requests.Request()
     credentials.refresh(request)
     oauth_token = credentials.token
 
-    bigquery_mcp_headers = {
+    mcp_headers = {
         "Authorization": f"Bearer {oauth_token}",
         "x-goog-user-project": project_id
     }
 
     return MCPToolset(
       connection_params=StreamableHTTPConnectionParams(
-          url=BIGQUERY_MCP_URL,
-          headers=bigquery_mcp_headers
+          url=url,
+          headers=mcp_headers
       )
     )
   except Exception as e:
-    print(f"Failed to initialize BigQuery toolset: {e}")
+    print(f"Failed to initialize toolset for {url}: {e}")
     return None
 
 def search_available_tools(query: str) -> List[str]:
@@ -86,17 +86,35 @@ async def initialize_mcp_tools():
   else:
     print("Skipping Maps MCP: GOOGLE_MAPS_API_KEY not found.")
 
-  # 2. BigQuery MCP
-  bq_toolset = get_bigquery_toolset()
-  if bq_toolset:
-    try:
-      print("--- Initializing BigQuery MCP Connection ---")
-      bq_tools = await bq_toolset.get_tools()
-      for tool in bq_tools:
-        registry.register(tool)
-      print(f"Registered {len(bq_tools)} tools from BigQuery MCP.")
-    except Exception as e:
-      print(f"Failed to load BigQuery MCP: {e}")
+  # Helper for registering tools from an authenticated toolset
+  async def register_mcp_server(name: str, url: str, scopes: List[str]):
+    toolset = get_authenticated_toolset(url, scopes)
+    if toolset:
+      try:
+        print(f"--- Initializing {name} MCP Connection ---")
+        tools = await toolset.get_tools()
+        for tool in tools:
+          registry.register(tool)
+        print(f"Registered {len(tools)} tools from {name} MCP.")
+      except Exception as e:
+        print(f"Failed to load {name} MCP: {e}")
+
+  # Register authenticated MCP servers
+  await register_mcp_server(
+      "BigQuery", 
+      BIGQUERY_MCP_URL, 
+      ["https://www.googleapis.com/auth/bigquery"]
+  )
+  await register_mcp_server(
+      "Compute Engine", 
+      COMPUTE_MCP_URL, 
+      ["https://www.googleapis.com/auth/cloud-platform"]
+  )
+  await register_mcp_server(
+      "GKE", 
+      GKE_MCP_URL, 
+      ["https://www.googleapis.com/auth/cloud-platform"]
+  )
 
 # Auto-initialize MCP tools to populate registry on import
 try:

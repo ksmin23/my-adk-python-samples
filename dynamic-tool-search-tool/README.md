@@ -124,17 +124,49 @@ You can interact with the agent locally using the ADK web interface.
 
 ## Example Usage
 
-![Dynamic Tool Search Tool Workflow](./assets/dynamic_tool_search_tool.png)
+The agent can discover and use tools across various Google Cloud services. Here are a few examples:
+
+### 1. Google Maps Platform (Discovery & Execution)
+
+![Google Maps Tool Search Tool Workflow](./assets/google_maps_tool_search_tool.png)
 
 **User:**
 > "restaurants in New York"
 
 **Agent Workflow:**
-1.  **Discovery**: The agent calls `search_available_tools(query="restaurants in New York")` to find relevant tools.
+1.  **Discovery**: The agent calls `search_available_tools(query="restaurants in New York")`.
 2.  **Selection**: It identifies `search_places` from the Maps MCP as the best match.
 3.  **Loading**: The agent calls `load_tool("search_places")` to retrieve the full tool definition.
 4.  **Injection**: The `after_tool_callback` dynamically injects the tool into the current session.
-5.  **Execution**: The agent now calls the newly available `search_places` tool to get the restaurant data and responds to the user.
+5.  **Execution**: The agent calls `search_places` to get the restaurant data.
+
+### 2. BigQuery (Data Discovery)
+
+![BigQuery Tool Search](./assets/bigquery_tool_search_tool.png)
+
+**User:**
+> "What are the datasets in `dev-464` project"
+
+**Agent Workflow:**
+1.  **Discovery**: The agent calls `search_available_tools(query="list BigQuery datasets")`.
+2.  **Selection**: It identifies `list_dataset_ids` as the appropriate tool.
+3.  **Loading**: The agent calls `load_tool("list_dataset_ids")`.
+4.  **Injection**: The tool is dynamically injected.
+5.  **Execution**: The agent calls `list_dataset_ids(project_id="dev-464")`.
+
+### 3. Google Kubernetes Engine (Infrastructure Discovery)
+
+![GKE Tool Search](./assets/gke_tool_search_tool.png)
+
+**User:**
+> "List the GKE clusters in region `us-central1` of project `dev-464`."
+
+**Agent Workflow:**
+1.  **Discovery**: The agent calls `search_available_tools(query="list GKE clusters")`.
+2.  **Selection**: It identifies `list_clusters` as the correct tool.
+3.  **Loading**: The agent calls `load_tool("list_clusters")`.
+4.  **Injection**: The tool is dynamically injected.
+5.  **Execution**: The agent calls `list_clusters(project_id="dev-464", location="us-central1")`.
 
 ## References
 
