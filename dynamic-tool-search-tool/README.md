@@ -138,8 +138,8 @@ You can interact with the agent locally using the ADK web interface.
 
 ## References
 
-- [ADK Documentation: Callbacks - Observe, Customize, and Control Agent Behavior](https://google.github.io/adk-docs/callbacks/)
 - [Implementing Anthropic-style Dynamic Tool Search Tool](https://medium.com/google-cloud/implementing-anthropic-style-dynamic-tool-search-tool-f39d02a35139)
+- [ADK Documentation: Callbacks - Observe, Customize, and Control Agent Behavior](https://google.github.io/adk-docs/callbacks/)
 - [Tutorial: Getting Started with Google MCP Services](https://medium.com/google-cloud/tutorial-getting-started-with-google-mcp-services-60b23b22a0e7)
 - [Google Cloud MCP Overview](https://docs.cloud.google.com/mcp/overview)
     - [Google Cloud MCP Supported Products](https://docs.cloud.google.com/mcp/supported-products)
