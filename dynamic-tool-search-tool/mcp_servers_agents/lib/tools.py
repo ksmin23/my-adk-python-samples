@@ -1,5 +1,6 @@
 import os
 import asyncio
+import logging
 import google.auth
 import google.auth.transport.requests
 from typing import List
@@ -7,6 +8,8 @@ from dotenv import load_dotenv
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset
 from google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams
 from .registry import registry
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -46,7 +49,7 @@ def get_authenticated_toolset(url: str, scopes: List[str]):
       )
     )
   except Exception as e:
-    print(f"Failed to initialize toolset for {url}: {e}")
+    logger.error(f"Failed to initialize toolset for {url}: {e}")
     return None
 
 def search_available_tools(query: str) -> List[str]:
@@ -76,28 +79,28 @@ async def initialize_mcp_tools():
   # 1. Maps MCP
   if MAPS_API_KEY != "no_api_found":
     try:
-      print("--- Initializing Maps MCP Connection ---")
+      logger.info("--- Initializing Maps MCP Connection ---")
       maps_tools = await google_maps_toolset.get_tools()
       for tool in maps_tools:
         registry.register(tool)
-      print(f"Registered {len(maps_tools)} tools from Maps MCP.")
+      logger.info(f"Registered {len(maps_tools)} tools from Maps MCP.")
     except Exception as e:
-      print(f"Failed to load Maps MCP: {e}")
+      logger.error(f"Failed to load Maps MCP: {e}")
   else:
-    print("Skipping Maps MCP: GOOGLE_MAPS_API_KEY not found.")
+    logger.warning("Skipping Maps MCP: GOOGLE_MAPS_API_KEY not found.")
 
   # Helper for registering tools from an authenticated toolset
   async def register_mcp_server(name: str, url: str, scopes: List[str]):
     toolset = get_authenticated_toolset(url, scopes)
     if toolset:
       try:
-        print(f"--- Initializing {name} MCP Connection ---")
+        logger.info(f"--- Initializing {name} MCP Connection ---")
         tools = await toolset.get_tools()
         for tool in tools:
           registry.register(tool)
-        print(f"Registered {len(tools)} tools from {name} MCP.")
+        logger.info(f"Registered {len(tools)} tools from {name} MCP.")
       except Exception as e:
-        print(f"Failed to load {name} MCP: {e}")
+        logger.error(f"Failed to load {name} MCP: {e}")
 
   # Register authenticated MCP servers
   await register_mcp_server(
@@ -123,9 +126,9 @@ try:
         loop.create_task(initialize_mcp_tools())
     else:
         loop.run_until_complete(initialize_mcp_tools())
-except Exception as e:
+except Exception as _:
     # Fallback for environments without a running loop or pre-defined loop
     try:
         asyncio.run(initialize_mcp_tools())
-    except Exception as e2:
-        print(f"Failed to auto-initialize MCP tools: {e2}")
+    except Exception as e:
+        logger.error(f"Failed to auto-initialize MCP tools: {e}")
