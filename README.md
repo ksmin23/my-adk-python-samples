@@ -163,6 +163,17 @@ For detailed setup and execution instructions, please see the [ADK Redis Session
 
 For detailed setup and execution instructions, please see the [ADK Redis Memory Service README](./agent-memory/redis-memory-service/README.md).
 
+### 9. Dynamic MCP Agent
+
+-   **Directory**: [`dynamic-tool-search-tool/`](./dynamic-tool-search-tool/)
+-   **Description**: An advanced agent that demonstrates dynamic discovery and loading of tools from Google Managed MCP servers. It uses a "Search & Load" pattern to support vast tool libraries efficiently.
+-   **Features**:
+    -   Dynamic tool injection via the `after_tool_callback` mechanism.
+    -   High scalability, supporting hundreds of tools with minimal overhead.
+    -   Uses BM25 search to find relevant tools based on user intent.
+
+For detailed setup and execution instructions, please see the [Dynamic MCP Agent README](./dynamic-tool-search-tool/README.md).
+
 ## References
 
 -   [ADK Official Docs](https://google.github.io/adk-docs/)
