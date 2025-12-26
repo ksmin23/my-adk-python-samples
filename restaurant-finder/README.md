@@ -186,3 +186,5 @@ Here is a sample conversation with the agent:
 - [Google Maps Platform Client Libraries](https://developers.google.com/maps/documentation/places/web-service/client-libraries)
 - [PyPI: google-maps-places](https://pypi.org/project/google-maps-places/) - Google Maps Places API (New)
 - [PyPI: googlemaps](https://pypi.org/project/googlemaps/) - Google Maps Places API (Legacy)
+- [Google Cloud MCP Overview](https://docs.cloud.google.com/mcp/overview) - Fully-managed, remote MCP servers provided by Google Cloud
+    - [Tutorial: Getting Started with Google MCP Services](https://medium.com/google-cloud/tutorial-getting-started-with-google-mcp-services-60b23b22a0e7)
