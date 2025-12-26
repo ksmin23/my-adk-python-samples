@@ -1,6 +1,6 @@
 # Dynamic MCP Agent with ADK
 
-This project demonstrates an advanced agent built with the Google Agent Development Kit (ADK) that dynamically discovers and loads tools from Google Managed MCP servers. By only loading tools into the context when they are actually needed, this agent can support hundreds of tools while maintaining high performance and reducing token costs by over 90%.
+This project demonstrates an advanced agent built with the Google Agent Development Kit (ADK) that dynamically discovers and loads tools from [Google Managed MCP servers](https://docs.cloud.google.com/mcp/supported-products). By only loading tools into the context when they are actually needed, this agent can support hundreds of tools while maintaining high performance and reducing token costs by over 90%.
 
 ## Overview
 
