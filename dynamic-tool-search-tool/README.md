@@ -8,8 +8,9 @@ This agent is designed for scalability and efficiency. Instead of pre-loading a 
 
 - **`mcp_servers_agents/`**: The main agent application.
   - **`agent.py`**: Defines the `root_agent` and implements the `after_tool_callback` for dynamic tool injection.
-  - **`tools.py`**: Defines the `search_available_tools` and `load_tool` functions, and handles connections to Google Managed MCP servers (Maps, BigQuery).
-  - **`registry.py`**: Implements a tool registry using the `rank_bm25` algorithm to index and search through all available MCP tools based on their descriptions.
+  - **`lib/`**: Core logic and utility modules.
+    - **`tools.py`**: Defines the dynamic loading functions and handles connections to Google Cloud MCP servers (Maps, BigQuery, Compute Engine, GKE).
+    - **`registry.py`**: Implements a BM25-based tool registry for indexing and searching available MCP tools.
   - **`requirements.txt`**: Project dependencies including `google-adk`, `rank_bm25`, and `google-auth`.
 
 ## Architecture
