@@ -2,8 +2,8 @@ import asyncio
 import logging
 from dotenv import load_dotenv
 from google.adk.agents import LlmAgent
-from .registry import registry
-from .tools import search_available_tools, load_tool, initialize_mcp_tools
+from .lib.registry import registry
+from .lib.tools import search_available_tools, load_tool, initialize_mcp_tools
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
