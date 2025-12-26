@@ -119,15 +119,17 @@ You can interact with the agent locally using the ADK web interface.
 
 ## Example Usage
 
+![Dynamic Tool Search Tool Workflow](./assets/dynamic_tool_search_tool.png)
+
 **User:**
-> "I want to find popular spots near Seoul Station and check for any interesting data in BigQuery datasets."
+> "restaurants in New York"
 
 **Agent Workflow:**
-1.  The agent calls `search_available_tools(query="popular spots near Seoul Station")`.
-2.  The registry returns `search_places` from the Maps MCP.
-3.  The agent calls `load_tool("search_places")`.
-4.  The tool is injected. Now the agent calls `search_places(...)` to get the actual data.
-5.  Repeats the process for BigQuery queries.
+1.  **Discovery**: The agent calls `search_available_tools(query="restaurants in New York")` to find relevant tools.
+2.  **Selection**: It identifies `search_places` from the Maps MCP as the best match.
+3.  **Loading**: The agent calls `load_tool("search_places")` to retrieve the full tool definition.
+4.  **Injection**: The `after_tool_callback` dynamically injects the tool into the current session.
+5.  **Execution**: The agent now calls the newly available `search_places` tool to get the restaurant data and responds to the user.
 
 ## References
 

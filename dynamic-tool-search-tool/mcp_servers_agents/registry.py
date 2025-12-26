@@ -17,13 +17,13 @@ class AdvancedToolRegistry:
     else:
       name = tool.__name__
       doc = inspect.getdoc(tool) or ""
-    
+
     # Index a combination of name and docstring for better retrieval
     description = f"{name} {doc}"
     self._tools[name] = tool
     self._tool_names.append(name)
     self._descriptions.append(description)
-    
+
     # Re-build the BM25 index
     tokenized_corpus = [desc.lower().split(" ") for desc in self._descriptions]
     self._bm25 = BM25Okapi(tokenized_corpus)

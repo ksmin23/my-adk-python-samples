@@ -17,7 +17,7 @@ BIGQUERY_MCP_URL = "https://bigquery.googleapis.com/mcp"
 MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "no_api_found")
 
 # Top-level toolset definitions
-maps_toolset = MCPToolset(
+google_maps_toolset = MCPToolset(
   connection_params=StreamableHTTPConnectionParams(
     url=MAPS_MCP_URL,
     headers={"X-Goog-Api-Key": MAPS_API_KEY}
@@ -33,7 +33,7 @@ def get_bigquery_toolset():
     request = google.auth.transport.requests.Request()
     credentials.refresh(request)
     oauth_token = credentials.token
-    
+
     bigquery_mcp_headers = {
         "Authorization": f"Bearer {oauth_token}",
         "x-goog-user-project": project_id
@@ -72,12 +72,12 @@ def load_tool(tool_name: str) -> str:
 
 async def initialize_mcp_tools():
   """Fetches tools from Google Managed MCP servers and registers them."""
-  
+
   # 1. Maps MCP
   if MAPS_API_KEY != "no_api_found":
     try:
       print("--- Initializing Maps MCP Connection ---")
-      maps_tools = await maps_toolset.get_tools()
+      maps_tools = await google_maps_toolset.get_tools()
       for tool in maps_tools:
         registry.register(tool)
       print(f"Registered {len(maps_tools)} tools from Maps MCP.")
