@@ -2,6 +2,28 @@
 
 This repository contains a collection of sample agents built using the [Google Agent Development Kit (ADK)](https://developers.google.com/agent-development-kit). Each sample is a self-contained application demonstrating different use cases and integrations.
 
+## Table of Contents
+
+- [General Prerequisites](#general-prerequisites)
+- [Available Agents](#available-agents)
+  - [1. GCP Release Notes Agent](#1-gcp-release-notes-agent)
+  - [2. Shop Search Agent](#2-shop-search-agent)
+  - [3. Restaurant Finder Agent](#3-restaurant-finder-agent)
+  - [4. Shopper's Concierge Agent](#4-shoppers-concierge-agent)
+  - [5. Agentic RAG](#5-agentic-rag)
+    - [QnA Agent with AlloyDB](#qna-agent-with-alloydb)
+    - [QnA Agent with BigQuery](#qna-agent-with-bigquery)
+    - [QnA Agent with Spanner](#qna-agent-with-spanner)
+    - [More RAG Agents](#more-rag-agents)
+  - [6. Graph RAG](#6-graph-rag)
+    - [Graph RAG with Spanner](#graph-rag-with-spanner)
+  - [7. ADK BigQuery Logging Plugin Example](#7-adk-bigquery-logging-plugin-example)
+  - [8. Agent Memory](#8-agent-memory)
+    - [ADK Redis Session Service](#adk-redis-session-service)
+    - [ADK Redis Memory Service](#adk-redis-memory-service)
+  - [9. Dynamic MCP Agent](#9-dynamic-mcp-agent)
+- [References](#references)
+
 ## General Prerequisites
 
 -   [Python 3.x](https://www.python.org/)
