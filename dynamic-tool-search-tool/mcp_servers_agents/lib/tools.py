@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+# -*- encoding: utf-8 -*-
+
+# This implementation is based on the source code and patterns described in the following article:
+# https://medium.com/google-cloud/implementing-anthropic-style-dynamic-tool-search-tool-f39d02a35139
+
 import os
 import asyncio
 import logging
@@ -38,14 +44,14 @@ def get_authenticated_toolset(url: str, scopes: List[str]):
     oauth_token = credentials.token
 
     mcp_headers = {
-        "Authorization": f"Bearer {oauth_token}",
-        "x-goog-user-project": project_id
+      "Authorization": f"Bearer {oauth_token}",
+      "x-goog-user-project": project_id
     }
 
     return MCPToolset(
       connection_params=StreamableHTTPConnectionParams(
-          url=url,
-          headers=mcp_headers
+        url=url,
+        headers=mcp_headers
       )
     )
   except Exception as e:
@@ -57,7 +63,7 @@ def search_available_tools(query: str) -> List[str]:
   Use this when you don't have a tool for a specific task. 
   Returns a list of 'ToolName: Description'. 
   Args:
-      query: Search keywords (e.g., 'weather', 'places', 'bigquery', 'sql').
+    query: Search keywords (e.g., 'weather', 'places', 'bigquery', 'sql').
   """
   return registry.search(query)
 
@@ -65,7 +71,7 @@ def load_tool(tool_name: str) -> str:
   """Loads a specific tool into your context. 
   Call this after finding a tool with 'search_available_tools'. 
   Args:
-      tool_name: The exact name of the tool to load.
+    tool_name: The exact name of the tool to load.
   """
   # This function is a signal for the callback.
   tool = registry.get_tool(tool_name)
@@ -104,31 +110,31 @@ async def initialize_mcp_tools():
 
   # Register authenticated MCP servers
   await register_mcp_server(
-      "BigQuery", 
-      BIGQUERY_MCP_URL, 
-      ["https://www.googleapis.com/auth/bigquery"]
+    "BigQuery", 
+    BIGQUERY_MCP_URL, 
+    ["https://www.googleapis.com/auth/bigquery"]
   )
   await register_mcp_server(
-      "Compute Engine", 
-      COMPUTE_MCP_URL, 
-      ["https://www.googleapis.com/auth/cloud-platform"]
+    "Compute Engine", 
+    COMPUTE_MCP_URL, 
+    ["https://www.googleapis.com/auth/cloud-platform"]
   )
   await register_mcp_server(
-      "GKE", 
-      GKE_MCP_URL, 
-      ["https://www.googleapis.com/auth/cloud-platform"]
+    "GKE", 
+    GKE_MCP_URL, 
+    ["https://www.googleapis.com/auth/cloud-platform"]
   )
 
 # Auto-initialize MCP tools to populate registry on import
 try:
-    loop = asyncio.get_event_loop()
-    if loop.is_running():
-        loop.create_task(initialize_mcp_tools())
-    else:
-        loop.run_until_complete(initialize_mcp_tools())
+  loop = asyncio.get_event_loop()
+  if loop.is_running():
+    loop.create_task(initialize_mcp_tools())
+  else:
+    loop.run_until_complete(initialize_mcp_tools())
 except Exception as _:
-    # Fallback for environments without a running loop or pre-defined loop
-    try:
-        asyncio.run(initialize_mcp_tools())
-    except Exception as e:
-        logger.error(f"Failed to auto-initialize MCP tools: {e}")
+  # Fallback for environments without a running loop or pre-defined loop
+  try:
+    asyncio.run(initialize_mcp_tools())
+  except Exception as e:
+    logger.error(f"Failed to auto-initialize MCP tools: {e}")
