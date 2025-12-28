@@ -4,7 +4,6 @@
 # This implementation is based on the source code and patterns described in the following article:
 # https://medium.com/google-cloud/implementing-anthropic-style-dynamic-tool-search-tool-f39d02a35139
 
-import asyncio
 import logging
 from dotenv import load_dotenv
 from google.adk.agents import LlmAgent
