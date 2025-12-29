@@ -60,13 +60,60 @@ The agent uses a dynamic injection flow where the primary agent discovers tools 
 - Python 3.10+
 - `uv` (or `pip` and `venv`)
 - A Google Cloud Project with Billing enabled.
-- **Enable MCP servers**: Enable the Google Cloud MCP servers for the services you want to use (e.g., Maps, BigQuery).
-    ```bash
-    gcloud beta services mcp enable <SERVICE> --project=<PROJECT_ID>
-    ```
-    *Refer to the [Supported products](https://docs.cloud.google.com/mcp/supported-products) for a list of available services and [Enable or disable MCP servers](https://docs.cloud.google.com/mcp/enable-disable-mcp-servers) for detailed instructions.*
 
-### 2. Installation
+#### 1.1 Project Setup and API Enablement
+
+1.  **Authenticate and set your Project**:
+    ```bash
+    # Authenticate with Google Cloud
+    gcloud auth login
+
+    # Set your project ID
+    gcloud config set project <YOUR_PROJECT_ID>
+    ```
+
+2.  **Enable the required Product APIs**:
+    ```bash
+    gcloud services enable \
+      bigquery.googleapis.com \
+      compute.googleapis.com \
+      container.googleapis.com \
+      mapstools.googleapis.com
+    ```
+
+#### 1.2 Enable Google MCP Services
+
+The MCP services are currently in a **beta** state and require explicit enablement of the MCP endpoints, which are distinct from the product APIs.
+
+```bash
+# Define your project variable
+export PROJECT_ID=$(gcloud config get-value project)
+
+# Enable the MCP Endpoints
+gcloud beta services mcp enable bigquery.googleapis.com --project=$PROJECT_ID
+gcloud beta services mcp enable mapstools.googleapis.com --project=$PROJECT_ID
+gcloud beta services mcp enable container.googleapis.com --project=$PROJECT_ID
+gcloud beta services mcp enable compute.googleapis.com --project=$PROJECT_ID
+```
+
+### 2. Identity and Access Management (IAM)
+
+The MCP servers enforce a **dual-layer security model**. Your identity must pass two gates:
+
+1.  **The MCP Gate**: Requires `roles/mcp.toolUser` to interact with the MCP server.
+2.  **The Service Gate**: Requires underlying service permissions (e.g., `roles/bigquery.dataViewer`).
+
+Grant the MCP Tool User role to your identity:
+
+```bash
+export USER_EMAIL=$(gcloud config get-value account)
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="user:$USER_EMAIL" \
+  --role="roles/mcp.toolUser"
+```
+
+### 3. Installation
 
 ```bash
 # Navigate to the project directory
@@ -80,7 +127,7 @@ source .venv/bin/activate
 uv pip install -r requirements.txt
 ```
 
-### 3. Configuration
+### 4. Configuration
 
 1.  **Environment Variables**:
     Create a `.env` file in the `mcp_servers_agents` directory:
@@ -90,8 +137,16 @@ uv pip install -r requirements.txt
 2.  **Edit `.env`**:
     - `GOOGLE_CLOUD_PROJECT`: Your GCP Project ID.
     - `GOOGLE_MAPS_API_KEY`: A valid Google Maps API Key.
-3.  **Authentication**:
-    Ensure you have authenticated with your GCP account for BigQuery access:
+3.  **Google Maps API Key**:
+    The Maps Grounding Lite server requires an API Key for quota and billing.
+    ```bash
+    # Create the key
+    gcloud alpha services api-keys create --display-name="Maps-MCP-Key"
+
+    # Note the 'keyString' from the output and add it to your .env file
+    ```
+4.  **Authentication**:
+    Ensure you have authenticated with your GCP account:
     ```bash
     gcloud auth application-default login
     ```
