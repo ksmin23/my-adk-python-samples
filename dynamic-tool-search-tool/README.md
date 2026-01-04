@@ -230,6 +230,7 @@ The agent can discover and use tools across various Google Cloud services. Here 
 - [Introducing advanced tool use on the Claude Developer Platform (2025-11-24)](https://www.anthropic.com/engineering/advanced-tool-use)
 - [Google ADK Documentation: Callbacks - Observe, Customize, and Control Agent Behavior](https://google.github.io/adk-docs/callbacks/)
 - [Tutorial: Getting Started with Google MCP Services (2025-12-11)](https://medium.com/google-cloud/tutorial-getting-started-with-google-mcp-services-60b23b22a0e7)
+    - [Getting Started with Google Cloud API Registry](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/agents/agent_engine/tutorial_get_started_with_cloud_api_registry.ipynb)
 - [Google Cloud MCP Overview](https://docs.cloud.google.com/mcp/overview)
     - [Google Cloud MCP Supported Products](https://docs.cloud.google.com/mcp/supported-products)
     - [Google Cloud MCP GitHub repository](https://github.com/Google/mcp)
