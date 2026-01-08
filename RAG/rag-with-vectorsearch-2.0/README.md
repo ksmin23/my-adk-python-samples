@@ -236,3 +236,4 @@ adk deploy agent_engine \
     - [Vertex AI Vector Search 2.0 Search](https://cloud.google.com/vertex-ai/docs/vector-search-2/query-search/search)
 - 📓 [Introduction to Vertex AI Vector Search 2.0](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/embeddings/vector-search-2-intro.ipynb)
 - 📓 [Vertex AI Vector Search 2.0 Public Preview Quickstart](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/embeddings/vector-search-2-quickstart.ipynb)
+- [Improve gen AI search with Vertex AI embeddings and task types (2024-10-03)](https://cloud.google.com/blog/products/ai-machine-learning/improve-gen-ai-search-with-vertex-ai-embeddings-and-task-types)
