@@ -1,0 +1,8 @@
+# Agent Framework
+google-adk==1.19.0
+python-dotenv==1.2.1
+google-auth==2.43.0
+
+# Vertex AI SDK (for Vector Search 2.0 and Embeddings)
+google-cloud-aiplatform>=1.42.0
+google-cloud-vectorsearch>=1.0.0

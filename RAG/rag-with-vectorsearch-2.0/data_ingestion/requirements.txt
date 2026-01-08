@@ -1,0 +1,13 @@
+# Vertex AI SDK
+google-cloud-aiplatform>=1.42.0
+google-cloud-vectorsearch>=1.0.0
+google-auth>=2.40.0
+python-dotenv>=1.0.0
+
+# LangChain (for DirectoryLoader and TextSplitter)
+langchain>=0.3.0
+langchain-community>=0.3.0
+unstructured>=0.16.0
+
+# Progress bar
+tqdm>=4.66.0
