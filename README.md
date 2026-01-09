@@ -112,7 +112,7 @@ For detailed setup and execution instructions, please see the [RAG with BigQuery
 
 For detailed setup and execution instructions, please see the [RAG with Spanner Agent README](./RAG/rag-with-spanner/README.md).
 
-#### QnA Agent with Vector Search 2.0 (Unified Vector Store)
+#### QnA Agent with Vector Search 2.0
 
 -   **Directory**: [`RAG/rag-with-vectorsearch-2.0/`](./RAG/rag-with-vectorsearch-2.0/)
 -   **Description**: An agent that implements the RAG pattern using **Vertex AI Vector Search 2.0** as a unified vector and document store, eliminating the need for a separate database like Firestore or AlloyDB.
