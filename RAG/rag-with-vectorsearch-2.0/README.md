@@ -243,6 +243,19 @@ Successfully created remote agent: projects/<PROJECT_NUMBER>/locations/<PROJECT_
 ```
 Make a note of the `AGENT_ENGINE_ID`. You will need it to interact with your deployed agent.
 
+### Testing the Deployed Agent
+
+Once your agent is deployed, you can use the provided Jupyter notebook to verify its functionality. 
+
+1.  Navigate to the `notebook/` directory.
+2.  Open **[test_vector_search_2_0_agent_on_agent_engine.ipynb](./notebook/test_vector_search_2_0_agent_on_agent_engine.ipynb)**.
+3.  Follow the instructions in the notebook to:
+    *   Configure your Project ID and Location.
+    *   Connect to the deployed agent using your unique `AGENT_ENGINE_ID`.
+    *   Test stateful sessions and real-time streaming queries.
+
+This notebook provides a convenient way to interact with your agent in a stateful manner and serves as a starting point for building your own client applications.
+
 ## References
 
 - [Vertex AI Vector Search 2.0 Overview](https://cloud.google.com/vertex-ai/docs/vector-search-2/overview)
