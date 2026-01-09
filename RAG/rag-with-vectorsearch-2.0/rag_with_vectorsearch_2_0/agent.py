@@ -10,7 +10,7 @@ from . import tools
 load_dotenv()
 
 root_agent = LlmAgent(
-  model='gemini-2.0-flash-exp', # Using 2.0 Flash as it's typically better for RAG speed/cost
+  model='gemini-2.5-flash',
   name='rag_vectorsearch_2_0_agent',
   instruction=instruction,
   tools=[tools.search_documents],

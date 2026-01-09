@@ -1,6 +1,6 @@
-# Agentic RAG with Vertex AI Vector Search 2.0 (Collections)
+# Agentic RAG with Vertex AI Vector Search 2.0
 
-This project is a sample implementation of an Agentic RAG using the Agent Development Kit (ADK), with **Vertex AI Vector Search 2.0** (Collections) as the unified vector store.
+This project is a sample implementation of an Agentic RAG using the Agent Development Kit (ADK), with **Vertex AI Vector Search 2.0** as the unified vector store.
 
 ## Key Features of Vector Search 2.0
 
@@ -98,6 +98,11 @@ export PROJECT_NUMBER=$(gcloud projects describe $GOOGLE_CLOUD_PROJECT --format=
 gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT \
     --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-aiplatform-re.iam.gserviceaccount.com" \
     --role="roles/aiplatform.user"
+
+# Grant the Vertex AI Vector Search Viewer role
+gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT \
+    --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-aiplatform-re.iam.gserviceaccount.com" \
+    --role="roles/vectorsearch.viewer"
 ```
 
 ## Setup
@@ -198,6 +203,10 @@ adk run rag_with_vectorsearch_2_0
 adk web
 ```
 
+**Screenshot:**
+
+![ADK Web Interface for RAG with Vector Search 2.0](./assets/rag-with-vertexai-vs-2.0.png)
+
 ## Deployment
 
 The RAG agent can be deployed to Vertex AI Agent Engine using the `adk deploy` command.
@@ -228,6 +237,12 @@ adk deploy agent_engine \
   rag_with_vectorsearch_2_0
 ```
 
+When the deployment finishes, it will print a line like this:
+```
+Successfully created remote agent: projects/<PROJECT_NUMBER>/locations/<PROJECT_LOCATION>/reasoningEngines/<AGENT_ENGINE_ID>
+```
+Make a note of the `AGENT_ENGINE_ID`. You will need it to interact with your deployed agent.
+
 ## References
 
 - [Vertex AI Vector Search 2.0 Overview](https://cloud.google.com/vertex-ai/docs/vector-search-2/overview)
@@ -237,3 +252,4 @@ adk deploy agent_engine \
 - 📓 [Introduction to Vertex AI Vector Search 2.0](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/embeddings/vector-search-2-intro.ipynb)
 - 📓 [Vertex AI Vector Search 2.0 Public Preview Quickstart](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/embeddings/vector-search-2-quickstart.ipynb)
 - [Improve gen AI search with Vertex AI embeddings and task types (2024-10-03)](https://cloud.google.com/blog/products/ai-machine-learning/improve-gen-ai-search-with-vertex-ai-embeddings-and-task-types)
+- 📓 [Deploy your first ADK agent on Vertex AI Agent Engine](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/agents/agent_engine/tutorial_deploy_your_first_adk_agent_on_agent_engine.ipynb)

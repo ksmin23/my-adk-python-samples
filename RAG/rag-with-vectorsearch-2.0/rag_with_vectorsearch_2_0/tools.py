@@ -23,18 +23,22 @@ def search_documents_in_vector_search(query: str, k: int = 5) -> str:
   Returns:
       A formatted string of the retrieved documents, or empty string if no results.
   """
+
+  logger.debug(f"[Tool:search_documents] Start - query: '{query}'")
   try:
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     location = os.environ["GOOGLE_CLOUD_LOCATION"]
     collection_name = os.environ["VECTOR_SEARCH_COLLECTION_NAME"]
 
     # Initialize Client (no need for client_options with regional endpoint)
+    logger.debug(f"[Tool:search_documents] Initializing Vector Search Client...")
     data_object_search_service_client = vectorsearch_v1beta.DataObjectSearchServiceClient()
 
     # Define Hybrid Search Request (Semantic + Text)
     # Combining results using Reciprocal Rank Fusion (RRF)
     parent = f"projects/{project_id}/locations/{location}/collections/{collection_name}"
 
+    logger.debug(f"[Tool:search_documents] Defining Hybrid Search Request...")
     batch_search_request = vectorsearch_v1beta.BatchSearchDataObjectsRequest(
       parent=parent,
       searches=[
@@ -69,7 +73,7 @@ def search_documents_in_vector_search(query: str, k: int = 5) -> str:
       ),
     )
 
-    logger.info(f"Performing Hybrid Search for '{query}'...")
+    logger.debug(f"[Tool:search_documents] API Call - Performing Hybrid Search for '{query}'...")
     batch_results = data_object_search_service_client.batch_search_data_objects(
       batch_search_request
     )
@@ -78,25 +82,27 @@ def search_documents_in_vector_search(query: str, k: int = 5) -> str:
     # When a ranker is used, batch_results.results contains a single ranked list
     # results[0] is the SearchDataObjectsResponse with the combined RRF-ranked results
     if not batch_results.results:
+      logger.debug(f"[Tool:search_documents] No batch results found for '{query}'")
       return ""
 
     combined_results = batch_results.results[0]
 
     if not combined_results.results:
+      logger.debug(f"[Tool:search_documents] No combined results found for '{query}'")
       return ""
 
     # Extract content directly from search results
     results = []
     for result in combined_results.results[:k]:
       data = result.data_object.data
-      content = data.get("content", "") if data else ""
+      content = data["content"] if data else ""
       if content:
         results.append(content)
 
     return "\n\n".join(results)
 
   except Exception as e:
-    logger.exception(f"An error occurred while searching in Vector Search: {e}")
+    logger.error(f"[Tool:search_documents] An error occurred while searching in Vector Search: {e}")
     return ""
 
 
