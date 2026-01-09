@@ -14,6 +14,7 @@ This repository contains a collection of sample agents built using the [Google A
     - [QnA Agent with AlloyDB](#qna-agent-with-alloydb)
     - [QnA Agent with BigQuery](#qna-agent-with-bigquery)
     - [QnA Agent with Spanner](#qna-agent-with-spanner)
+    - [QnA Agent with Vector Search 2.0](#qna-agent-with-vector-search-20)
     - [More RAG Agents](#more-rag-agents)
   - [6. Graph RAG](#6-graph-rag)
     - [Graph RAG with Spanner](#graph-rag-with-spanner)
@@ -110,6 +111,18 @@ For detailed setup and execution instructions, please see the [RAG with BigQuery
     -   Provides instructions for local execution and deployment to Vertex AI Agent Engine.
 
 For detailed setup and execution instructions, please see the [RAG with Spanner Agent README](./RAG/rag-with-spanner/README.md).
+
+#### QnA Agent with Vector Search 2.0 (Unified Vector Store)
+
+-   **Directory**: [`RAG/rag-with-vectorsearch-2.0/`](./RAG/rag-with-vectorsearch-2.0/)
+-   **Description**: An agent that implements the RAG pattern using **Vertex AI Vector Search 2.0** as a unified vector and document store, eliminating the need for a separate database like Firestore or AlloyDB.
+-   **Features**:
+    -   **Unified Architecture**: Simplifies RAG by storing embeddings and source data together.
+    -   **Auto-Embeddings**: Automatically generates embeddings using Vertex AI models during ingestion.
+    -   **Hybrid Search**: Combines semantic and keyword search with Reciprocal Rank Fusion (RRF).
+    -   **Integrated Testing**: Includes a Jupyter notebook for verifying the deployed agent on Agent Engine.
+
+For detailed setup and execution instructions, please see the [RAG with Vector Search 2.0 README](./RAG/rag-with-vectorsearch-2.0/README.md).
 
 #### More RAG Agents
 
