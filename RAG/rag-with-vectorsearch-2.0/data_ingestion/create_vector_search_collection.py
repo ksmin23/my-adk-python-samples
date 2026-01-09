@@ -174,17 +174,17 @@ def main():
   parser.add_argument(
     "--project_id",
     default=os.getenv("GOOGLE_CLOUD_PROJECT"),
-    help="GCP Project ID"
+    help="GCP Project ID (default: from GOOGLE_CLOUD_PROJECT env var)"
   )
   parser.add_argument(
     "--location",
     default=os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1"),
-    help="GCP Location"
+    help="GCP Location (default: from GOOGLE_CLOUD_LOCATION env var or 'us-central1')"
   )
   parser.add_argument(
     "--collection_name",
     default=os.getenv("VECTOR_SEARCH_COLLECTION_NAME"),
-    help="Collection Name"
+    help="Collection Name (default: from VECTOR_SEARCH_COLLECTION_NAME env var)"
   )
   parser.add_argument(
     "--embedding_model",
