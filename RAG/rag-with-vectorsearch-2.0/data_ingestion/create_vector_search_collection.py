@@ -19,6 +19,7 @@ def create_collection(
   embedding_model: str = "gemini-embedding-001",
   embedding_dim: int = 768,
   create_index: bool = True,
+  index_name: str = "dense-vector-index",
   wait_for_index: bool = False
 ):
   """
@@ -91,6 +92,7 @@ def create_collection(
         project_id,
         location,
         collection_name,
+        index_name,
         wait_for_index
       )
 
@@ -105,6 +107,7 @@ def create_ann_index(
   project_id: str,
   location: str,
   collection_name: str,
+  index_id: str = "dense-vector-index",
   wait_for_completion: bool = False
 ):
   """
@@ -121,7 +124,6 @@ def create_ann_index(
       wait_for_completion: Whether to wait for index creation to complete
   """
   parent = f"projects/{project_id}/locations/{location}/collections/{collection_name}"
-  index_id = "dense-vector-index"
 
   print(f"\n🔨 Creating ANN Index: {index_id}")
 
@@ -187,6 +189,11 @@ def main():
     help="Collection Name (default: from VECTOR_SEARCH_COLLECTION_NAME env var)"
   )
   parser.add_argument(
+    "--index_name",
+    default="dense-vector-index",
+    help="Index Name (default: 'dense-vector-index')"
+  )
+  parser.add_argument(
     "--embedding_model",
     default="gemini-embedding-001",
     help="Embedding model ID (default: gemini-embedding-001)"
@@ -220,6 +227,7 @@ def main():
     args.embedding_model,
     args.embedding_dim,
     create_index=not args.no_index,
+    index_name=args.index_name,
     wait_for_index=args.wait_for_index
   )
 
