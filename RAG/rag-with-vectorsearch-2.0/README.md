@@ -266,3 +266,6 @@ This notebook provides a convenient way to interact with your agent in a statefu
 - 📓 [Vertex AI Vector Search 2.0 Public Preview Quickstart](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/embeddings/vector-search-2-quickstart.ipynb)
 - [Improve gen AI search with Vertex AI embeddings and task types (2024-10-03)](https://cloud.google.com/blog/products/ai-machine-learning/improve-gen-ai-search-with-vertex-ai-embeddings-and-task-types)
 - 📓 [Deploy your first ADK agent on Vertex AI Agent Engine](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/agents/agent_engine/tutorial_deploy_your_first_adk_agent_on_agent_engine.ipynb)
+- [Migration from Vertex AI Vector Search 1.0 to 2.0](https://docs.cloud.google.com/vertex-ai/docs/vector-search-2/migration-from-vs-1_0)
+- :octocat: [RAG with Vector Search 1.0 and Firestore](../rag-with-vectorsearch-ds/README.md)
+- :octocat: [RAG with Vector Search 1.0 and GCS](../rag-with-vectorsearch-gcs/README.md)
