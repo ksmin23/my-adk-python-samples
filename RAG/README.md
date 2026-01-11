@@ -47,3 +47,11 @@ These samples showcase an architecture where Vertex AI Vector Search is used as 
     -   **Description**: An Agentic RAG implementation using Vertex AI Vector Search for vector retrieval and Google Cloud Storage (GCS) as the document store.
     -   **Vector Store**: Vertex AI Vector Search.
     -   **Document Store**: Google Cloud Storage.
+
+### 4. Using Vertex AI Vector Search 2.0 (Unified Vector Store)
+
+These samples demonstrate the new capabilities of Vector Search 2.0, which supports storing both embeddings and data together, eliminating the need for a separate document store.
+
+-   **[RAG with Vector Search 2.0](./rag-with-vectorsearch-2.0/)**
+    -   **Description**: An Agentic RAG implementation using **Vertex AI Vector Search 2.0**. Features unified data storage, auto-embeddings, and hybrid search (Semantic + Keyword) with RRF ranking.
+    -   **Vector Store**: Vertex AI Vector Search 2.0 (Unified).
