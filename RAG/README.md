@@ -48,7 +48,7 @@ These samples showcase an architecture where Vertex AI Vector Search is used as 
     -   **Vector Store**: Vertex AI Vector Search.
     -   **Document Store**: Google Cloud Storage.
 
-### 4. Using Vertex AI Vector Search 2.0 (Unified Vector Store)
+### 4. Using Vertex AI Vector Search 2.0
 
 These samples demonstrate the new capabilities of Vector Search 2.0, which supports storing both embeddings and data together, eliminating the need for a separate document store.
 
