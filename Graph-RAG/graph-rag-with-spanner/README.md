@@ -338,7 +338,7 @@ if __name__ == "__main__":
 **c. Run the script:**
 ```bash
 python query_agent.py
-
+```
 ## References
 
 - [Build GraphRAG applications using Spanner Graph and LangChain (2025-03-22)](https://cloud.google.com/blog/products/databases/using-spanner-graph-with-langchain-for-graphrag)
