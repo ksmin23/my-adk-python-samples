@@ -338,7 +338,7 @@ python query_agent.py
 ## References
 
 - [Build GraphRAG applications using Spanner Graph and LangChain (2025-03-22)](https://cloud.google.com/blog/products/databases/using-spanner-graph-with-langchain-for-graphrag)
-   - [LLMGraphTransformer - System Prompt to extract nodes and edges from text](https://github.com/langchain-ai/langchain-experimental/blob/libs/experimental/v0.4.1/libs/experimental/langchain_experimental/graph_transformers/llm.py#L72)
+   - [LangChain LLMGraphTransformer - System Prompt to extract nodes and edges from text](https://github.com/langchain-ai/langchain-experimental/blob/libs/experimental/v0.4.1/libs/experimental/langchain_experimental/graph_transformers/llm.py#L72)
 - [langchain-google-spanner-python - GitHub](https://github.com/googleapis/langchain-google-spanner-python)
 - [Spanner Graph Retrievers Usage (Jupyter Notebook)](https://github.com/googleapis/langchain-google-spanner-python/blob/main/docs/graph_rag.ipynb)
 - [Spanner Graph Store Usage (Jupyter Notebook)](https://github.com/googleapis/langchain-google-spanner-python/blob/main/docs/graph_store.ipynb)
