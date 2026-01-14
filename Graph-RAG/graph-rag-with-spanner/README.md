@@ -286,35 +286,38 @@ export AGENT_ENGINE_ID="your-agent-engine-id"
 Create a file named `query_agent.py` and add the following code.
 
 ```python
+import asyncio
 import os
 import vertexai
 from vertexai import agent_engines
 
-def query_remote_agent(project_id, location, agent_id, user_query):
+async def query_remote_agent(project_id, location, agent_id, user_query):
     """Initializes Vertex AI and sends a query to the deployed agent."""
     vertexai.init(project=project_id, location=location)
 
+    # Construct the full resource name
+    agent_name = f"projects/{project_id}/locations/{location}/reasoningEngines/{agent_id}"
+
     # Load the deployed agent
-    remote_agent = agent_engines.get(agent_id)
-    remote_session = remote_agent.create_session(user_id="u_123")
+    remote_agent = agent_engines.get(agent_name)
+    remote_session = await remote_agent.async_create_session(user_id="u_123")
 
     print(f"Querying agent: '{user_query}'...")
 
-    # Stream the query and print the final text response
+    # Stream the query and print the response
     try:
-        # Stream the query and print the final text response
-        for event in remote_agent.stream_query(
+        async for event in remote_agent.async_stream_query(
             user_id="u_123",
             session_id=remote_session["id"],
             message=user_query
         ):
-            if event.get('content', {}).get('parts', [{}])[0].get('text'):
-                print("Response:", event['content']['parts'][0]['text'])
-    except Exception:
-        # Fallback to stream_query if query method is not supported or for streaming
-        # This part might need adjustment based on the specific ADK agent implementation details
-        # For simplicity, we'll assume the standard query pattern for Agent Engine
-        pass
+            if "content" in event and event["content"] and "parts" in event["content"]:
+                for part in event["content"]["parts"]:
+                    if "text" in part:
+                        print(part["text"], end="", flush=True)
+        print("\n")
+    except Exception as e:
+        print(f"Error querying agent: {e}")
 
 if __name__ == "__main__":
     project = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -325,7 +328,7 @@ if __name__ == "__main__":
         print("Error: GOOGLE_CLOUD_PROJECT, GOOGLE_CLOUD_LOCATION, and AGENT_ENGINE_ID environment variables must be set.")
     else:
         query = "Give me recommendations for a beginner drone"
-        query_remote_agent(project, loc, agent, query)
+        asyncio.run(query_remote_agent(project, loc, agent, query))
 ```
 
 **c. Run the script:**
