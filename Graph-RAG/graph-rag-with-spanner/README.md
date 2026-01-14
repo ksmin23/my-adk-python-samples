@@ -289,17 +289,21 @@ Create a file named `query_agent.py` and add the following code.
 import asyncio
 import os
 import vertexai
-from vertexai import agent_engines
 
 async def query_remote_agent(project_id, location, agent_id, user_query):
     """Initializes Vertex AI and sends a query to the deployed agent."""
     vertexai.init(project=project_id, location=location)
 
+    # Initialize the client
+    client = vertexai.Client(project=project_id, location=location)
+
     # Construct the full resource name
     agent_name = f"projects/{project_id}/locations/{location}/reasoningEngines/{agent_id}"
 
-    # Load the deployed agent
-    remote_agent = agent_engines.get(agent_name)
+    # Get the deployed agent
+    remote_agent = client.agent_engines.get(name=agent_name)
+
+    # Create a session for this user
     remote_session = await remote_agent.async_create_session(user_id="u_123")
 
     print(f"Querying agent: '{user_query}'...")
