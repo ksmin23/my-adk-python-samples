@@ -47,6 +47,8 @@ def search_documents_in_vector_search(query: str, k: int = 5) -> str:
           semantic_search=vectorsearch_v1beta.SemanticSearch(
             search_text=query,
             search_field="dense_vector",  # Vector field defined in Collection Schema
+            # Using "task type" embeddings for improving RAG search quality.
+            # Task types: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/embeddings/task-types
             task_type="QUESTION_ANSWERING",  # Optimized for retrieval
             top_k=k * 2,  # Fetch more for RRF to re-rank
             output_fields=vectorsearch_v1beta.OutputFields(
