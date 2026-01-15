@@ -247,8 +247,8 @@ Make a note of the `AGENT_ENGINE_ID`. You will need it to interact with your dep
 
 Once your agent is deployed, you can use the provided Jupyter notebook to verify its functionality. 
 
-1.  Navigate to the `notebook/` directory.
-2.  Open **[test_vector_search_2_0_agent_on_agent_engine.ipynb](./notebook/test_vector_search_2_0_agent_on_agent_engine.ipynb)**.
+1.  Navigate to the `notebooks/` directory.
+2.  Open **[test_vector_search_2_0_agent_on_agent_engine.ipynb](./notebooks/test_vector_search_2_0_agent_on_agent_engine.ipynb)**.
 3.  Follow the instructions in the notebook to:
     *   Configure your Project ID and Location.
     *   Connect to the deployed agent using your unique `AGENT_ENGINE_ID`.
