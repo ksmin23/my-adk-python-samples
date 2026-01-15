@@ -67,6 +67,9 @@ def create_collection(
             "vertex_embedding_config": {
               "model_id": embedding_model,
               "text_template": "{content}",  # Auto-embed from content field
+
+              # Using "task type" embeddings for improving RAG search quality.
+              # Task types: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/embeddings/task-types
               "task_type": "RETRIEVAL_DOCUMENT",
             },
           },
