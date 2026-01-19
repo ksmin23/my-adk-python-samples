@@ -264,6 +264,8 @@ This notebook provides a convenient way to interact with your agent in a statefu
     - [Vertex AI Vector Search 2.0 Search](https://cloud.google.com/vertex-ai/docs/vector-search-2/query-search/search)
 - 📓 [Introduction to Vertex AI Vector Search 2.0](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/embeddings/vector-search-2-intro.ipynb)
 - 📓 [Vertex AI Vector Search 2.0 Public Preview Quickstart](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/embeddings/vector-search-2-quickstart.ipynb)
+- [Introducing Vertex AI Vector Search 2.0 from zero to billion-scale (2025-12-26)](https://medium.com/google-cloud/introducing-vertex-ai-vector-search-2-0-from-zero-to-billion-scale-90ed666dac43)
+- [10-minute agentic RAG with the new Vector Search 2.0 and ADK (2026-01-19)](https://medium.com/google-cloud/10-minute-agentic-rag-with-the-new-vector-search-2-0-and-adk-655fff0bacac)
 - [Improve gen AI search with Vertex AI embeddings and task types (2024-10-03)](https://cloud.google.com/blog/products/ai-machine-learning/improve-gen-ai-search-with-vertex-ai-embeddings-and-task-types): Explains how Vertex AI's "task type" embeddings provide a streamlined solution to significantly enhance the accuracy and effectiveness of RAG systems.
   - [Vertex AI embedding task types](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/embeddings/task-types)
   - 📓 [Task type embedding](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/embeddings/task-type-embedding.ipynb)
