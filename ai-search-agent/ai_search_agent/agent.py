@@ -9,7 +9,7 @@ from .prompts import instruction_ai_search
 load_dotenv()
 
 root_agent = Agent(
-  model="gemini-3-flash",
+  model="gemini-3-flash-preview",
   name="ai_search_agent",
   description=(
     "An AI-powered search agent that uses advanced Google Search operators "
