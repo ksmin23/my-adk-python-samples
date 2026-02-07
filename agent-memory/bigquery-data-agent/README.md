@@ -8,6 +8,9 @@ A self-learning BigQuery agent that stores and retrieves successful SQL queries 
 - **Self-Learning Memory**: Automatically searches past queries before generating new ones.
 - **Scoped Sharing**: Save queries to personal (`user`) or shared (`team`) memory.
 - **Enhanced Searchability**: Each saved query includes title, description, and original question for accurate retrieval.
+- **Built-in Memory Tools**:
+    - `PreloadMemoryTool`: Automatically retrieves relevant memories into system instructions.
+    - `LoadMemoryTool`: Allows the agent to selectively load specific memories when needed.
 
 ## Prerequisites
 

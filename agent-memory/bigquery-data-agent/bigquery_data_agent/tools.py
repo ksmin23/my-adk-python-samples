@@ -28,6 +28,29 @@ bigquery_toolset = BigQueryToolset(
 )
 
 
+# Module-level cache for vertexai client
+_vertexai_client = None
+
+
+def _get_vertexai_client():
+  """Get or create a cached vertexai client."""
+  global _vertexai_client
+  if _vertexai_client is None:
+    import vertexai
+    project = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
+    location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
+    _vertexai_client = vertexai.Client(project=project, location=location)
+  return _vertexai_client
+
+
+def _get_agent_engine_name() -> str:
+  """Get the full Agent Engine resource name."""
+  project = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
+  location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
+  agent_engine_id = os.environ.get("AGENT_ENGINE_ID", "")
+  return f"projects/{project}/locations/{location}/reasoningEngines/{agent_engine_id}"
+
+
 def store_query_result_in_state(
   tool: BaseTool,
   args: dict[str, Any],
@@ -60,9 +83,9 @@ async def save_query_to_memory(
   scope: Literal["user", "team"],
   tool_context: ToolContext,
 ) -> dict[str, Any]:
-  """Save a validated query to the Agent Engine Memory Bank with metadata.
+  """Save a validated query to the Memory Bank with scope-based storage.
 
-  Uses Agent Engine SDK directly for scope-based memory storage.
+  Uses Agent Engine SDK directly to store memories in the appropriate scope.
   Stores title, description, NL query, and SQL for accurate search.
 
   Args:
@@ -76,8 +99,6 @@ async def save_query_to_memory(
   Returns:
     A status message indicating success or failure.
   """
-  import vertexai
-
   logger.info("Saving query to memory with scope: %s", scope)
 
   # Safety check: only save SELECT queries
@@ -91,25 +112,22 @@ async def save_query_to_memory(
   # Get context from session state
   user_id = tool_context.state.get("user_id", "anonymous")
   team_id = tool_context.state.get("team_id", "default")
-  agent_engine_id = os.environ.get("AGENT_ENGINE_ID", "")
 
-  if not agent_engine_id:
+  # Check AGENT_ENGINE_ID is configured
+  if not os.environ.get("AGENT_ENGINE_ID"):
     return {
       "status": "error",
       "message": "AGENT_ENGINE_ID not configured. Run setup_memory_bank.py first.",
     }
 
   try:
-    project = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
-    location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
+    client = _get_vertexai_client()
+    agent_engine_name = _get_agent_engine_name()
 
-    client = vertexai.Client(project=project, location=location)
-    agent_engine_name = f"projects/{project}/locations/{location}/reasoningEngines/{agent_engine_id}"
-
-    # Build scope based on visibility
+    # Determine scope dict based on scope parameter
     if scope == "user":
       memory_scope = {"user_id": user_id}
-    else:  # team scope
+    else:  # team
       memory_scope = {"team_id": team_id}
 
     # Create structured memory fact with title, description, and query
@@ -118,15 +136,15 @@ Description: {description}
 NL Query: {nl_query}
 SQL: {sql_query}"""
 
-    # Use GenerateMemories with direct_memories_source
-    operation = client.agent_engines.memories.generate(
+    # Store directly to the appropriate scope using Agent Engine SDK
+    client.agent_engines.memories.generate(
       name=agent_engine_name,
       scope=memory_scope,
       direct_memories_source={"direct_memories": [{"fact": fact}]},
       config={"wait_for_completion": True},
     )
 
-    logger.info("Memory generation completed: %s", operation)
+    logger.info("Memory saved to %s scope: %s", scope, title)
 
     return {
       "status": "success",
@@ -149,9 +167,9 @@ async def search_query_history(
   scope: Literal["user", "team", "global"],
   tool_context: ToolContext,
 ) -> dict[str, Any]:
-  """Search the Agent Engine Memory Bank for similar past queries.
+  """Search the Memory Bank for similar past queries with scope-based retrieval.
 
-  Uses Agent Engine SDK directly for scope-based memory retrieval.
+  Uses Agent Engine SDK directly to search memories in the appropriate scope(s).
   Parses stored query format with title, description, NL query, and SQL.
 
   Args:
@@ -162,15 +180,13 @@ async def search_query_history(
   Returns:
     A dictionary containing matching queries or an empty list.
   """
-  import vertexai
-
   logger.info("Searching query history with scope: %s", scope)
 
   user_id = tool_context.state.get("user_id", "anonymous")
   team_id = tool_context.state.get("team_id", "default")
-  agent_engine_id = os.environ.get("AGENT_ENGINE_ID", "")
 
-  if not agent_engine_id:
+  # Check AGENT_ENGINE_ID is configured
+  if not os.environ.get("AGENT_ENGINE_ID"):
     logger.warning("AGENT_ENGINE_ID not configured, returning empty results")
     return {
       "status": "success",
@@ -179,11 +195,8 @@ async def search_query_history(
     }
 
   try:
-    project = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
-    location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
-
-    client = vertexai.Client(project=project, location=location)
-    agent_engine_name = f"projects/{project}/locations/{location}/reasoningEngines/{agent_engine_id}"
+    client = _get_vertexai_client()
+    agent_engine_name = _get_agent_engine_name()
 
     matches = []
 
@@ -198,13 +211,13 @@ async def search_query_history(
 
     # Search each scope with similarity search
     for memory_scope in scopes_to_search:
+      scope_name = "user" if "user_id" in memory_scope else "team"
+
       response = client.agent_engines.memories.retrieve(
         name=agent_engine_name,
         scope=memory_scope,
         similarity_search_params={"search_query": nl_query},
       )
-
-      scope_name = "user" if "user_id" in memory_scope else "team"
 
       for memory in list(response):
         fact = memory.memory.fact if hasattr(memory, "memory") else str(memory)

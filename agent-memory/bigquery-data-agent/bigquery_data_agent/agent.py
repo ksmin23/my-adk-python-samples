@@ -7,7 +7,8 @@ from datetime import date
 from dotenv import load_dotenv
 from google.adk.agents import LlmAgent
 from google.adk.agents.callback_context import CallbackContext
-from google.adk.tools import preload_memory
+from google.adk.tools.preload_memory_tool import preload_memory_tool
+from google.adk.tools.load_memory_tool import load_memory_tool
 from google.genai import types
 
 # Load .env file (auto-discovers from current directory or parents)
@@ -90,7 +91,8 @@ Dataset: {os.environ.get("BIGQUERY_DATASET", "")}
       bigquery_toolset,  # ADK BigQueryToolset with execute_sql
       save_query_to_memory,
       search_query_history,
-      preload_memory,  # ADK built-in tool for memory preloading
+      preload_memory_tool,  # ADK built-in tool for memory preloading
+      load_memory_tool,     # ADK built-in tool for selective memory loading
     ],
     after_tool_callback=store_query_result_in_state,
     after_agent_callback=auto_save_session_to_memory_callback,
