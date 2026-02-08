@@ -5,11 +5,13 @@ import os
 from datetime import date
 
 from dotenv import load_dotenv
-from google.adk.agents import LlmAgent
+from google.adk.agents.llm_agent import Agent
 from google.adk.agents.callback_context import CallbackContext
 from google.adk.tools.preload_memory_tool import preload_memory_tool
 from google.adk.tools.load_memory_tool import load_memory_tool
 from google.genai import types
+
+from .log_tools import log_system_instructions, log_tool_call
 
 # Load .env file (auto-discovers from current directory or parents)
 load_dotenv()
@@ -66,12 +68,12 @@ async def auto_save_session_to_memory_callback(
     logger.warning("Failed to save session to memory: %s", e)
 
 
-def get_root_agent() -> LlmAgent:
-  """Create and configure the BigQuery Data Agent."""
-
-  # Combine instructions
-  # Prepend the general agent identity and runtime context
-  full_instruction = f"""
+# Create the root agent instance directly
+root_agent = Agent(
+  model=os.environ.get("AGENT_MODEL", "gemini-2.5-flash"),
+  name="bigquery_data_agent",
+  description="A self-learning BigQuery agent that converts natural language to SQL and learns from past queries.",
+  instruction=f"""
 You are a BigQuery Data Agent with access to the Memory Bank.
 Today's date: {date.today()}
 Project: {os.environ.get("GOOGLE_CLOUD_PROJECT", "")}
@@ -80,29 +82,18 @@ Dataset: {os.environ.get("BIGQUERY_DATASET", "")}
 {get_system_instruction()}
 
 {get_schema_info()}
-"""
-
-  agent = LlmAgent(
-    model=os.environ.get("AGENT_MODEL", "gemini-2.5-flash"),
-    name="bigquery_data_agent",
-    description="A self-learning BigQuery agent that converts natural language to SQL and learns from past queries.",
-    instruction=full_instruction,
-    tools=[
-      bigquery_toolset,  # ADK BigQueryToolset with execute_sql
-      save_query_to_memory,
-      search_query_history,
-      preload_memory_tool,  # ADK built-in tool for memory preloading
-      load_memory_tool,     # ADK built-in tool for selective memory loading
-    ],
-    after_tool_callback=store_query_result_in_state,
-    after_agent_callback=auto_save_session_to_memory_callback,
-    generate_content_config=types.GenerateContentConfig(
-      temperature=0.01,  # Low temperature for consistent SQL generation
-    ),
-  )
-
-  return agent
-
-
-# Create the root agent instance
-root_agent = get_root_agent()
+""",
+  tools=[
+    bigquery_toolset,  # ADK BigQueryToolset with execute_sql
+    save_query_to_memory,
+    search_query_history,
+    preload_memory_tool,  # ADK built-in tool for memory preloading
+    load_memory_tool,     # ADK built-in tool for selective memory loading
+  ],
+  before_model_callback=log_system_instructions,
+  after_tool_callback=[log_tool_call, store_query_result_in_state],
+  after_agent_callback=auto_save_session_to_memory_callback,
+  generate_content_config=types.GenerateContentConfig(
+    temperature=0.01,  # Low temperature for consistent SQL generation
+  ),
+)

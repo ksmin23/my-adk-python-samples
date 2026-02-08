@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# -*- encoding: utf-8 -*-
+# vim: tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+
 """Tools for BigQuery Data Agent with Agent Engine Memory Bank."""
 
 import logging
@@ -26,30 +30,6 @@ bigquery_tool_config = BigQueryToolConfig(
 bigquery_toolset = BigQueryToolset(
   bigquery_tool_config=bigquery_tool_config,
 )
-
-
-# Module-level cache for vertexai client
-_vertexai_client = None
-
-
-def _get_vertexai_client():
-  """Get or create a cached vertexai client."""
-  global _vertexai_client
-  if _vertexai_client is None:
-    import vertexai
-    project = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
-    location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
-    _vertexai_client = vertexai.Client(project=project, location=location)
-  return _vertexai_client
-
-
-def _get_agent_engine_name() -> str:
-  """Get the full Agent Engine resource name."""
-  project = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
-  location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
-  agent_engine_id = os.environ.get("AGENT_ENGINE_ID", "")
-  return f"projects/{project}/locations/{location}/reasoningEngines/{agent_engine_id}"
-
 
 def store_query_result_in_state(
   tool: BaseTool,
@@ -113,22 +93,25 @@ async def save_query_to_memory(
   user_id = tool_context.state.get("user_id", "anonymous")
   team_id = tool_context.state.get("team_id", "default")
 
-  # Check AGENT_ENGINE_ID is configured
-  if not os.environ.get("AGENT_ENGINE_ID"):
-    return {
-      "status": "error",
-      "message": "AGENT_ENGINE_ID not configured. Run setup_memory_bank.py first.",
-    }
 
   try:
-    client = _get_vertexai_client()
-    agent_engine_name = _get_agent_engine_name()
+    memory_service = tool_context.invocation_context.memory_service
+    if not memory_service:
+      return {
+        "status": "error",
+        "message": "Memory service not available in context.",
+      }
+
+    client = memory_service._get_api_client()
+    agent_engine_id = memory_service._agent_engine_id
+    agent_engine_name = f"reasoningEngines/{agent_engine_id}"
+    app_name = tool_context.invocation_context.session.app_name
 
     # Determine scope dict based on scope parameter
     if scope == "user":
-      memory_scope = {"user_id": user_id}
+      memory_scope = {"app_name": app_name, "user_id": user_id}
     else:  # team
-      memory_scope = {"team_id": team_id}
+      memory_scope = {"app_name": app_name, "team_id": team_id}
 
     # Create structured memory fact with title, description, and query
     fact = f"""Title: {title}
@@ -185,29 +168,35 @@ async def search_query_history(
   user_id = tool_context.state.get("user_id", "anonymous")
   team_id = tool_context.state.get("team_id", "default")
 
-  # Check AGENT_ENGINE_ID is configured
-  if not os.environ.get("AGENT_ENGINE_ID"):
-    logger.warning("AGENT_ENGINE_ID not configured, returning empty results")
-    return {
-      "status": "success",
-      "message": "AGENT_ENGINE_ID not configured. Proceeding without history.",
-      "matches": [],
-    }
 
   try:
-    client = _get_vertexai_client()
-    agent_engine_name = _get_agent_engine_name()
+    memory_service = tool_context.invocation_context.memory_service
+    if not memory_service:
+      logger.warning("Memory service not available, returning empty results")
+      return {
+        "status": "success",
+        "message": "Memory service not available. Proceeding without history.",
+        "matches": [],
+      }
+
+    client = memory_service._get_api_client()
+    agent_engine_id = memory_service._agent_engine_id
+    agent_engine_name = f"reasoningEngines/{agent_engine_id}"
+    app_name = tool_context.invocation_context.session.app_name
 
     matches = []
 
     # Define scopes to search based on the requested scope
     scopes_to_search = []
     if scope == "user":
-      scopes_to_search = [{"user_id": user_id}]
+      scopes_to_search = [{"app_name": app_name, "user_id": user_id} ]
     elif scope == "team":
-      scopes_to_search = [{"team_id": team_id}]
+      scopes_to_search = [{"app_name": app_name, "team_id": team_id}]
     else:  # global - search both user and team
-      scopes_to_search = [{"user_id": user_id}, {"team_id": team_id}]
+      scopes_to_search = [
+        {"app_name": app_name, "user_id": user_id},
+        {"app_name": app_name, "team_id": team_id}
+      ]
 
     # Search each scope with similarity search
     for memory_scope in scopes_to_search:

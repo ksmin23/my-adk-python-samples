@@ -9,6 +9,8 @@ from vertexai.types import (
     MemoryBankCustomizationConfigGenerateMemoriesExampleConversationSource as ConversationSource,
     MemoryBankCustomizationConfigGenerateMemoriesExampleConversationSourceEvent as ConversationSourceEvent,
     MemoryBankCustomizationConfigGenerateMemoriesExampleGeneratedMemory as ExampleGeneratedMemory,
+    MemoryBankCustomizationConfigMemoryTopicManagedMemoryTopic as ManagedMemoryTopic,
+    MemoryBankCustomizationConfigMemoryTopicManagedMemoryTopicManagedTopicEnum as ManagedTopicEnum,
 )
 from google.genai.types import Content, Part
 
@@ -95,7 +97,13 @@ def get_user_scope_config() -> CustomizationConfig:
     """Get CustomizationConfig for user-scoped memories."""
     return CustomizationConfig(
         scope_keys=["user_id"],
-        memory_topics=[MemoryTopic(custom_memory_topic=SQL_QUERY_TOPIC)],
+        memory_topics=[
+            MemoryTopic(custom_memory_topic=SQL_QUERY_TOPIC),
+            MemoryTopic(managed_memory_topic=ManagedMemoryTopic(managed_topic_enum=ManagedTopicEnum.USER_PERSONAL_INFO)),
+            MemoryTopic(managed_memory_topic=ManagedMemoryTopic(managed_topic_enum=ManagedTopicEnum.USER_PREFERENCES)),
+            MemoryTopic(managed_memory_topic=ManagedMemoryTopic(managed_topic_enum=ManagedTopicEnum.KEY_CONVERSATION_DETAILS)),
+            MemoryTopic(managed_memory_topic=ManagedMemoryTopic(managed_topic_enum=ManagedTopicEnum.EXPLICIT_INSTRUCTIONS)),
+        ],
         generate_memories_examples=create_example_memories(),
     )
 
@@ -104,7 +112,13 @@ def get_team_scope_config() -> CustomizationConfig:
     """Get CustomizationConfig for team-scoped memories."""
     return CustomizationConfig(
         scope_keys=["team_id"],
-        memory_topics=[MemoryTopic(custom_memory_topic=SQL_QUERY_TOPIC)],
+        memory_topics=[
+            MemoryTopic(custom_memory_topic=SQL_QUERY_TOPIC),
+            MemoryTopic(managed_memory_topic=ManagedMemoryTopic(managed_topic_enum=ManagedTopicEnum.USER_PERSONAL_INFO)),
+            MemoryTopic(managed_memory_topic=ManagedMemoryTopic(managed_topic_enum=ManagedTopicEnum.USER_PREFERENCES)),
+            MemoryTopic(managed_memory_topic=ManagedMemoryTopic(managed_topic_enum=ManagedTopicEnum.KEY_CONVERSATION_DETAILS)),
+            MemoryTopic(managed_memory_topic=ManagedMemoryTopic(managed_topic_enum=ManagedTopicEnum.EXPLICIT_INSTRUCTIONS)),
+        ],
         generate_memories_examples=create_example_memories(),
     )
 
@@ -137,7 +151,7 @@ def create_agent_engine_with_memory_bank(
             }
         }
     )
-    
+
     return agent_engine.api_resource.name.split("/")[-1]
 
 
