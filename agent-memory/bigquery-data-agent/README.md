@@ -116,7 +116,7 @@ bigquery-data-agent/
 ├── README.md
 ├── utils/                   # Utility and configuration scripts
 │   ├── __init__.py
-│   ├── memory_config.py     # Memory Bank configuration
+│   ├── memory_bank_customization.py # Memory Bank customization config
 │   └── setup_memory_bank.py  # CLI script to create Agent Engine
 └── bigquery_data_agent/
     ├── __init__.py

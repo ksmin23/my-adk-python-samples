@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 # vim: tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
-"""Memory Bank configuration for BigQuery Data Agent."""
+"""Memory Bank customization configuration for BigQuery Data Agent."""
 
 import os
 

@@ -8,7 +8,7 @@ import sys
 import argparse
 from dotenv import load_dotenv
 
-from memory_config import (
+from memory_bank_customization import (
   create_agent_engine_with_memory_bank,
   update_agent_engine_memory_config,
 )
