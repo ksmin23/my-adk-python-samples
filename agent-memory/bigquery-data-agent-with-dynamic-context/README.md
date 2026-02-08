@@ -112,7 +112,7 @@ Agent: (returns only User B's personal queries)
 ## Project Structure
 
 ```
-bigquery-data-agent/
+bigquery-data-agent-with-dynamic-context/
 ├── README.md
 ├── utils/                   # Utility and configuration scripts
 │   ├── __init__.py
