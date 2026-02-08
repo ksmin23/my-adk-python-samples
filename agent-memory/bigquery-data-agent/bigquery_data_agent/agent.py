@@ -89,7 +89,7 @@ ENVIRONMENT CONTEXT:
     bigquery_toolset,  # ADK BigQueryToolset with execute_sql
     save_query_to_memory,
     search_query_history,
-    preload_memory_tool,  # ADK built-in tool for memory preloading
+    # preload_memory_tool,  # ADK built-in tool for memory preloading
     load_memory_tool,     # ADK built-in tool for selective memory loading
   ],
   before_model_callback=log_system_instructions,
