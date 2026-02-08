@@ -2,6 +2,10 @@
 import os
 from google.genai.types import Content, Part
 import vertexai
+
+# Note: vertexai.types is a lazy-loaded property, not a physical module.
+# Using 'from vertexai.types import ...' would fail with ModuleNotFoundError.
+# Instead, we import 'types' from 'vertexai' to trigger the lazy-loading mechanism.
 from vertexai import types
 
 CustomizationConfig = types.MemoryBankCustomizationConfig
