@@ -8,7 +8,7 @@ import logging
 import os
 import traceback
 from datetime import datetime
-from typing import Any, Literal
+from typing import Any, Literal, Optional
 
 from dotenv import load_dotenv
 from google.adk.tools import BaseTool, ToolContext
@@ -63,6 +63,7 @@ async def save_query_to_memory(
   sql_query: str,
   scope: Literal["user", "team"],
   tool_context: ToolContext,
+  team_id: Optional[str] = None,
 ) -> dict[str, Any]:
   """Save a validated query to the Memory Bank with scope-based storage.
 
@@ -76,6 +77,7 @@ async def save_query_to_memory(
     sql_query: The SQL query that was validated as correct.
     scope: The sharing scope - 'user' for personal, 'team' for shared.
     tool_context: The ADK tool context.
+    team_id: Optional team ID strings (e.g., "sales-team"). If provided, it overrides the default or state-cached team ID.
 
   Returns:
     A status message indicating success or failure.
@@ -90,11 +92,7 @@ async def save_query_to_memory(
       "message": "Only SELECT queries can be saved.",
     }
 
-  # Get context from session state
-  user_id = tool_context.state.get("user_id", "anonymous")
-  team_id = tool_context.state.get("team_id", "default")
-
-
+  # Resolving context will happen inside the try block using the service
   try:
     memory_service = tool_context._invocation_context.memory_service
     if not memory_service:
@@ -106,7 +104,13 @@ async def save_query_to_memory(
     client = memory_service._get_api_client()
     agent_engine_id = memory_service._agent_engine_id
     agent_engine_name = f"reasoningEngines/{agent_engine_id}"
+    user_id = tool_context._invocation_context.user_id
     app_name = tool_context._invocation_context.session.app_name
+    # Resolve and Persist team_id: parameter > state > default
+    if team_id:
+      tool_context.state["team_id"] = team_id
+    else:
+      team_id = tool_context.state.get("team_id", "default")
 
     # Determine scope dict based on scope parameter
     if scope == "user":
@@ -151,6 +155,7 @@ async def search_query_history(
   nl_query: str,
   scope: Literal["user", "team", "global"],
   tool_context: ToolContext,
+  team_id: Optional[str] = None,
 ) -> dict[str, Any]:
   """Search the Memory Bank for similar past queries with scope-based retrieval.
 
@@ -161,16 +166,14 @@ async def search_query_history(
     nl_query: The natural language query to search for.
     scope: The search scope - 'user', 'team', or 'global'.
     tool_context: The ADK tool context.
+    team_id: Optional team ID strings. If provided, it overrides the default or state-cached team ID for team-scoped search.
 
   Returns:
     A dictionary containing matching queries or an empty list.
   """
   logger.info("Searching query history with scope: %s", scope)
 
-  user_id = tool_context.state.get("user_id", "anonymous")
-  team_id = tool_context.state.get("team_id", "default")
-
-
+  # Resolving context will happen inside the try block using the service
   try:
     memory_service = tool_context._invocation_context.memory_service
     if not memory_service:
@@ -184,7 +187,13 @@ async def search_query_history(
     client = memory_service._get_api_client()
     agent_engine_id = memory_service._agent_engine_id
     agent_engine_name = f"reasoningEngines/{agent_engine_id}"
+    user_id = tool_context._invocation_context.user_id
     app_name = tool_context._invocation_context.session.app_name
+    # Resolve and Persist team_id: parameter > state > default
+    if team_id:
+      tool_context.state["team_id"] = team_id
+    else:
+      team_id = tool_context.state.get("team_id", "default")
 
     matches = []
 
