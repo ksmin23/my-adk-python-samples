@@ -9,9 +9,10 @@ import logging
 from dotenv import load_dotenv
 
 # Add the project root to sys.path
-sys.path.insert(0, os.path.dirname(__file__))
+# Now setup_memory_bank.py is in utils/, so project root is one level up
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from bigquery_data_agent.memory_config import (
+from .memory_config import (
     create_agent_engine_with_memory_bank,
     update_agent_engine_memory_config,
 )

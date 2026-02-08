@@ -47,7 +47,7 @@ AGENT_ENGINE_ID=your-agent-engine-id
 Before running the agent, create an Agent Engine with Memory Bank configuration:
 
 ```bash
-python setup_memory_bank.py --project=your-project-id --location=us-central1
+python utils/setup_memory_bank.py --project=your-project-id --location=us-central1
 ```
 
 This creates an Agent Engine with custom memory topics for scope-based SQL query storage.
@@ -111,7 +111,10 @@ Agent: (returns only User B's personal queries)
 ```
 bigquery-data-agent/
 ├── README.md
-├── setup_memory_bank.py     # CLI script to create Agent Engine
+├── utils/                   # Utility and configuration scripts
+│   ├── __init__.py
+│   ├── memory_config.py     # Memory Bank configuration
+│   └── setup_memory_bank.py  # CLI script to create Agent Engine
 └── bigquery_data_agent/
     ├── __init__.py
     ├── .env.example          # Environment configuration template
