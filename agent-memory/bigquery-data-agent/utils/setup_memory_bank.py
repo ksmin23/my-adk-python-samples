@@ -8,21 +8,23 @@ import sys
 import argparse
 from dotenv import load_dotenv
 
-# Add the project root to sys.path
-# Now setup_memory_bank.py is in utils/, so project root is one level up
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-
-from .memory_config import (
+from memory_config import (
   create_agent_engine_with_memory_bank,
   update_agent_engine_memory_config,
 )
 
+import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 def main():
-  load_dotenv()
-  
+  # Load .env from the agent directory
+  script_dir = os.path.dirname(os.path.abspath(__file__))
+  project_root = os.path.dirname(script_dir)
+  env_path = os.path.join(project_root, "bigquery_data_agent", ".env")
+  load_dotenv(env_path)
+
   parser = argparse.ArgumentParser(description="Setup or update BigQuery Data Agent Memory Bank.")
   parser.add_argument(
     "--project", 
@@ -44,26 +46,25 @@ def main():
   
   project = args.project
   location = args.location
-  existing_id = args.agent_engine_id
+  agent_engine_id = args.agent_engine_id
   
-  if not project:
-    logger.error("Project ID not set. Please provide --project or set GOOGLE_CLOUD_PROJECT environment variable.")
-    sys.exit(1)
-    
-    try:
-        if existing_id:
-            logger.info(f"Updating existing Agent Engine: {existing_id}")
-            update_agent_engine_memory_config(existing_id, project, location)
-            logger.info("✓ Memory Bank configuration updated.")
-        else:
-            logger.info("Creating new Agent Engine with Memory Bank...")
-            agent_id = create_agent_engine_with_memory_bank(project, location)
-            logger.info(f"✓ Created Agent Engine: {agent_id}")
-            logger.info(f"\nResource ID: {agent_id}")
+  assert project, "Project ID not set. Please provide --project or set GOOGLE_CLOUD_PROJECT environment variable."
+  assert location, "Location not set. Please provide --location or set GOOGLE_CLOUD_LOCATION environment variable."
 
-    except Exception as e:
-        logger.error(f"Setup failed: {e}")
-        sys.exit(1)
+  try:
+    if agent_engine_id:
+      logger.info(f"Updating existing Agent Engine: {agent_engine_id}")
+      update_agent_engine_memory_config(agent_engine_id, project, location)
+      logger.info("✓ Memory Bank configuration updated.")
+    else:
+      logger.info("Creating new Agent Engine with Memory Bank...")
+      agent_id = create_agent_engine_with_memory_bank(project, location)
+      logger.info(f"✓ Created Agent Engine: {agent_id}")
+      logger.info(f"\nResource ID: {agent_id}")
+
+  except Exception as e:
+    logger.error(f"Setup failed: {e}")
+    sys.exit(1)
 
 
 if __name__ == "__main__":

@@ -1,19 +1,18 @@
 """Memory Bank configuration for BigQuery Data Agent."""
 import os
-import vertexai
-from vertexai.types import (
-    MemoryBankCustomizationConfig as CustomizationConfig,
-    MemoryBankCustomizationConfigMemoryTopic as MemoryTopic,
-    MemoryBankCustomizationConfigMemoryTopicCustomMemoryTopic as CustomMemoryTopic,
-    MemoryBankCustomizationConfigGenerateMemoriesExample as GenerateMemoriesExample,
-    MemoryBankCustomizationConfigGenerateMemoriesExampleConversationSource as ConversationSource,
-    MemoryBankCustomizationConfigGenerateMemoriesExampleConversationSourceEvent as ConversationSourceEvent,
-    MemoryBankCustomizationConfigGenerateMemoriesExampleGeneratedMemory as ExampleGeneratedMemory,
-    MemoryBankCustomizationConfigMemoryTopicManagedMemoryTopic as ManagedMemoryTopic,
-    MemoryBankCustomizationConfigMemoryTopicManagedMemoryTopicManagedTopicEnum as ManagedTopicEnum,
-)
 from google.genai.types import Content, Part
+import vertexai
+from vertexai import types
 
+CustomizationConfig = types.MemoryBankCustomizationConfig
+MemoryTopic = types.MemoryBankCustomizationConfigMemoryTopic
+CustomMemoryTopic = types.MemoryBankCustomizationConfigMemoryTopicCustomMemoryTopic
+GenerateMemoriesExample = types.MemoryBankCustomizationConfigGenerateMemoriesExample
+ConversationSource = types.MemoryBankCustomizationConfigGenerateMemoriesExampleConversationSource
+ConversationSourceEvent = types.MemoryBankCustomizationConfigGenerateMemoriesExampleConversationSourceEvent
+ExampleGeneratedMemory = types.MemoryBankCustomizationConfigGenerateMemoriesExampleGeneratedMemory
+ManagedMemoryTopic = types.MemoryBankCustomizationConfigMemoryTopicManagedMemoryTopic
+ManagedTopicEnum = types.ManagedTopicEnum
 
 # Custom Memory Topic for SQL queries
 SQL_QUERY_TOPIC = CustomMemoryTopic(
