@@ -37,9 +37,6 @@ BIGQUERY_DATASET=your_dataset_name
 
 # Agent Configuration
 AGENT_MODEL=gemini-2.5-flash
-
-# Agent Engine Memory Bank (required for query storage)
-AGENT_ENGINE_ID=your-agent-engine-id
 ```
 
 ### 2. Create Memory Bank
@@ -47,11 +44,17 @@ AGENT_ENGINE_ID=your-agent-engine-id
 Before running the agent, create an Agent Engine with Memory Bank configuration:
 
 ```bash
+# Using defaults from .env
+python utils/setup_memory_bank.py
+
+# Or providing arguments explicitly
 python utils/setup_memory_bank.py --project=your-project-id --location=us-central1
 ```
 
-This creates an Agent Engine with custom memory topics for scope-based SQL query storage.
-Copy the output `AGENT_ENGINE_ID` to your `.env` file.
+This creates the necessary **Reasoning Engine** infrastructure on Vertex AI with custom memory topics. 
+The setup script ensures that the engine is provisioned with a display name matching the agent name (`bigquery_data_agent`). 
+
+Once provisioned, the ADK framework automatically resolves and connects to this memory bank at runtime based on the matching name, so you don't need to manually manage the Engine ID in your `.env` file.
 
 ### 3. Run the Agent
 

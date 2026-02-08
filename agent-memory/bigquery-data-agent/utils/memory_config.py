@@ -126,7 +126,7 @@ def get_team_scope_config() -> CustomizationConfig:
 def create_agent_engine_with_memory_bank(
     project: str,
     location: str,
-    display_name: str = "bigquery-data-agent",
+    display_name: str = "bigquery_data_agent",
 ) -> str:
     """Create Agent Engine with Memory Bank CustomizationConfig.
     
