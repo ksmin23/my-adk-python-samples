@@ -144,3 +144,11 @@ SQL: SELECT FORMAT_DATE('%Y-%m', order_date) AS month, SUM(amount) AS total_sale
 | `user` | user_id | Personal only |
 | `team` | team_id | All team members |
 | `global` | (search only) | Searches both user and team |
+
+
+## References
+
+- 📓 [Get started with Memory Bank on ADK](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/agents/agent_engine/memory_bank/get_started_with_memory_bank_on_adk.ipynb)
+- 📝 [Self Improving Text2Sql Agent with Dynamic Context and Continuous Learning (2025-12-15)](https://www.ashpreetbedi.com/articles/sql-agent): A self-improving Text-to-SQL agent using dynamic context and "poor-man's continuous learning".
+- :octocat: [Dash](https://github.com/agno-agi/dash): Dash is a **self-learning data agent** that grounds its answers in **6 layers of context** and improves with every run. Inspired by [OpenAI's in-house data agent](https://openai.com/index/inside-our-in-house-data-agent/).
+- 📝 [OpenAI's in-house data agent (2026-01-29)](https://openai.com/index/inside-our-in-house-data-agent/)
