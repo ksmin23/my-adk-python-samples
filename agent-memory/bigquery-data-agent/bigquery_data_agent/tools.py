@@ -6,6 +6,7 @@
 
 import logging
 import os
+import traceback
 from datetime import datetime
 from typing import Any, Literal
 
@@ -95,7 +96,7 @@ async def save_query_to_memory(
 
 
   try:
-    memory_service = tool_context.invocation_context.memory_service
+    memory_service = tool_context._invocation_context.memory_service
     if not memory_service:
       return {
         "status": "error",
@@ -105,7 +106,7 @@ async def save_query_to_memory(
     client = memory_service._get_api_client()
     agent_engine_id = memory_service._agent_engine_id
     agent_engine_name = f"reasoningEngines/{agent_engine_id}"
-    app_name = tool_context.invocation_context.session.app_name
+    app_name = tool_context._invocation_context.session.app_name
 
     # Determine scope dict based on scope parameter
     if scope == "user":
@@ -138,6 +139,7 @@ SQL: {sql_query}"""
     }
 
   except Exception as e:
+    traceback.print_exc()
     logger.error("Failed to save query to memory: %s", e)
     return {
       "status": "error",
@@ -170,7 +172,7 @@ async def search_query_history(
 
 
   try:
-    memory_service = tool_context.invocation_context.memory_service
+    memory_service = tool_context._invocation_context.memory_service
     if not memory_service:
       logger.warning("Memory service not available, returning empty results")
       return {
@@ -182,7 +184,7 @@ async def search_query_history(
     client = memory_service._get_api_client()
     agent_engine_id = memory_service._agent_engine_id
     agent_engine_name = f"reasoningEngines/{agent_engine_id}"
-    app_name = tool_context.invocation_context.session.app_name
+    app_name = tool_context._invocation_context.session.app_name
 
     matches = []
 
@@ -235,6 +237,7 @@ async def search_query_history(
     }
 
   except Exception as e:
+    traceback.print_exc()
     logger.error("Failed to search query history: %s", e)
     return {
       "status": "error",
