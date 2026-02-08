@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# -*- encoding: utf-8 -*-
+# vim: tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+
 """BigQuery Data Agent with Agent Engine Memory Bank integration."""
 
 import logging
@@ -39,11 +43,8 @@ def get_schema_info() -> str:
   """
   # TODO: Implement dynamic schema retrieval from BigQuery
   # For now, return a placeholder that should be configured
-  schema_placeholder = f"""
+  schema_placeholder = """
 <SCHEMA>
-Project: {os.environ.get("GOOGLE_CLOUD_PROJECT", "")}
-Dataset: {os.environ.get("BIGQUERY_DATASET", "")}
-
 (Schema information will be loaded dynamically.
 Configure BIGQUERY_DATASET in .env or implement schema retrieval.)
 </SCHEMA>
@@ -74,13 +75,14 @@ root_agent = Agent(
   name="bigquery_data_agent",
   description="A self-learning BigQuery agent that converts natural language to SQL and learns from past queries.",
   instruction=f"""
-You are a BigQuery Data Agent with access to the Memory Bank.
-Today's date: {date.today()}
-Project: {os.environ.get("GOOGLE_CLOUD_PROJECT", "")}
-Dataset: {os.environ.get("BIGQUERY_DATASET", "")}
+ENVIRONMENT CONTEXT:
+- Today's date: {date.today()}
+- Project ID: {os.environ.get("GOOGLE_CLOUD_PROJECT", "")}
+- Dataset ID: {os.environ.get("BIGQUERY_DATASET", "")}
 
 {get_system_instruction()}
 
+### DATABASE SCHEMA
 {get_schema_info()}
 """,
   tools=[
