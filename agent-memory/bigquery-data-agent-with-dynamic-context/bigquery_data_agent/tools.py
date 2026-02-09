@@ -167,11 +167,23 @@ Description: {description}
 NL Query: {nl_query}
 SQL: {sql_query}"""
 
+    dataset_id = os.environ.get("BIGQUERY_DATASET", "unknown")
+
     # Store directly to the appropriate scope using Agent Engine SDK
     client.agent_engines.memories.generate(
       name=agent_engine_name,
       scope=memory_scope,
-      direct_memories_source={"direct_memories": [{"fact": fact}]},
+      direct_memories_source={
+        "direct_memories": [
+          {
+            "fact": fact,
+            "metadata": {
+              "dataset_id": dataset_id,
+              "content_type": "sql",
+            }
+          }
+        ]
+      },
       config={"wait_for_completion": False},
     )
 
