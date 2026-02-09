@@ -129,7 +129,7 @@ SQL: {sql_query}"""
       name=agent_engine_name,
       scope=memory_scope,
       direct_memories_source={"direct_memories": [{"fact": fact}]},
-      config={"wait_for_completion": True},
+      config={"wait_for_completion": False},
     )
 
     logger.info("Memory saved to %s scope: %s", scope, title)
@@ -225,17 +225,25 @@ async def search_query_history(
         # Parse the stored fact format
         match_entry = {"fact": fact, "scope": scope_name}
 
+        current_key = None
         lines = fact.split("\n")
         for line in lines:
           line_lower = line.lower()
           if line_lower.startswith("title:"):
-            match_entry["title"] = line.split(":", 1)[1].strip()
+            current_key = "title"
+            match_entry[current_key] = line.split(":", 1)[1].strip()
           elif line_lower.startswith("description:"):
-            match_entry["description"] = line.split(":", 1)[1].strip()
+            current_key = "description"
+            match_entry[current_key] = line.split(":", 1)[1].strip()
           elif line_lower.startswith("nl query:"):
-            match_entry["nl_query"] = line.split(":", 1)[1].strip()
+            current_key = "nl_query"
+            match_entry[current_key] = line.split(":", 1)[1].strip()
           elif line_lower.startswith("sql:"):
-            match_entry["sql_query"] = line.split(":", 1)[1].strip()
+            current_key = "sql_query"
+            match_entry[current_key] = line.split(":", 1)[1].strip()
+          elif current_key:
+            # Append multi-line values
+            match_entry[current_key] += "\n" + line
 
         matches.append(match_entry)
 
