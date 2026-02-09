@@ -32,6 +32,7 @@ bigquery_toolset = BigQueryToolset(
   bigquery_tool_config=bigquery_tool_config,
 )
 
+
 def store_query_result_in_state(
   tool: BaseTool,
   args: dict[str, Any],
@@ -68,7 +69,9 @@ def _parse_memory_fact(fact: str) -> dict[str, Any]:
   Returns:
     A dictionary containing the parsed fields.
   """
+
   parsed = {"fact": fact}
+
   # Mapping of prefixes to match_entry keys
   key_map = {
     "title:": "title",
@@ -261,11 +264,8 @@ async def search_query_history(
 
       for memory in list(response):
         fact = memory.memory.fact if hasattr(memory, "memory") else str(memory)
-
-        # Parse the stored fact format
         match_entry = _parse_memory_fact(fact)
         match_entry["scope"] = scope_name
-
         matches.append(match_entry)
 
     return {
