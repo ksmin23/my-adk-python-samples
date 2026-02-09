@@ -213,14 +213,16 @@ SQL: {sql_query}"""
         "direct_memories": [
           {
             "fact": fact,
-            "metadata": {
-              "dataset_id": dataset_id,
-              "content_type": "sql",
-            }
           }
         ]
       },
-      config={"wait_for_completion": False},
+      config={
+        "wait_for_completion": False,
+        "metadata": {
+          "dataset_id": {"string_value": dataset_id},
+          "content_type": {"string_value": "sql"},
+        },
+      },
     )
 
     logger.info("Memory saved to %s scope: %s", scope, title)
@@ -310,7 +312,7 @@ async def search_query_history(
           "filters": [
             {
               "key": "content_type",
-              "value": "sql",
+              "value": {"string_value": "sql"},
               "op": "EQUAL",
             }
           ]
@@ -321,7 +323,7 @@ async def search_query_history(
         name=agent_engine_name,
         scope=memory_scope,
         similarity_search_params={"search_query": nl_query},
-        filter_groups=filter_groups,
+        config={"filter_groups": filter_groups},
       )
 
       for memory in list(response):
