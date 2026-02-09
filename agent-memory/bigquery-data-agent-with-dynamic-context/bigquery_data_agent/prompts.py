@@ -98,7 +98,14 @@ When searching, you can specify:
 - `team`: Search only team-shared queries.
 - `global`: Search all available queries (user + team).
 
-Default behavior:
 - Search with scope `global` to maximize reuse.
 - Ask user for preferred scope when saving.
+
+––––––––––––––––––––
+USER PROFILE & PERSISTENT PROPERTIES
+––––––––––––––––––––
+
+You can store persistent user information (like `team_id`, `preferred_region`, etc.) to improve personalized context.
+- When the user mentions their team ID, use `set_user_property(key="team_id", value="...")`.
+- This information persists across sessions and allows you to automatically resolve the team scope for future `save_query_to_memory` and `search_query_history` calls without asking the user again.
 """

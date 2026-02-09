@@ -128,6 +128,151 @@ def _parse_memory_fact(fact: str) -> dict[str, Any]:
   return parsed
 
 
+async def _save_user_property(
+  key: str,
+  value: str,
+  tool_context: ToolContext,
+) -> None:
+  """Internal helper to save a user property to personal memory."""
+  memory_service = tool_context._invocation_context.memory_service
+  if not memory_service:
+    return
+
+  client = memory_service._get_api_client()
+  agent_engine_id = memory_service._agent_engine_id
+  agent_engine_name = f"reasoningEngines/{agent_engine_id}"
+  user_id = tool_context._invocation_context.user_id
+  app_name = tool_context._invocation_context.session.app_name
+
+  user_scope = {"app_name": app_name, "user_id": user_id}
+  fact = f"User property {key}: {value}"
+
+  client.agent_engines.memories.generate(
+    name=agent_engine_name,
+    scope=user_scope,
+    direct_memories_source={"direct_memories": [{"fact": fact}]},
+    config={
+      "wait_for_completion": False,
+      "metadata": {
+        "content_type": {"string_value": "profile"},
+        "property_key": {"string_value": key},
+      },
+    },
+  )
+  logger.info("Auto-registered user property '%s' = '%s'", key, value)
+  # Update state for immediate session use
+  tool_context.state[key] = value
+
+
+async def set_user_property(
+  key: str,
+  value: str,
+  tool_context: ToolContext,
+) -> dict:
+  """Sets a persistent property for the user in their personal memory scope.
+
+  This is useful for storing information like 'team_id' that should persist
+  across sessions.
+
+  Args:
+    key: The property name (e.g., 'team_id').
+    value: The property value.
+    tool_context: The ADK tool context.
+
+  Returns:
+    A status message indicating success or failure.
+  """
+  try:
+    await _save_user_property(key, value, tool_context)
+    return {
+      "status": "success",
+      "message": f"Successfully saved {key} as '{value}'. This will be remembered across sessions.",
+    }
+  except Exception as e:
+    logger.error("Failed to save user property: %s", e)
+    return {"status": "error", "message": str(e)}
+
+
+async def get_team_id_from_user_memory(tool_context: ToolContext) -> str | None:
+  """Attempts to retrieve team_id from the user's personal memory scope.
+
+  Searches for memories in the 'user' scope that mention 'team id'.
+
+  Args:
+    tool_context: The ADK tool context.
+
+  Returns:
+    The extracted team_id string or None if not found.
+  """
+  try:
+    memory_service = tool_context._invocation_context.memory_service
+    if not memory_service:
+      return None
+
+    client = memory_service._get_api_client()
+    agent_engine_id = memory_service._agent_engine_id
+    agent_engine_name = f"reasoningEngines/{agent_engine_id}"
+    user_id = tool_context._invocation_context.user_id
+    app_name = tool_context._invocation_context.session.app_name
+
+    user_scope = {"app_name": app_name, "user_id": user_id}
+
+    # Step 1: Try structured retrieval using metadata filter
+    try:
+      filter_groups = [
+        {
+          "filters": [
+            {"key": "content_type", "value": {"string_value": "profile"}, "op": "EQUAL"},
+            {"key": "property_key", "value": {"string_value": "team_id"}, "op": "EQUAL"}
+          ]
+        }
+      ]
+      
+      response = client.agent_engines.memories.retrieve(
+        name=agent_engine_name,
+        scope=user_scope,
+        config={"filter_groups": filter_groups},
+      )
+      
+      for memory in list(response):
+        fact = memory.memory.fact if hasattr(memory, "memory") else str(memory)
+        # Match "User property team_id: value"
+        match = re.search(r"property team_id:\s*([a-zA-Z0-9_-]+)", fact, re.IGNORECASE)
+        if match:
+          val = match.group(1)
+          logger.info("Found team_id '%s' via metadata filter", val)
+          return val
+    except Exception as me:
+      logger.debug("Metadata-based profile lookup failed: %s", me)
+
+    # Step 2: Fallback to semantic search with robust regex
+    # Search for "my team id" or "team name" in personal memory
+    response = client.agent_engines.memories.retrieve(
+      name=agent_engine_name,
+      scope=user_scope,
+      # top_k: Max memories to return (Default: 3, Max: 100)
+      similarity_search_params={
+        "search_query": "What is my team id or team name?",
+        "top_k": 5
+      }
+    )
+
+    for memory in list(response):
+      fact = memory.memory.fact if hasattr(memory, "memory") else str(memory)
+      # Improved regex to handle "team ID is X", "team: X", "I'm in team X", "data-ops 팀 소속", etc.
+      # Korean support included via context words
+      match = re.search(r"(?:team(?:\s|_|)id|team|팀)\s*(?:is|:|\s|이|소속|ID)\s*([a-zA-Z0-9_-]+)", fact, re.IGNORECASE)
+      if match:
+        team_id = match.group(1)
+        logger.info("Found team_id '%s' in user memory via regex", team_id)
+        return team_id
+
+  except Exception as e:
+    logger.warning("Failed to lookup team_id in memory: %s", e)
+  
+  return None
+
+
 async def save_query_to_memory(
   title: str,
   description: str,
@@ -178,16 +323,32 @@ async def save_query_to_memory(
     agent_engine_name = f"reasoningEngines/{agent_engine_id}"
     user_id = tool_context._invocation_context.user_id
     app_name = tool_context._invocation_context.session.app_name
-    # Resolve and Persist team_id: parameter > state > default
-    if team_id:
-      tool_context.state["team_id"] = team_id
-    else:
-      team_id = tool_context.state.get("team_id", "default")
-
+    
     # Determine scope dict based on scope parameter
     if scope == "user":
       memory_scope = {"app_name": app_name, "user_id": user_id}
     else:  # team
+      # Resolve team_id only when needed for team scope: parameter > state > user memory profile
+      if not team_id:
+        team_id = tool_context.state.get("team_id")
+
+      if not team_id:
+        team_id = await get_team_id_from_user_memory(tool_context)
+        if team_id:
+          tool_context.state["team_id"] = team_id
+
+      if not team_id:
+        return {
+          "status": "error",
+          "message": "Team ID is required for team scope. Please provide it or save it in your profile first.",
+        }
+      
+      # Auto-register team_id to user profile for future sessions
+      try:
+        await _save_user_property("team_id", team_id, tool_context)
+      except Exception as pe:
+        logger.debug("Minor failure during team_id auto-registration: %s", pe)
+
       memory_scope = {"app_name": app_name, "team_id": team_id}
 
     # Create structured memory fact with title, description, and query
@@ -201,7 +362,7 @@ SQL: {sql_query}"""
     dataset_id = tool_context.state.get("last_dataset_id")
     if not dataset_id or dataset_id == "unknown":
       dataset_id = _extract_dataset_id(sql_query)
-    
+
     if dataset_id == "unknown":
       dataset_id = os.environ.get("BIGQUERY_DATASET", "unknown")
 
@@ -282,11 +443,16 @@ async def search_query_history(
     agent_engine_name = f"reasoningEngines/{agent_engine_id}"
     user_id = tool_context._invocation_context.user_id
     app_name = tool_context._invocation_context.session.app_name
-    # Resolve and Persist team_id: parameter > state > default
-    if team_id:
-      tool_context.state["team_id"] = team_id
-    else:
-      team_id = tool_context.state.get("team_id", "default")
+    
+    # Resolve team_id only for team or global scope: parameter > state > user memory profile
+    if scope in ["team", "global"]:
+      if not team_id:
+        team_id = tool_context.state.get("team_id")
+      
+      if not team_id:
+        team_id = await get_team_id_from_user_memory(tool_context)
+        if team_id:
+          tool_context.state["team_id"] = team_id
 
     matches = []
 

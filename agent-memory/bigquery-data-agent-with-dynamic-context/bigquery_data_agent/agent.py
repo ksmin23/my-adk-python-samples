@@ -26,6 +26,7 @@ from .tools import (
   bigquery_toolset,
   save_query_to_memory,
   search_query_history,
+  set_user_property,
   store_query_result_in_state,
 )
 
@@ -88,6 +89,7 @@ ENVIRONMENT CONTEXT:
     bigquery_toolset,  # ADK BigQueryToolset with execute_sql
     save_query_to_memory,
     search_query_history,
+    set_user_property,
     preload_memory_tool,  # ADK built-in tool for memory preloading
     load_memory_tool,     # ADK built-in tool for selective memory loading
   ],
