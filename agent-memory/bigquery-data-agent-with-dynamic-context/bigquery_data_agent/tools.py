@@ -304,10 +304,24 @@ async def search_query_history(
     for memory_scope in scopes_to_search:
       scope_name = "user" if "user_id" in memory_scope else "team"
 
+      # Filter for SQL-type memories only
+      filter_groups = [
+        {
+          "filters": [
+            {
+              "key": "content_type",
+              "value": "sql",
+              "op": "EQUAL",
+            }
+          ]
+        }
+      ]
+
       response = client.agent_engines.memories.retrieve(
         name=agent_engine_name,
         scope=memory_scope,
         similarity_search_params={"search_query": nl_query},
+        filter_groups=filter_groups,
       )
 
       for memory in list(response):
