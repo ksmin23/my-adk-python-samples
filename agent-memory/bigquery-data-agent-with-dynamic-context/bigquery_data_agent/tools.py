@@ -56,6 +56,46 @@ def store_query_result_in_state(
   return None
 
 
+def _parse_memory_fact(fact: str) -> dict[str, Any]:
+  """Parses a structured memory fact string into a dictionary.
+
+  The fact string is expected to have fields like 'Title:', 'Description:',
+  'NL Query:', and 'SQL:'. Multi-line values are supported.
+
+  Args:
+    fact: The raw fact string from memory.
+
+  Returns:
+    A dictionary containing the parsed fields.
+  """
+  parsed = {"fact": fact}
+  # Mapping of prefixes to match_entry keys
+  key_map = {
+    "title:": "title",
+    "description:": "description",
+    "nl query:": "nl_query",
+    "sql:": "sql_query",
+  }
+
+  current_key = None
+  for line in fact.split("\n"):
+    line_lower = line.lower()
+    # Check if line starts with any of our known prefixes
+    matched = False
+    for prefix, entry_key in key_map.items():
+      if line_lower.startswith(prefix):
+        current_key = entry_key
+        parsed[current_key] = line.split(":", 1)[1].strip()
+        matched = True
+        break
+
+    if not matched and current_key:
+      # Append multi-line content for the last found key
+      parsed[current_key] += "\n" + line
+
+  return parsed
+
+
 async def save_query_to_memory(
   title: str,
   description: str,
@@ -223,31 +263,8 @@ async def search_query_history(
         fact = memory.memory.fact if hasattr(memory, "memory") else str(memory)
 
         # Parse the stored fact format
-        match_entry = {"fact": fact, "scope": scope_name}
-
-        # Mapping of prefixes to match_entry keys
-        key_map = {
-          "title:": "title",
-          "description:": "description",
-          "nl query:": "nl_query",
-          "sql:": "sql_query",
-        }
-
-        current_key = None
-        for line in fact.split("\n"):
-          line_lower = line.lower()
-          # Check if line starts with any of our known prefixes
-          matched = False
-          for prefix, entry_key in key_map.items():
-            if line_lower.startswith(prefix):
-              current_key = entry_key
-              match_entry[current_key] = line.split(":", 1)[1].strip()
-              matched = True
-              break
-
-          if not matched and current_key:
-            # Append multi-line content for the last found key
-            match_entry[current_key] += "\n" + line
+        match_entry = _parse_memory_fact(fact)
+        match_entry["scope"] = scope_name
 
         matches.append(match_entry)
 
