@@ -34,6 +34,31 @@ bigquery_toolset = BigQueryToolset(
 )
 
 
+def _extract_dataset_id(sql: str) -> str:
+  """Extracts the dataset_id from a BigQuery SQL query.
+
+  Looks for project.dataset.table or dataset.table patterns.
+
+  Args:
+    sql: The SQL query string.
+
+  Returns:
+    The extracted dataset_id or 'unknown'.
+  """
+  # Matches: `project.dataset.table`, project.dataset.table, dataset.table
+  # Pattern 1: project.dataset.table (3 parts)
+  match = re.search(r"([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+)\.[a-zA-Z0-9_-]+", sql)
+  if match:
+    return match.group(2)
+  
+  # Pattern 2: dataset.table (2 parts)
+  match = re.search(r"([a-zA-Z0-9_-]+)\.[a-zA-Z0-9_-]+", sql)
+  if match:
+    return match.group(1)
+  
+  return "unknown"
+
+
 def store_query_result_in_state(
   tool: BaseTool,
   args: dict[str, Any],
@@ -56,20 +81,7 @@ def store_query_result_in_state(
       sql = args.get("sql", "")
       tool_context.state["last_executed_query"] = sql
       tool_context.state["last_query_results"] = tool_response.get("rows", [])
-
-      # Extract dataset_id from SQL (looking for project.dataset.table or dataset.table)
-      # Matches: `project.dataset.table`, project.dataset.table, dataset.table
-      dataset_id = "unknown"
-      match = re.search(r"([a-zA-Z0-9_-]+)\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+", sql)
-      if match:
-        dataset_id = match.group(2) if len(match.groups()) > 1 else match.group(1)
-      else:
-        # Fallback to dataset.table
-        match = re.search(r"([a-zA-Z0-9_-]+)\.[a-zA-Z0-9_-]+", sql)
-        if match:
-          dataset_id = match.group(1)
-      
-      tool_context.state["last_dataset_id"] = dataset_id
+      tool_context.state["last_dataset_id"] = _extract_dataset_id(sql)
 
   return None
 
@@ -185,11 +197,13 @@ NL Query: {nl_query}
 SQL: {sql_query}"""
 
     # Try to get dataset_id from state (stored during execution)
-    # Fallback to environment variable
-    dataset_id = tool_context.state.get(
-      "last_dataset_id", 
-      os.environ.get("BIGQUERY_DATASET", "unknown")
-    )
+    # Fallback to extracting from current query, then to environment variable
+    dataset_id = tool_context.state.get("last_dataset_id")
+    if not dataset_id or dataset_id == "unknown":
+      dataset_id = _extract_dataset_id(sql_query)
+    
+    if dataset_id == "unknown":
+      dataset_id = os.environ.get("BIGQUERY_DATASET", "unknown")
 
     # Store directly to the appropriate scope using Agent Engine SDK
     client.agent_engines.memories.generate(
