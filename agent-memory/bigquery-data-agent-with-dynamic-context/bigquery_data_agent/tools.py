@@ -225,24 +225,28 @@ async def search_query_history(
         # Parse the stored fact format
         match_entry = {"fact": fact, "scope": scope_name}
 
+        # Mapping of prefixes to match_entry keys
+        key_map = {
+          "title:": "title",
+          "description:": "description",
+          "nl query:": "nl_query",
+          "sql:": "sql_query",
+        }
+
         current_key = None
-        lines = fact.split("\n")
-        for line in lines:
+        for line in fact.split("\n"):
           line_lower = line.lower()
-          if line_lower.startswith("title:"):
-            current_key = "title"
-            match_entry[current_key] = line.split(":", 1)[1].strip()
-          elif line_lower.startswith("description:"):
-            current_key = "description"
-            match_entry[current_key] = line.split(":", 1)[1].strip()
-          elif line_lower.startswith("nl query:"):
-            current_key = "nl_query"
-            match_entry[current_key] = line.split(":", 1)[1].strip()
-          elif line_lower.startswith("sql:"):
-            current_key = "sql_query"
-            match_entry[current_key] = line.split(":", 1)[1].strip()
-          elif current_key:
-            # Append multi-line values
+          # Check if line starts with any of our known prefixes
+          matched = False
+          for prefix, entry_key in key_map.items():
+            if line_lower.startswith(prefix):
+              current_key = entry_key
+              match_entry[current_key] = line.split(":", 1)[1].strip()
+              matched = True
+              break
+
+          if not matched and current_key:
+            # Append multi-line content for the last found key
             match_entry[current_key] += "\n" + line
 
         matches.append(match_entry)
