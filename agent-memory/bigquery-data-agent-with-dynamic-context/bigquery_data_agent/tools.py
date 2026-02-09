@@ -6,6 +6,7 @@
 
 import logging
 import os
+import re
 import traceback
 from datetime import datetime
 from typing import Any, Literal, Optional
@@ -52,8 +53,24 @@ def store_query_result_in_state(
   """
   if tool.name == "execute_sql":
     if tool_response.get("status") == "SUCCESS":
-      tool_context.state["last_executed_query"] = args.get("sql", "")
+      sql = args.get("sql", "")
+      tool_context.state["last_executed_query"] = sql
       tool_context.state["last_query_results"] = tool_response.get("rows", [])
+
+      # Extract dataset_id from SQL (looking for project.dataset.table or dataset.table)
+      # Matches: `project.dataset.table`, project.dataset.table, dataset.table
+      dataset_id = "unknown"
+      match = re.search(r"([a-zA-Z0-9_-]+)\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+", sql)
+      if match:
+        dataset_id = match.group(2) if len(match.groups()) > 1 else match.group(1)
+      else:
+        # Fallback to dataset.table
+        match = re.search(r"([a-zA-Z0-9_-]+)\.[a-zA-Z0-9_-]+", sql)
+        if match:
+          dataset_id = match.group(1)
+      
+      tool_context.state["last_dataset_id"] = dataset_id
+
   return None
 
 
@@ -167,7 +184,12 @@ Description: {description}
 NL Query: {nl_query}
 SQL: {sql_query}"""
 
-    dataset_id = os.environ.get("BIGQUERY_DATASET", "unknown")
+    # Try to get dataset_id from state (stored during execution)
+    # Fallback to environment variable
+    dataset_id = tool_context.state.get(
+      "last_dataset_id", 
+      os.environ.get("BIGQUERY_DATASET", "unknown")
+    )
 
     # Store directly to the appropriate scope using Agent Engine SDK
     client.agent_engines.memories.generate(
