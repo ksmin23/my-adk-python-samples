@@ -31,12 +31,17 @@ bigquery-data-agent-with-dynamic-context/
     ├── __init__.py
     ├── .env.example                  # Template for environment variables
     ├── agent.py                      # Main agent definition and callbacks
+    ├── log_tools.py                  # Logging utilities
     ├── prompts.py                    # System instructions and prompt templates
+    ├── requirements.txt              # Project dependencies
     └── tools.py                      # Tool implementations (BigQuery, Memory)
 ```
 
 - `bigquery_data_agent/agent.py`: Defines the `LlmAgent`, including model configuration and tool registration.
+- `bigquery_data_agent/log_tools.py`: Helper functions for logging system instructions and tool calls.
+- `bigquery_data_agent/prompts.py`: Contains the system instructions and prompt templates for the agent.
 - `bigquery_data_agent/tools.py`: Implements the core logic for executing SQL, saving queries to memory, and searching history.
+- `utils/memory_bank_customization.py`: Defines the Memory Bank configuration, including custom topics like `sql_query`.
 - `utils/setup_memory_bank.py`: A utility script to initialize the Vertex AI Agent Engine and Memory Bank.
 
 ## Prerequisites
