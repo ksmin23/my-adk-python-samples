@@ -1,5 +1,0 @@
-google-adk==1.23.0
-google-cloud-aiplatform==1.135.0
-google-cloud-bigquery==3.40.0
-google-genai==1.60.0
-python-dotenv==1.2.1
