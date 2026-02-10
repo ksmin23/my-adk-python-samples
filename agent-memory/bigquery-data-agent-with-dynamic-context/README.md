@@ -189,3 +189,6 @@ SQL: SELECT FORMAT_DATE('%Y-%m', date) as month, SUM(amount) FROM ...
 - 📝 [Self Improving Text2Sql Agent with Dynamic Context](https://www.ashpreetbedi.com/articles/sql-agent)
 - :octocat: [Dash - Self-learning Data Agent](https://github.com/agno-agi/dash)
 - 📝 [OpenAI's in-house data agent](https://openai.com/index/inside-our-in-house-data-agent/)
+- [Gemini for Google Cloud > Conversational Analytics API: Build data agents and chat with your data](https://docs.cloud.google.com/gemini/docs/conversational-analytics-api/overview)
+  - [Google Codelabs: Introduction to the Conversational Analytics API](https://codelabs.developers.google.com/ca-api-bigquery#0)
+  - :octocat: [Intro to Gemini Data Analytics](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/agents/gemini_data_analytics/intro_gemini_data_analytics_sdk.ipynb)
