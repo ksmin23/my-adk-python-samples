@@ -2,8 +2,8 @@
 google-cloud-aiplatform==1.135.0
 google-cloud-spanner==3.62.0
 google-adk==1.23.0
-pathrag
-nano-vectordb  # retained for default fallback if needed, though we use Spanner
+PathRAG @ git+https://github.com/BUPT-GAMMA/PathRAG.git
+nano-vectordb==0.0.4.3  # retained for default fallback if needed, though we use Spanner
 networkx==3.6.1      # retained for graph ops
 tqdm==4.67.1
 tenacity==9.1.2
