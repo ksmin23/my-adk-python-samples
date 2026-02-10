@@ -6,7 +6,7 @@
 
 import logging
 import os
-from datetime import date
+
 
 from dotenv import load_dotenv
 from google.adk.agents.llm_agent import Agent
@@ -76,7 +76,7 @@ root_agent = Agent(
   description="A self-learning BigQuery agent that converts natural language to SQL and learns from past queries.",
   instruction=f"""
 ENVIRONMENT CONTEXT:
-- Today's date: {date.today()}
+
 - Project ID: {os.environ.get("GOOGLE_CLOUD_PROJECT", "")}
 - Dataset ID: {os.environ.get("BIGQUERY_DATASET", "")}
 
@@ -93,9 +93,11 @@ ENVIRONMENT CONTEXT:
     preload_memory_tool,  # ADK built-in tool for memory preloading
     load_memory_tool,     # ADK built-in tool for selective memory loading
   ],
-  before_model_callback=log_system_instructions,
-  after_tool_callback=[log_tool_call, store_query_result_in_state],
-  after_agent_callback=auto_save_session_to_memory_callback,
+  # Use these callbacks for detailed logging of system instructions and tool calls
+  # before_model_callback=[log_system_instructions],
+  # after_tool_callback=[log_tool_call, store_query_result_in_state],
+  after_tool_callback=[store_query_result_in_state],
+  after_agent_callback=[auto_save_session_to_memory_callback],
   generate_content_config=types.GenerateContentConfig(
     temperature=0.01,  # Low temperature for consistent SQL generation
   ),
