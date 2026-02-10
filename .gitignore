@@ -130,4 +130,5 @@ dmypy.json
 # Misc
 .adk
 .DS_Store
+.ruff_cache/
 zap/
