@@ -1,0 +1,10 @@
+# PathRAG Agent Dependencies
+google-cloud-aiplatform
+google-cloud-spanner
+google-adk
+pathrag
+nano-vectordb  # retained for default fallback if needed, though we use Spanner
+networkx      # retained for graph ops
+tqdm
+tenacity
+google-cloud-resource-manager # for project validation if needed
