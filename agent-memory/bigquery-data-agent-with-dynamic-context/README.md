@@ -81,6 +81,7 @@ Edit the `.env` file with your project details:
 
 ```ini
 # Google Cloud Configuration
+GOOGLE_GENAI_USE_VERTEXAI=1
 GOOGLE_CLOUD_PROJECT=your-project-id
 GOOGLE_CLOUD_LOCATION=us-central1
 
