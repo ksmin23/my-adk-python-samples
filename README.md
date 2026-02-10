@@ -22,6 +22,7 @@ This repository contains a collection of sample agents built using the [Google A
   - [8. Agent Memory](#8-agent-memory)
     - [ADK Redis Session Service](#adk-redis-session-service)
     - [ADK Redis Memory Service](#adk-redis-memory-service)
+    - [BigQuery Data Agent with Agent Engine Memory Bank](#bigquery-data-agent-with-agent-engine-memory-bank)
   - [9. Dynamic MCP Agent](#9-dynamic-mcp-agent)
 - [References](#references)
 
@@ -197,6 +198,18 @@ For detailed setup and execution instructions, please see the [ADK Redis Session
     -   Enhances personalization and continuity across user conversations.
 
 For detailed setup and execution instructions, please see the [ADK Redis Memory Service README](./agent-memory/redis-memory-service/README.md).
+
+#### BigQuery Data Agent with Agent Engine Memory Bank
+
+-   **Directory**: [`agent-memory/bigquery-data-agent-with-dynamic-context/`](./agent-memory/bigquery-data-agent-with-dynamic-context/)
+-   **Description**: A self-learning BigQuery agent that converts natural language to SQL and improves over time by saving successful queries to the [Vertex AI Agent Engine Memory Bank](https://docs.cloud.google.com/agent-builder/agent-engine/memory-bank/overview).
+-   **Features**:
+    -   **Natural Language to SQL**: Converts user questions into syntactically correct BigQuery SQL.
+    -   **Dynamic Context**: Automatically searches for relevant past queries to improve accuracy.
+    -   **Scoped Memory**: Supports `user` (private) and `team` (shared) memory scopes for personalized and collaborative analysis.
+    -   **Agent Engine Integration**: Leverages the managed Memory Bank service for scalable and secure memory storage.
+
+For detailed setup and execution instructions, please see the [BigQuery Data Agent README](./agent-memory/bigquery-data-agent-with-dynamic-context/README.md).
 
 ### 9. Dynamic MCP Agent
 
