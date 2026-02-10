@@ -184,6 +184,12 @@ NL Query: Show me monthly sales trends
 SQL: SELECT FORMAT_DATE('%Y-%m', date) as month, SUM(amount) FROM ...
 ```
 
+## 💡 Future Works
+
+- **Template-based Query Storage**: Store queries as parameterized templates (e.g., `WHERE date = @date`) to improve reusability across different time ranges and conditions.
+- **Automated Golden Query Generation**: Analyze BigQuery execution history in batch to identify high-value, frequently used queries ("Golden Queries") and automatically populate the Memory Bank.
+- **Business Context Extraction**: Automatically extract and store business logic and definitions from query comments and usage patterns to enhance the agent's domain understanding.
+
 ## References
 
 - 📓 [Get started with Memory Bank on ADK](https://github.com/GoogleCloudPlatform/generative-ai/blob/main/agents/agent_engine/memory_bank/get_started_with_memory_bank_on_adk.ipynb)
