@@ -1,10 +1,10 @@
 # PathRAG Agent Dependencies
-google-cloud-aiplatform
-google-cloud-spanner
-google-adk
+google-cloud-aiplatform==1.135.0
+google-cloud-spanner==3.62.0
+google-adk==1.23.0
 pathrag
 nano-vectordb  # retained for default fallback if needed, though we use Spanner
-networkx      # retained for graph ops
-tqdm
-tenacity
-google-cloud-resource-manager # for project validation if needed
+networkx==3.6.1      # retained for graph ops
+tqdm==4.67.1
+tenacity==9.1.2
+google-cloud-resource-manager==1.16.0 # for project validation if needed
