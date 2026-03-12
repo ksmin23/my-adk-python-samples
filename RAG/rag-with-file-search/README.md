@@ -148,7 +148,8 @@ adk web
 
 **Screenshot:**
 
-![ADK Web Interface for RAG with File Search](./assets/rag-with-file-search.png)
+![ADK Web Interface for RAG with File Search](./assets/rag-with-file-search-01.png)
+![ADK Web Interface for RAG with File Search](./assets/rag-with-file-search-02.png)
 
 ### 2. Store Management CLI
 
