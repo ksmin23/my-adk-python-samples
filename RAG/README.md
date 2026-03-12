@@ -55,3 +55,11 @@ These samples demonstrate the new capabilities of Vector Search 2.0, which suppo
 -   **[RAG with Vector Search 2.0](./rag-with-vectorsearch-2.0/)**
     -   **Description**: An Agentic RAG implementation using **Vertex AI Vector Search 2.0**. Features unified data storage, auto-embeddings, and hybrid search (Semantic + Keyword) with RRF ranking.
     -   **Vector Store**: Vertex AI Vector Search 2.0 (Unified).
+
+### 5. Using Gemini File Search (Managed RAG)
+
+These samples demonstrate how to use **Gemini File Search**, a fully managed RAG system that handles file storage, chunking, and embedding creation within the Gemini API ecosystem. It's the most automated approach for building RAG applications.
+
+-   **[RAG with File Search](./rag-with-file-search/)**
+    -   **Description**: An Agentic RAG implementation using **Gemini File Search**. Features automatic MIME type patching, auto-ingestion of files via the ADK Web UI, and session-based data isolation using metadata filters.
+    -   **Vector Store**: Gemini File Search Store (Managed).
