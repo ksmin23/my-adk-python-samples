@@ -15,6 +15,7 @@ This repository contains a collection of sample agents built using the [Google A
     - [QnA Agent with BigQuery](#qna-agent-with-bigquery)
     - [QnA Agent with Spanner](#qna-agent-with-spanner)
     - [QnA Agent with Vector Search 2.0](#qna-agent-with-vector-search-20)
+    - [QnA Agent with Gemini File Search](#qna-agent-with-gemini-file-search)
     - [More RAG Agents](#more-rag-agents)
   - [6. Graph RAG](#6-graph-rag)
     - [Graph RAG with Spanner](#graph-rag-with-spanner)
@@ -124,6 +125,18 @@ For detailed setup and execution instructions, please see the [RAG with Spanner 
     -   **Integrated Testing**: Includes a Jupyter notebook for verifying the deployed agent on Agent Engine.
 
 For detailed setup and execution instructions, please see the [RAG with Vector Search 2.0 README](./RAG/rag-with-vectorsearch-2.0/README.md).
+
+#### QnA Agent with Gemini File Search
+
+-   **Directory**: [`RAG/rag-with-file-search/`](./RAG/rag-with-file-search/)
+-   **Description**: An agent that implements the RAG pattern using **Gemini File Search**, a fully managed RAG system within the Gemini API ecosystem.
+-   **Features**:
+    -   **Fully Managed RAG**: Hands-off file search store management (chunking, embedding, storage).
+    -   **Auto-Ingestion**: Automatically indexes files uploaded through the ADK Web UI.
+    -   **Session Isolation**: Supports data isolation between users via session-based metadata filters.
+    -   **MIME Type Patching**: Robust handling of various file types with automated MIME type correction.
+
+For detailed setup and execution instructions, please see the [RAG with Gemini File Search README](./RAG/rag-with-file-search/README.md).
 
 #### More RAG Agents
 
