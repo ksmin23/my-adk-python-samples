@@ -77,7 +77,8 @@ export GOOGLE_CLOUD_LOCATION="us-central1"
 # Enable required APIs
 gcloud services enable \
   generativelanguage.googleapis.com \
-  aiplatform.googleapis.com
+  aiplatform.googleapis.com \
+  cloudresourcemanager.googleapis.com
 ```
 
 ## Setup
