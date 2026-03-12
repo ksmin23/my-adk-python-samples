@@ -18,7 +18,10 @@ This project is a sample implementation of an Agentic RAG using the Agent Develo
 rag-with-file-search/
 ├── rag_with_file_search/       # ADK Agent directory
 │   ├── .env.example
-│   ├── agent.py                # Agent logic & Middleware
+│   ├── __init__.py             # Agent entry point for ADK discovery
+│   ├── agent.py                # Model and agent assembly
+│   ├── prompts.py              # System instructions
+│   ├── tools.py                # Custom tool implementations (Middleware)
 │   └── requirements.txt        # Agent dependencies
 ├── utils/                      # Helper utilities
 │   └── gemini_fs_store_cli.py  # Store Management CLI
