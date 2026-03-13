@@ -216,6 +216,9 @@ adk deploy agent_engine \
 ## References
 
 - [Gemini File Search Documentation](https://ai.google.dev/gemini-api/docs/file-search)
+  - [Supported models](https://ai.google.dev/gemini-api/docs/file-search#supported-models)
+  - [Supported file types](https://ai.google.dev/gemini-api/docs/file-search#supported-files)
+  - [Limitations](https://ai.google.dev/gemini-api/docs/file-search#limitations)
 - 📓 [Colab: Using Google Gemini File Search Tool for RAG](https://codelabs.developers.google.com/gemini-file-search-for-rag)
 - :octocat: [Gemini File Search Demo](https://github.com/derailed-dash/gemini-file-search-demo)
 - [Improve gen AI search with Vertex AI embeddings](https://cloud.google.com/blog/products/ai-machine-learning/improve-gen-ai-search-with-vertex-ai-embeddings-and-task-types)
