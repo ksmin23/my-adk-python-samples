@@ -48,9 +48,9 @@ This architecture focuses on ease of use by delegating the heavy lifting of inde
 +--------------+    (1) Query / Upload   +----------------------------+
 |              | ----------------------> |        Agentic RAG         |
 |  User/Client | <---------------------- |(Cloud Run, Agent Engine...)| 
-|              |    (5) Final Result     +----------------------------+
+|              |    (4) Final Result     +----------------------------+
 +--------------+                                |            ^
-                                  (2) Patch &   |            | (4) Return Grounded
+                                  (2) Patch &   |            | (3) Return Grounded
                                       Ingest    v            |     Context
                                      +----------------------------------+
                                      |    Gemini File Search Store      |
