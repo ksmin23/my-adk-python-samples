@@ -2,76 +2,60 @@
 # -*- encoding: utf-8 -*-
 # vim: tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
+import os
+import tempfile
 import logging
-from typing import Any, Dict
 from google.adk.tools import tool
 
-from shared_lib.spanner_storage import SpannerPathRAG
-from shared_lib.gemini_client import gemini_complete, gemini_embedding
-from PathRAG.PathRAG import QueryParam
+from PathRAG import PathRAG, QueryParam
 
 logger = logging.getLogger(__name__)
-
-# Singleton instance or per-request? 
-# ADK tools are stateless functions usually. 
-# But initializing PathRAG might be expensive if it checks DB connectivity every time.
-# We'll use a global lazy instance or cached.
 
 _rag_instance = None
 
 def get_rag_instance():
   global _rag_instance
   if _rag_instance is None:
-    _rag_instance = SpannerPathRAG(
-      working_dir="./.pathrag_cache",
+    _rag_instance = PathRAG(
+      # Required by PathRAG framework for initialization,
+      # even though Spanner backends don't use local file storage.
+      working_dir=tempfile.mkdtemp(prefix="pathrag_"),
       kv_storage="SpannerKVStorage",
-      vector_storage="SpannerVectorStorage",
+      vector_storage="SpannerVectorDBStorage",
       graph_storage="SpannerGraphStorage",
-      llm_model_func=gemini_complete,
-      embedding_func=gemini_embedding,
-      llm_model_name="gemini-2.5-flash"
+      llm_model_name="gemini/gemini-2.5-flash",
+      embedding_model_name="gemini/gemini-embedding-001",
+      embedding_dim=3072,
+      addon_params={
+        "spanner_instance_id": os.environ.get("SPANNER_INSTANCE"),
+        "spanner_database_id": os.environ.get("SPANNER_DATABASE"),
+      },
     )
   return _rag_instance
 
+
 @tool
-def query_pathrag_knowledge_graph(query: str) -> str:
-  """
-  Queries the PathRAG Knowledge Graph to retrieve relevant information using Hybrid Search (Graph + Vector).
-  Use this tool when the user asks questions that require knowledge from the ingested documents or about specific entities and relationships.
-  
+async def pathrag_tool(query: str) -> str:
+  """Queries the PathRAG Knowledge Graph to retrieve relevant context
+  using Hybrid Search (Graph + Vector).
+  Use this tool when the user asks questions that require knowledge
+  from the ingested documents or about specific entities and relationships.
+
   Args:
     query: The natural language query to ask.
-  
-  Returns:
-    The response from the Knowledge Graph RAG system.
-  """
-  logger.info(f"Querying PathRAG: {query}")
-  try:
-    # PathRAG query is async, but ADK tools can be sync or async?
-    # Usually we define async def.
-    # But tools wrapper handles async?
-    return "Async tool required, but defined as sync. Please update to async def if supported."
-  except Exception as e:
-    logger.error(f"Error querying PathRAG: {e}")
-    return f"Error: {str(e)}"
 
-# Redefine as async
-@tool
-async def query_pathrag_knowledge_graph_async(query: str) -> str:
+  Returns:
+    Retrieved context from the Knowledge Graph including entities,
+    relationships, and relevant text chunks.
   """
-  Queries the PathRAG Knowledge Graph to retrieve relevant information.
-  
-  Args:
-    query: The natural language query.
-  """
-  logger.info(f"Querying PathRAG (Async): {query}")
+  logger.info(f"Querying PathRAG context: {query}")
   try:
     rag = get_rag_instance()
-    response = await rag.aquery(query, param=QueryParam(mode="hybrid"))
-    return str(response)
+    context = await rag.aquery(
+      query,
+      param=QueryParam(mode="hybrid", only_need_context=True)
+    )
+    return str(context) if context else "No relevant context found in the Knowledge Graph."
   except Exception as e:
     logger.error(f"Error querying PathRAG: {e}")
-    return f"Error: {str(e)}"
-
-# Export the tool
-pathrag_tool = query_pathrag_knowledge_graph_async
+    return f"Error querying Knowledge Graph: {str(e)}"

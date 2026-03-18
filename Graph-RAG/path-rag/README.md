@@ -2,32 +2,102 @@
 
 This project demonstrates how to implement a PathRAG (Path-based Retrieval Augmented Generation) agent using the Agent Development Kit (ADK) and Google Cloud Spanner as the backend storage for Knowledge Graph, Vector Store, and Key-Value Store.
 
-It leverages the [PathRAG](https://github.com/BUPT-GAMMA/PathRAG) library, adapted to use Google Vertex AI (Gemini) models and Spanner storage.
+It leverages the [PathRAG](https://github.com/BUPT-GAMMA/PathRAG) library with built-in Spanner storage backends and LiteLLM for Gemini model integration.
 
-## Project Structure
+## Architecture
 
 ```
-/PathRAG
-├── pathrag_with_spanner/    # ADK Agent directory
-│   ├── agent.py             # Agent definition
-│   ├── prompt.py            # Agent system instructions
-│   ├── tools.py             # Agent tools
-│   └── test_pathrag_spanner.py # Test script
-├── data_ingestion/          # Data ingestion directory
-│   └── insert_document.py   # Script to ingest documents into Spanner
-├── shared_lib/              # Shared libraries
-│   ├── gemini_client.py     # Vertex AI Gemini wrapper
-│   └── spanner_storage.py   # Spanner storage implementation
-├── utils/                   # Utility scripts
-│   └── create_spanner_db.py # Script to provision Spanner resources
-└── requirements.txt         # Project dependencies
+User Query
+    |
+    v
+ADK Agent (Gemini 2.5 Flash)
+    |  tool call
+    v
+pathrag_tool(query)
+    |
+    v
+PathRAG.aquery(only_need_context=True)
+    |-- Keyword Extraction (LLM)
+    |-- Graph Search (Spanner Property Graph)
+    |-- Vector Search (Spanner Vector Search)
+    +-- Context assembly and return
+    |
+    v
+ADK Agent generates final answer based on context
 ```
+
+`QueryParam(only_need_context=True)` skips answer generation inside PathRAG, letting the ADK Agent's LLM generate the final answer from the retrieved context.
+
+## How It Works
+
+1. **User sends a query** to the ADK Agent.
+2. **Agent calls `pathrag_tool`** with the query.
+3. **PathRAG processes the query**:
+   - Extracts keywords (high-level & low-level) using LLM.
+   - Searches the Spanner Graph (entities, relationships, paths).
+   - Searches the Spanner Vector Store (semantic similarity).
+   - Combines results into structured context.
+4. **Context is returned** to the Agent (no LLM answer generation inside PathRAG).
+5. **Agent generates the final answer** using the retrieved context.
+
+## :file_folder: Project Structure
+
+```
+path-rag/
+|-- pathrag_with_spanner/         # ADK Agent directory
+|   |-- __init__.py
+|   |-- agent.py                  # ADK Agent definition (root_agent)
+|   |-- prompt.py                 # Agent system instructions
+|   |-- tools.py                  # pathrag_tool - context retrieval via PathRAG
+|   +-- test_pathrag_spanner.py   # Test script using ADK Runner
+|-- data_ingestion/               # Data ingestion directory
+|   +-- insert_document.py        # Script to ingest documents into Spanner
++-- requirements.txt              # Project dependencies
+```
+
+### Key Files
+
+| File | Description |
+|------|-------------|
+| `pathrag_with_spanner/agent.py` | `root_agent` definition using Gemini 2.5 Flash and `pathrag_tool` |
+| `pathrag_with_spanner/tools.py` | `pathrag_tool` defined with `@tool` decorator, extracts context from PathRAG |
+| `pathrag_with_spanner/prompt.py` | System instruction guiding the Agent to answer based on tool-retrieved context |
+| `pathrag_with_spanner/test_pathrag_spanner.py` | Test script using ADK `Runner` + `InMemorySessionService` |
+| `data_ingestion/insert_document.py` | Script to ingest documents into the PathRAG Knowledge Graph |
+
+## :floppy_disk: Storage (Google Cloud Spanner)
+
+Tables and Property Graph are automatically created by PathRAG's `_ensure_schema()` on first use.
+
+**KV Storage** (`SpannerKVStorage`) — `{namespace}_kv`
+
+| Table | Purpose |
+|-------|---------|
+| `full_docs_kv` | Full document storage |
+| `text_chunks_kv` | Text chunk storage |
+| `llm_response_cache_kv` | LLM response caching |
+
+**Vector Storage** (`SpannerVectorDBStorage`) — `vdb_{namespace}`
+
+| Table | Purpose |
+|-------|---------|
+| `vdb_entities` | Entity embeddings |
+| `vdb_relationships` | Relationship embeddings |
+| `vdb_chunks` | Chunk embeddings |
+
+**Graph Storage** (`SpannerGraphStorage`) — `{namespace}_nodes`, `{namespace}_edges`
+
+| Table | Purpose |
+|-------|---------|
+| `chunk_entity_relation_nodes` | Knowledge Graph nodes (entities) |
+| `chunk_entity_relation_edges` | Knowledge Graph edges (relationships) |
+| `pathrag_chunk_entity_relation` | Spanner Property Graph |
 
 ## Prerequisites
 
 Before you begin, ensure you have an active Google Cloud project and the following tools installed:
--   [Google Cloud SDK (gcloud)](https://cloud.google.com/sdk/docs/install)
--   [uv](https://github.com/astral-sh/uv) (for Python package management)
+- [Google Cloud SDK (gcloud)](https://cloud.google.com/sdk/docs/install)
+- [uv](https://github.com/astral-sh/uv) (for Python package management)
 
 ### 1. Configure your Google Cloud project
 
@@ -40,26 +110,20 @@ gcloud auth application-default login
 Set up your project and enable required APIs:
 
 ```bash
-# Set your project ID
 export PROJECT_ID=$(gcloud config get-value project)
 
-# Enable APIs
 gcloud services enable \
   spanner.googleapis.com \
-  aiplatform.googleapis.com \
-  cloudresourcemanager.googleapis.com
+  aiplatform.googleapis.com
 ```
 
-### 2. Create a Spanner Instance and Database
-
-You can manually create the instance, or use the provided utility script later to create the database and schema.
+### 2. Create a Spanner Instance
 
 ```bash
 export SPANNER_INSTANCE="pathrag-instance"
 export SPANNER_DATABASE="pathrag-db"
 export SPANNER_REGION="us-central1"
 
-# Create Instance
 gcloud spanner instances create $SPANNER_INSTANCE \
   --config=regional-$SPANNER_REGION \
   --description="PathRAG Instance" \
@@ -67,79 +131,45 @@ gcloud spanner instances create $SPANNER_INSTANCE \
   --edition=ENTERPRISE
 ```
 
-## Setup
+### 3. Set Environment Variables
+
+```bash
+export GOOGLE_CLOUD_PROJECT="your-project-id"
+export GOOGLE_CLOUD_LOCATION="us-central1"
+export GOOGLE_GENAI_USE_VERTEXAI="1"
+export SPANNER_INSTANCE="pathrag-instance"
+export SPANNER_DATABASE="pathrag-db"
+```
+
+## :rocket: Setup
 
 ### 1. Install Dependencies
 
 ```bash
-# Create virtual environment
 uv venv
-
-# Activate virtual environment
 source .venv/bin/activate
-
-# Install dependencies
 uv pip install -r requirements.txt
 ```
 
-### 2. Provision Spanner Resources
-
-Run the utility script to create the necessary tables and Property Graph schema in Spanner.
-
-```bash
-# Set environment variables
-export GOOGLE_CLOUD_PROJECT="your-project-id"
-export SPANNER_INSTANCE="pathrag-instance"
-export SPANNER_DATABASE="pathrag-db"
-
-# Run provisioning script
-python utils/create_spanner_db.py
-```
-
-### 3. Data Ingestion
+### 2. Data Ingestion
 
 Ingest documents into the PathRAG Knowledge Graph.
 
 ```bash
-# Set additional env var for Gemini
-export GOOGLE_GENAI_USE_VERTEXAI="1"
-export GOOGLE_CLOUD_LOCATION="us-central1"
-
-# Ingest a document
 python data_ingestion/insert_document.py --file your_document.txt
 ```
 
-## Run the Agent
-
-You can run the agent utilizing the ADK CLI or the provided test script.
+## :robot: Run the Agent
 
 ### Using ADK CLI (Web Interface)
 
 ```bash
-# Ensure PYTHONPATH includes the current directory
-export PYTHONPATH=$PYTHONPATH:.
-
-# Run ADK Web Interface targeting the agent directory
 adk web pathrag_with_spanner
 ```
 
-### Using Test Script
-
-```bash
-python pathrag_with_spanner/test_pathrag_spanner.py
-```
-
-## Architecture
-
--   **LLM**: Vertex AI Gemini 2.5 Flash
--   **Storage**: Google Cloud Spanner
-    -   `PathRagKV`: Key-Value store for metadata and caching.
-    -   `PathRagVector`: Vector store for embeddings (Supports Spanner Vector Search).
-    -   `PathRagGraph`: Property Graph (Nodes and Edges) for structural knowledge.
--   **Library**: Custom `SpannerPathRAG` implementation extending `PathRAG`.
-
 ## References
 
-- [PathRAG GitHub](https://github.com/BUPT-GAMMA/PathRAG)
+- :octocat: [PathRAG GitHub](https://github.com/ksmin23/PathRAG)
+- [Google ADK Documentation](https://google.github.io/adk-docs/)
 - [Google Cloud Spanner Graph](https://cloud.google.com/spanner/docs/graph/overview)
-- [Vertex AI Agent Engine](https://cloud.google.com/vertex-ai/docs/agent-engine/overview)
+- [Vertex AI Gemini](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini)
