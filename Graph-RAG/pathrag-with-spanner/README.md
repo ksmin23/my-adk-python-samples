@@ -2,7 +2,7 @@
 
 This project demonstrates how to implement a PathRAG (Path-based Retrieval Augmented Generation) agent using the Agent Development Kit (ADK). It supports two storage backends: **Google Cloud Spanner** for production use and **local file-based storage** for quick development and testing.
 
-It leverages the [PathRAG](https://github.com/BUPT-GAMMA/PathRAG) library with built-in Spanner storage backends and LiteLLM for Gemini model integration.
+It leverages the [PathRAG](https://github.com/ksmin23/PathRAG) library with built-in Spanner storage backends and LiteLLM for Gemini model integration.
 
 ## Architecture
 
