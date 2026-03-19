@@ -1,6 +1,6 @@
-# PathRAG Agent with Spanner Graph
+# PathRAG Agent
 
-This project demonstrates how to implement a PathRAG (Path-based Retrieval Augmented Generation) agent using the Agent Development Kit (ADK) and Google Cloud Spanner as the backend storage for Knowledge Graph, Vector Store, and Key-Value Store.
+This project demonstrates how to implement a PathRAG (Path-based Retrieval Augmented Generation) agent using the Agent Development Kit (ADK). It supports two storage backends: **Google Cloud Spanner** for production use and **local file-based storage** for quick development and testing.
 
 It leverages the [PathRAG](https://github.com/BUPT-GAMMA/PathRAG) library with built-in Spanner storage backends and LiteLLM for Gemini model integration.
 
@@ -60,14 +60,30 @@ path-rag/
 | File | Description |
 |------|-------------|
 | `pathrag_with_spanner/agent.py` | `root_agent` definition using Gemini 2.5 Flash and `pathrag_tool` |
-| `pathrag_with_spanner/tools.py` | `pathrag_tool` defined with `@tool` decorator, extracts context from PathRAG |
+| `pathrag_with_spanner/tools.py` | `pathrag_tool` function, extracts context from PathRAG |
 | `pathrag_with_spanner/prompt.py` | System instruction guiding the Agent to answer based on tool-retrieved context |
 | `pathrag_with_spanner/test_pathrag_spanner.py` | Test script using ADK `Runner` + `InMemorySessionService` |
 | `data_ingestion/insert_document.py` | Script to ingest documents into the PathRAG Knowledge Graph |
 
-## :floppy_disk: Storage (Google Cloud Spanner)
+## :floppy_disk: Storage Backends
 
-Tables and Property Graph are automatically created by PathRAG's `_ensure_schema()` on first use.
+The storage backend is selected via the `PATHRAG_STORAGE_TYPE` environment variable.
+
+### Option A: Local file-based storage (`default`)
+
+Uses local files for all storage — no cloud setup required. Ideal for quick development and testing.
+
+| Component | Backend | Storage |
+|-----------|---------|---------|
+| KV Storage | `JsonKVStorage` | JSON files in `PATHRAG_WORKING_DIR` |
+| Vector Storage | `NanoVectorDBStorage` | Local vector DB files |
+| Graph Storage | `NetworkXStorage` | NetworkX graph file |
+
+> **Note:** `PATHRAG_WORKING_DIR` is **required** when using local storage, since data is persisted to disk.
+
+### Option B: Google Cloud Spanner (`spanner`)
+
+Uses Cloud Spanner for production-grade, scalable storage. Tables and Property Graph are automatically created by PathRAG's `_ensure_schema()` on first use.
 
 **KV Storage** (`SpannerKVStorage`) — `{namespace}_kv`
 
@@ -95,11 +111,10 @@ Tables and Property Graph are automatically created by PathRAG's `_ensure_schema
 
 ## Prerequisites
 
-Before you begin, ensure you have an active Google Cloud project and the following tools installed:
-- [Google Cloud SDK (gcloud)](https://cloud.google.com/sdk/docs/install)
 - [uv](https://github.com/astral-sh/uv) (for Python package management)
+- [Google Cloud SDK (gcloud)](https://cloud.google.com/sdk/docs/install) — required only for Spanner backend
 
-### 1. Configure your Google Cloud project
+### 1. Configure Google Cloud (Spanner backend only)
 
 Authenticate with Google Cloud:
 
@@ -117,7 +132,7 @@ gcloud services enable \
   aiplatform.googleapis.com
 ```
 
-### 2. Create a Spanner Instance
+### 2. Create a Spanner Instance (Spanner backend only)
 
 ```bash
 export SPANNER_INSTANCE="pathrag-instance"
@@ -133,7 +148,24 @@ gcloud spanner instances create $SPANNER_INSTANCE \
 
 ### 3. Set Environment Variables
 
+Copy the example file and edit it:
+
 ```bash
+cp pathrag_with_spanner/.env.example pathrag_with_spanner/.env
+```
+
+**For local storage (quick start):**
+
+```bash
+export PATHRAG_STORAGE_TYPE=default
+export PATHRAG_WORKING_DIR=/path/to/your/pathrag/data
+export GEMINI_API_KEY=your-gemini-api-key
+```
+
+**For Spanner storage (production):**
+
+```bash
+export PATHRAG_STORAGE_TYPE=spanner
 export GOOGLE_CLOUD_PROJECT="your-project-id"
 export GOOGLE_CLOUD_LOCATION="us-central1"
 export GOOGLE_GENAI_USE_VERTEXAI="1"
@@ -156,6 +188,10 @@ uv pip install -r requirements.txt
 Ingest documents into the PathRAG Knowledge Graph.
 
 ```bash
+# Ingest sample documents (Apple, Steve Jobs, Google)
+python data_ingestion/insert_document.py --sample
+
+# Or ingest your own document
 python data_ingestion/insert_document.py --file your_document.txt
 ```
 
