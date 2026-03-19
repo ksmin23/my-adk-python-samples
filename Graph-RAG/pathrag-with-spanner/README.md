@@ -275,8 +275,10 @@ adk run pathrag_with_spanner
 #### Using the Web Interface
 
 ```bash
-adk web pathrag_with_spanner
+adk web
 ```
+**Screenshot:**
+![pathrag-with-spanner](./assets/pathrag-with-spanner.png)
 
 ## References
 
