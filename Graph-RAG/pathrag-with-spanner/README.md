@@ -40,7 +40,7 @@ ADK Agent generates final answer based on context
 4. **Context is returned** to the Agent (no LLM answer generation inside PathRAG).
 5. **Agent generates the final answer** using the retrieved context.
 
-## :file_folder: Project Structure
+## Project Structure
 
 ```
 pathrag-with-spanner/
@@ -65,7 +65,7 @@ pathrag-with-spanner/
 | `pathrag_with_spanner/test_pathrag_spanner.py` | Test script using ADK `Runner` + `InMemorySessionService` |
 | `data_ingestion/insert.py` | Script to ingest documents into the PathRAG Knowledge Graph |
 
-## :floppy_disk: Storage Backends
+## Storage Backends
 
 The storage backend is selected via the `PATHRAG_STORAGE_TYPE` environment variable.
 
@@ -173,7 +173,7 @@ export SPANNER_INSTANCE="pathrag-instance"
 export SPANNER_DATABASE="pathrag-db"
 ```
 
-## :rocket: Setup
+## Setup
 
 ### 1. Install Dependencies
 
@@ -195,7 +195,7 @@ python data_ingestion/insert.py --sample
 python data_ingestion/insert.py --file your_document.txt
 ```
 
-## :robot: Run the Agent
+## Run the Agent
 
 ### Using ADK CLI (Web Interface)
 
