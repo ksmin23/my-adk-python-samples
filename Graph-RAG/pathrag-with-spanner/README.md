@@ -43,7 +43,7 @@ ADK Agent generates final answer based on context
 ## :file_folder: Project Structure
 
 ```
-path-rag/
+pathrag-with-spanner/
 |-- pathrag_with_spanner/         # ADK Agent directory
 |   |-- __init__.py
 |   |-- agent.py                  # ADK Agent definition (root_agent)
@@ -51,7 +51,7 @@ path-rag/
 |   |-- tools.py                  # pathrag_tool - context retrieval via PathRAG
 |   +-- test_pathrag_spanner.py   # Test script using ADK Runner
 |-- data_ingestion/               # Data ingestion directory
-|   +-- insert_document.py        # Script to ingest documents into Spanner
+|   +-- insert.py        # Script to ingest documents into Spanner
 +-- requirements.txt              # Project dependencies
 ```
 
@@ -63,7 +63,7 @@ path-rag/
 | `pathrag_with_spanner/tools.py` | `pathrag_tool` function, extracts context from PathRAG |
 | `pathrag_with_spanner/prompt.py` | System instruction guiding the Agent to answer based on tool-retrieved context |
 | `pathrag_with_spanner/test_pathrag_spanner.py` | Test script using ADK `Runner` + `InMemorySessionService` |
-| `data_ingestion/insert_document.py` | Script to ingest documents into the PathRAG Knowledge Graph |
+| `data_ingestion/insert.py` | Script to ingest documents into the PathRAG Knowledge Graph |
 
 ## :floppy_disk: Storage Backends
 
@@ -189,10 +189,10 @@ Ingest documents into the PathRAG Knowledge Graph.
 
 ```bash
 # Ingest sample documents (Apple, Steve Jobs, Google)
-python data_ingestion/insert_document.py --sample
+python data_ingestion/insert.py --sample
 
 # Or ingest your own document
-python data_ingestion/insert_document.py --file your_document.txt
+python data_ingestion/insert.py --file your_document.txt
 ```
 
 ## :robot: Run the Agent
