@@ -19,6 +19,7 @@ This repository contains a collection of sample agents built using the [Google A
     - [More RAG Agents](#more-rag-agents)
   - [6. Graph RAG](#6-graph-rag)
     - [Graph RAG with Spanner](#graph-rag-with-spanner)
+    - [PathRAG with Spanner](#pathrag-with-spanner)
   - [7. ADK BigQuery Logging Plugin Example](#7-adk-bigquery-logging-plugin-example)
   - [8. Agent Memory](#8-agent-memory)
     - [ADK Redis Session Service](#adk-redis-session-service)
@@ -175,6 +176,16 @@ This section includes agents that implement the Graph Retrieval-Augmented Genera
     -   Includes data ingestion scripts using `LLMGraphTransformer` to extract nodes and relationships from documents.
     -   Leverages concise retrieval using `SpannerGraphStore`.
 -   **README**: [Graph RAG with Spanner README](./Graph-RAG/graph-rag-with-spanner/README.md)
+
+#### PathRAG with Spanner
+
+-   **Directory**: [`Graph-RAG/pathrag-with-spanner/`](./Graph-RAG/pathrag-with-spanner/)
+-   **Description**: An agent that implements the PathRAG (Path-based Retrieval Augmented Generation) pattern using the PathRAG library with configurable storage backends.
+-   **Features**:
+    -   Supports two storage backends: Google Cloud Spanner (production) and local file-based storage (development).
+    -   Uses `QueryParam(only_need_context=True)` to avoid double LLM calls — PathRAG returns raw context, ADK agent generates the final answer.
+    -   Includes sample document ingestion for quick testing.
+-   **README**: [PathRAG with Spanner README](./Graph-RAG/pathrag-with-spanner/README.md)
 
 ### 7. ADK BigQuery Logging Plugin Example
 
