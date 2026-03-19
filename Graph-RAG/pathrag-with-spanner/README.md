@@ -49,7 +49,6 @@ pathrag-with-spanner/
 │   ├── agent.py                  # ADK Agent definition (root_agent)
 │   ├── prompt.py                 # Agent system instructions
 │   ├── tools.py                  # pathrag_tool - context retrieval via PathRAG
-│   └── test_pathrag_spanner.py   # Test script using ADK Runner
 ├── data_ingestion/               # Data ingestion directory
 │   └── insert.py                 # Script to ingest documents
 ├── requirements.txt              # Project dependencies
@@ -63,7 +62,6 @@ pathrag-with-spanner/
 | `pathrag_with_spanner/agent.py` | `root_agent` definition using Gemini 2.5 Flash and `pathrag_tool` |
 | `pathrag_with_spanner/tools.py` | `pathrag_tool` function, extracts context from PathRAG |
 | `pathrag_with_spanner/prompt.py` | System instruction guiding the Agent to answer based on tool-retrieved context |
-| `pathrag_with_spanner/test_pathrag_spanner.py` | Test script using ADK `Runner` + `InMemorySessionService` |
 | `data_ingestion/insert.py` | Script to ingest documents into the PathRAG Knowledge Graph |
 
 ## Storage Backends
