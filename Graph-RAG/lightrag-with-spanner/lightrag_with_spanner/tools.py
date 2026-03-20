@@ -67,14 +67,14 @@ async def lightrag_tool(query: str) -> str:
     Retrieved context from the Knowledge Graph including entities,
     relationships, and relevant text chunks.
   """
-  logger.info(f"Querying LightRAG context: {query}")
+  logger.debug(f"Querying LightRAG context: {query}")
   try:
     rag = await get_rag_instance()
     context = await rag.aquery(
       query,
       param=QueryParam(mode="hybrid", only_need_context=True)
     )
-    logger.info(f"Retrieved context: {context}")
+    logger.debug(f"Retrieved context: {context}")
     return str(context) if context else "No relevant context found in the Knowledge Graph."
   except Exception as e:
     import traceback

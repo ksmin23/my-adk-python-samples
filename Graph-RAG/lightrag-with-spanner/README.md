@@ -49,6 +49,7 @@ lightrag-with-spanner/
 │   ├── agent.py                     # ADK Agent definition (root_agent)
 │   ├── prompt.py                    # Agent system instructions
 │   ├── tools.py                     # lightrag_tool - context retrieval via LightRAG
+│   └── .env.example                 # Environment variables template
 ├── data_ingestion/                  # Data ingestion directory
 │   └── insert.py                    # Script to ingest documents
 ├── requirements.txt                 # Project dependencies
@@ -155,8 +156,7 @@ cp lightrag_with_spanner/.env.example lightrag_with_spanner/.env
 ```bash
 export GOOGLE_CLOUD_PROJECT="your-project-id"
 export GOOGLE_CLOUD_LOCATION="us-central1"
-export GOOGLE_GENAI_USE_VERTEXAI="1"
-export GEMINI_API_KEY=your-gemini-api-key
+export GOOGLE_GENAI_USE_VERTEXAI="true"
 export SPANNER_INSTANCE="lightrag-instance"
 export SPANNER_DATABASE="lightrag-db"
 ```

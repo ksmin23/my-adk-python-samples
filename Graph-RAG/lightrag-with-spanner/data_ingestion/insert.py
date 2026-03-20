@@ -115,7 +115,7 @@ if __name__ == "__main__":
 
   args = parser.parse_args()
 
-  required_vars = ["GEMINI_API_KEY", "SPANNER_INSTANCE", "SPANNER_DATABASE"]
+  required_vars = ["GOOGLE_GENAI_USE_VERTEXAI", "SPANNER_INSTANCE", "SPANNER_DATABASE"]
   missing = [v for v in required_vars if not os.environ.get(v)]
   if missing:
     logger.error(f"Missing environment variables: {', '.join(missing)}")
