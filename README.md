@@ -20,6 +20,7 @@ This repository contains a collection of sample agents built using the [Google A
   - [6. Graph RAG](#6-graph-rag)
     - [Graph RAG with Spanner](#graph-rag-with-spanner)
     - [PathRAG with Spanner](#pathrag-with-spanner)
+    - [LightRAG with Spanner](#lightrag-with-spanner)
   - [7. ADK BigQuery Logging Plugin Example](#7-adk-bigquery-logging-plugin-example)
   - [8. Agent Memory](#8-agent-memory)
     - [ADK Redis Session Service](#adk-redis-session-service)
@@ -186,6 +187,16 @@ This section includes agents that implement the Graph Retrieval-Augmented Genera
     -   Uses `QueryParam(only_need_context=True)` to avoid double LLM calls — PathRAG returns raw context, ADK agent generates the final answer.
     -   Includes sample document ingestion for quick testing.
 -   **README**: [PathRAG with Spanner README](./Graph-RAG/pathrag-with-spanner/README.md)
+
+#### LightRAG with Spanner
+
+-   **Directory**: [`Graph-RAG/lightrag-with-spanner/`](./Graph-RAG/lightrag-with-spanner/)
+-   **Description**: An agent that implements the LightRAG (Light Retrieval Augmented Generation) pattern using the [LightRAG](https://github.com/HKUDS/LightRAG) library with Google Cloud Spanner as the storage backend via the [lightrag-spanner](https://github.com/ksmin23/lightrag-spanner) plugin.
+-   **Features**:
+    -   Uses Spanner for all storage (KV, Vector, Graph, DocStatus) — no local file storage needed.
+    -   Hybrid search combining Knowledge Graph traversal and vector similarity via Spanner.
+    -   Uses `QueryParam(only_need_context=True)` to avoid double LLM calls — LightRAG returns raw context, ADK agent generates the final answer.
+-   **README**: [LightRAG with Spanner README](./Graph-RAG/lightrag-with-spanner/README.md)
 
 ### 7. ADK BigQuery Logging Plugin Example
 
