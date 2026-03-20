@@ -216,6 +216,8 @@ adk run lightrag_with_spanner
 ```bash
 adk web
 ```
+**Screenshot:**
+![lightrag-with-spanner](./assets/lightrag-with-spanner.png)
 
 ## References
 
