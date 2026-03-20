@@ -29,33 +29,26 @@ def _get_embedding_func() -> EmbeddingFunc:
 async def get_rag_instance():
   global _rag_instance
   if _rag_instance is None:
-    storage_type = os.environ.get("LIGHTRAG_STORAGE_TYPE", "spanner").lower()
+    lightrag_spanner.register()
 
-    common_params = dict(
+    rag = LightRAG(
       working_dir=os.environ.get("LIGHTRAG_WORKING_DIR", tempfile.mkdtemp(prefix="lightrag_")),
       llm_model_func=gemini_model_complete,
       llm_model_name=os.environ.get("LLM_MODEL_NAME", "gemini-2.5-flash"),
       embedding_func=_get_embedding_func(),
+      kv_storage="SpannerKVStorage",
+      vector_storage="SpannerVectorStorage",
+      graph_storage="SpannerGraphStorage",
+      doc_status_storage="SpannerDocStatusStorage",
+      addon_params={
+        "spanner_instance_id": os.environ.get("SPANNER_INSTANCE"),
+        "spanner_database_id": os.environ.get("SPANNER_DATABASE"),
+      },
+      # Disable LLM caching -- with remote storage like Spanner, cache lookups
+      # add network round-trips on every LLM call with minimal hit rate benefit.
+      enable_llm_cache=False,
+      enable_llm_cache_for_entity_extract=False,
     )
-
-    if storage_type == "spanner":
-      lightrag_spanner.register()
-      common_params.update(
-        kv_storage="SpannerKVStorage",
-        vector_storage="SpannerVectorStorage",
-        graph_storage="SpannerGraphStorage",
-        doc_status_storage="SpannerDocStatusStorage",
-        addon_params={
-          "spanner_instance_id": os.environ.get("SPANNER_INSTANCE"),
-          "spanner_database_id": os.environ.get("SPANNER_DATABASE"),
-        },
-        # Disable LLM caching -- with remote storage like Spanner, cache lookups
-        # add network round-trips on every LLM call with minimal hit rate benefit.
-        enable_llm_cache=False,
-        enable_llm_cache_for_entity_extract=False,
-      )
-
-    rag = LightRAG(**common_params)
     await rag.initialize_storages()
     _rag_instance = rag
   return _rag_instance

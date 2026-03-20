@@ -61,44 +61,28 @@ def _get_embedding_func() -> EmbeddingFunc:
 
 
 def _create_rag_instance(work_dir: str) -> LightRAG:
-  storage_type = os.environ.get("LIGHTRAG_STORAGE_TYPE", "spanner").lower()
+  lightrag_spanner.register()
 
-  common_params = dict(
+  return LightRAG(
     working_dir=work_dir,
     llm_model_func=gemini_model_complete,
     llm_model_name=os.environ.get("LLM_MODEL_NAME", "gemini-2.5-flash"),
     embedding_func=_get_embedding_func(),
+    kv_storage="SpannerKVStorage",
+    vector_storage="SpannerVectorStorage",
+    graph_storage="SpannerGraphStorage",
+    doc_status_storage="SpannerDocStatusStorage",
+    addon_params={
+      "spanner_instance_id": SPANNER_INSTANCE,
+      "spanner_database_id": SPANNER_DATABASE,
+    },
+    enable_llm_cache=False,
+    enable_llm_cache_for_entity_extract=False,
   )
-
-  if storage_type == "spanner":
-    lightrag_spanner.register()
-    common_params.update(
-      kv_storage="SpannerKVStorage",
-      vector_storage="SpannerVectorStorage",
-      graph_storage="SpannerGraphStorage",
-      doc_status_storage="SpannerDocStatusStorage",
-      addon_params={
-        "spanner_instance_id": SPANNER_INSTANCE,
-        "spanner_database_id": SPANNER_DATABASE,
-      },
-      enable_llm_cache=False,
-      enable_llm_cache_for_entity_extract=False,
-    )
-
-  return LightRAG(**common_params)
 
 
 def _get_working_dir() -> str:
-  storage_type = os.environ.get("LIGHTRAG_STORAGE_TYPE", "spanner").lower()
-  working_dir = os.environ.get("LIGHTRAG_WORKING_DIR")
-
-  if storage_type != "spanner" and not working_dir:
-    raise ValueError(
-      "LIGHTRAG_WORKING_DIR environment variable is required "
-      "when LIGHTRAG_STORAGE_TYPE is not 'spanner'."
-    )
-
-  return working_dir or tempfile.mkdtemp(prefix="lightrag_")
+  return os.environ.get("LIGHTRAG_WORKING_DIR") or tempfile.mkdtemp(prefix="lightrag_")
 
 
 async def insert_document(file_path: str):
@@ -131,12 +115,7 @@ if __name__ == "__main__":
 
   args = parser.parse_args()
 
-  storage_type = os.environ.get("LIGHTRAG_STORAGE_TYPE", "spanner").lower()
-  required_vars = ["GEMINI_API_KEY"]
-  if storage_type == "spanner":
-    required_vars += ["SPANNER_INSTANCE", "SPANNER_DATABASE"]
-  else:
-    required_vars += ["LIGHTRAG_WORKING_DIR"]
+  required_vars = ["GEMINI_API_KEY", "SPANNER_INSTANCE", "SPANNER_DATABASE"]
   missing = [v for v in required_vars if not os.environ.get(v)]
   if missing:
     logger.error(f"Missing environment variables: {', '.join(missing)}")

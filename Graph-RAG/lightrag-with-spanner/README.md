@@ -1,6 +1,6 @@
 # LightRAG Agent with Spanner Graph
 
-This project demonstrates how to implement a LightRAG (Light Retrieval Augmented Generation) agent using the Agent Development Kit (ADK). It supports two storage backends: **Google Cloud Spanner** for production use and **local file-based storage** for quick development and testing.
+This project demonstrates how to implement a LightRAG (Light Retrieval Augmented Generation) agent using the Agent Development Kit (ADK) with **Google Cloud Spanner** as the storage backend.
 
 It leverages the [LightRAG](https://github.com/HKUDS/LightRAG) library with the [lightrag-spanner](https://github.com/ksmin23/lightrag-spanner) storage plugin and Gemini models for LLM and embedding.
 
@@ -64,26 +64,9 @@ lightrag-with-spanner/
 | `lightrag_with_spanner/prompt.py` | System instruction guiding the Agent to answer based on tool-retrieved context |
 | `data_ingestion/insert.py` | Script to ingest documents into the LightRAG Knowledge Graph |
 
-## Storage Backends
+## Storage Backend
 
-The storage backend is selected via the `LIGHTRAG_STORAGE_TYPE` environment variable.
-
-### Option A: Local file-based storage (`default`)
-
-Uses local files for all storage — no cloud setup required. Ideal for quick development and testing.
-
-| Component | Backend | Storage |
-|-----------|---------|---------|
-| KV Storage | `JsonKVStorage` | JSON files in `LIGHTRAG_WORKING_DIR` |
-| Vector Storage | `NanoVectorDBStorage` | Local vector DB files |
-| Graph Storage | `NetworkXStorage` | NetworkX graph file |
-| Doc Status Storage | `JsonDocStatusStorage` | JSON file |
-
-> **Note:** `LIGHTRAG_WORKING_DIR` is **required** when using local storage, since data is persisted to disk.
-
-### Option B: Google Cloud Spanner (`spanner`)
-
-Uses Cloud Spanner for production-grade, scalable storage. Tables are automatically created by `lightrag-spanner` on first use via `initialize_storages()`.
+This project uses **Google Cloud Spanner** for production-grade, scalable storage. Tables are automatically created by `lightrag-spanner` on first use via `initialize_storages()`.
 
 | Component | Backend |
 |-----------|---------|
@@ -97,9 +80,9 @@ Uses Cloud Spanner for production-grade, scalable storage. Tables are automatica
 Before you begin, ensure you have the following tools installed:
 
 - [uv](https://github.com/astral-sh/uv) (for Python package management)
-- [Google Cloud SDK (gcloud)](https://cloud.google.com/sdk/docs/install) — required only for Spanner backend
+- [Google Cloud SDK (gcloud)](https://cloud.google.com/sdk/docs/install)
 
-### 1. Configure your Google Cloud project (Spanner backend only)
+### 1. Configure your Google Cloud project
 
 First, authenticate with Google Cloud:
 
@@ -117,7 +100,7 @@ gcloud services enable \
   aiplatform.googleapis.com
 ```
 
-### 2. Create a Spanner Instance and Database (Spanner backend only)
+### 2. Create a Spanner Instance and Database
 
 Create a Spanner instance and a database using the `gcloud` CLI.
 
@@ -139,7 +122,7 @@ gcloud spanner databases create $SPANNER_DATABASE \
   --instance=$SPANNER_INSTANCE
 ```
 
-### 3. Grant Agent Engine permissions to Spanner (Spanner backend only)
+### 3. Grant Agent Engine permissions to Spanner
 
 To allow the deployed Agent Engine to connect to your Spanner instance, you must grant the necessary IAM roles to the Agent Engine's service account.
 
@@ -169,18 +152,7 @@ Copy the example file and edit it:
 cp lightrag_with_spanner/.env.example lightrag_with_spanner/.env
 ```
 
-**For local storage (quick start):**
-
 ```bash
-export LIGHTRAG_STORAGE_TYPE=default
-export LIGHTRAG_WORKING_DIR=/path/to/your/lightrag/data
-export GEMINI_API_KEY=your-gemini-api-key
-```
-
-**For Spanner storage (production):**
-
-```bash
-export LIGHTRAG_STORAGE_TYPE=spanner
 export GOOGLE_CLOUD_PROJECT="your-project-id"
 export GOOGLE_CLOUD_LOCATION="us-central1"
 export GOOGLE_GENAI_USE_VERTEXAI="1"
