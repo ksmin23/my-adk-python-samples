@@ -281,6 +281,7 @@ adk web
 ## References
 
 - :octocat: [PathRAG GitHub](https://github.com/ksmin23/PathRAG): Knowledge Graph-based RAG system that uses path-based retrieval through knowledge graphs for more accurate, explainable, and context-aware LLM responses.
+  - [PathRAG Technical Specification](./PathRAG_Technical_Specification.md)
 - [Intro to GraphRAG](https://graphrag.com/concepts/intro-to-graphrag/) - A dive into GraphRAG pattern details
 - [LightRAG](https://lightrag.github.io/) - Simple and Fast Retrieval-Augmented Generation that incorporates graph structures into text indexing and retrieval processes.
   - :octocat: [LightRAG GitHub](https://github.com/HKUDS/LightRAG/)
