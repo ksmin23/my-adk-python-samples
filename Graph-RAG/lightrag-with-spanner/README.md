@@ -222,6 +222,7 @@ adk web
 ## References
 
 - :octocat: [LightRAG GitHub](https://github.com/HKUDS/LightRAG): Simple and Fast Retrieval-Augmented Generation that incorporates graph structures into text indexing and retrieval processes.
+  - [LightRAG Technical Specification](./LightRAG_Technical_Specification.md)
 - :octocat: [lightrag-spanner GitHub](https://github.com/ksmin23/lightrag-spanner): Google Cloud Spanner storage backend for LightRAG.
 - [Intro to GraphRAG](https://graphrag.com/concepts/intro-to-graphrag/) - A dive into GraphRAG pattern details
 - [Google ADK Documentation](https://google.github.io/adk-docs/)
