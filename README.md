@@ -180,7 +180,7 @@ This section includes agents that implement the Graph Retrieval-Augmented Genera
 #### PathRAG with Spanner
 
 -   **Directory**: [`Graph-RAG/pathrag-with-spanner/`](./Graph-RAG/pathrag-with-spanner/)
--   **Description**: An agent that implements the PathRAG (Path-based Retrieval Augmented Generation) pattern using the PathRAG library with configurable storage backends.
+-   **Description**: An agent that implements the PathRAG (Path-based Retrieval Augmented Generation) pattern using the [PathRAG](https://github.com/ksmin23/PathRAG) library with configurable storage backends.
 -   **Features**:
     -   Supports two storage backends: Google Cloud Spanner (production) and local file-based storage (development).
     -   Uses `QueryParam(only_need_context=True)` to avoid double LLM calls — PathRAG returns raw context, ADK agent generates the final answer.
