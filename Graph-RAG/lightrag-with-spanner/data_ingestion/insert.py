@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 SPANNER_INSTANCE = os.environ.get("SPANNER_INSTANCE")
 SPANNER_DATABASE = os.environ.get("SPANNER_DATABASE")
+WORKSPACE = os.environ.get("LIGHTRAG_WORKSPACE", "lightrag")
 
 SAMPLE_DOCS = [
     """
@@ -65,6 +66,7 @@ def _create_rag_instance(work_dir: str) -> LightRAG:
 
   return LightRAG(
     working_dir=work_dir,
+    workspace=WORKSPACE,
     llm_model_func=gemini_model_complete,
     llm_model_name=os.environ.get("LLM_MODEL_NAME", "gemini-2.5-flash"),
     embedding_func=_get_embedding_func(),

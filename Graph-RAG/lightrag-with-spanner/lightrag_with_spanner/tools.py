@@ -33,6 +33,7 @@ async def get_rag_instance():
 
     rag = LightRAG(
       working_dir=os.environ.get("LIGHTRAG_WORKING_DIR", tempfile.mkdtemp(prefix="lightrag_")),
+      workspace=os.environ.get("LIGHTRAG_WORKSPACE", "lightrag"),
       llm_model_func=gemini_model_complete,
       llm_model_name=os.environ.get("LLM_MODEL_NAME", "gemini-2.5-flash"),
       embedding_func=_get_embedding_func(),
