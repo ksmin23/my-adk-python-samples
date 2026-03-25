@@ -15,6 +15,9 @@ logger = logging.getLogger(__name__)
 
 _rag_instance = None
 
+QUERY_TOP_K = int(os.environ.get("LIGHTRAG_QUERY_TOP_K", "10"))
+COSINE_THRESHOLD = float(os.environ.get("LIGHTRAG_COSINE_THRESHOLD", "0.5"))
+
 
 def _get_embedding_func() -> EmbeddingFunc:
   return EmbeddingFunc(
@@ -45,6 +48,7 @@ async def get_rag_instance():
         "spanner_instance_id": os.environ.get("SPANNER_INSTANCE"),
         "spanner_database_id": os.environ.get("SPANNER_DATABASE"),
       },
+      cosine_better_than_threshold=COSINE_THRESHOLD,
       # Disable LLM caching -- with remote storage like Spanner, cache lookups
       # add network round-trips on every LLM call with minimal hit rate benefit.
       enable_llm_cache=False,
@@ -73,7 +77,11 @@ async def lightrag_tool(query: str) -> str:
     rag = await get_rag_instance()
     context = await rag.aquery(
       query,
-      param=QueryParam(mode="hybrid", only_need_context=True)
+      param=QueryParam(
+        mode="hybrid",
+        only_need_context=True,
+        top_k=QUERY_TOP_K,
+      )
     )
     logger.debug(f"Retrieved context: {context}")
     return str(context) if context else "No relevant context found in the Knowledge Graph."
