@@ -47,6 +47,7 @@ async def get_rag_instance():
       addon_params={
         "spanner_instance_id": os.environ.get("SPANNER_INSTANCE"),
         "spanner_database_id": os.environ.get("SPANNER_DATABASE"),
+        "spanner_graph_name": os.getenv("SPANNER_GRAPH_NAME", "lightrag_knowledge_graph"),
       },
       cosine_better_than_threshold=COSINE_THRESHOLD,
       # Disable LLM caching -- with remote storage like Spanner, cache lookups

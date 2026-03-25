@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 SPANNER_INSTANCE = os.environ.get("SPANNER_INSTANCE")
 SPANNER_DATABASE = os.environ.get("SPANNER_DATABASE")
+SPANNER_GRAPH_NAME = os.getenv("SPANNER_GRAPH_NAME", "lightrag_knowledge_graph")
 WORKSPACE = os.environ.get("LIGHTRAG_WORKSPACE", "lightrag")
 
 SAMPLE_DOCS = [
@@ -77,6 +78,7 @@ def _create_rag_instance(work_dir: str) -> LightRAG:
     addon_params={
       "spanner_instance_id": SPANNER_INSTANCE,
       "spanner_database_id": SPANNER_DATABASE,
+      "spanner_graph_name": SPANNER_GRAPH_NAME,
     },
     enable_llm_cache=False,
     enable_llm_cache_for_entity_extract=False,
