@@ -191,11 +191,11 @@ This section includes agents that implement the Graph Retrieval-Augmented Genera
 #### LightRAG with Spanner
 
 -   **Directory**: [`Graph-RAG/lightrag-with-spanner/`](./Graph-RAG/lightrag-with-spanner/)
--   **Description**: An agent that implements the LightRAG (Light Retrieval Augmented Generation) pattern using the [LightRAG](https://github.com/HKUDS/LightRAG) library with Google Cloud Spanner as the storage backend via the [lightrag-spanner](https://github.com/ksmin23/lightrag-spanner) plugin.
+-   **Description**: An agent that implements the LightRAG (Light Retrieval Augmented Generation) pattern using the Agent Development Kit (ADK) with **Google Cloud Spanner** as the storage backend. It leverages the [LightRAG](https://github.com/HKUDS/LightRAG) library with the [lightrag-spanner](https://github.com/ksmin23/lightrag-spanner) storage plugin and Gemini models for LLM and embedding.
 -   **Features**:
-    -   Uses Spanner for all storage (KV, Vector, Graph, DocStatus) — no local file storage needed.
-    -   Hybrid search combining Knowledge Graph traversal and vector similarity via Spanner.
-    -   Uses `QueryParam(only_need_context=True)` to avoid double LLM calls — LightRAG returns raw context, ADK agent generates the final answer.
+    -   **Full Spanner Integration**: Uses Spanner for all storage components (KV, Vector, Graph, DocStatus), eliminating the need for local file storage.
+    -   **Hybrid Retrieval**: Combines Knowledge Graph traversal and vector similarity search via Spanner.
+    -   **Optimized LLM Usage**: Uses `QueryParam(only_need_context=True)` to extract structured context from LightRAG and lets the ADK Agent generate the final answer, avoiding redundant LLM calls.
 -   **README**: [LightRAG with Spanner README](./Graph-RAG/lightrag-with-spanner/README.md)
 
 ### 7. ADK BigQuery Logging Plugin Example
