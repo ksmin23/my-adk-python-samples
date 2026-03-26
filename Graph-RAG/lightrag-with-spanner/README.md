@@ -6,8 +6,8 @@ It leverages the [LightRAG](https://github.com/HKUDS/LightRAG) library with the 
 
 ## Architecture
 
-<table border="0" style="border: none;">
-  <tr>
+<table border="0" cellpadding="0" cellspacing="0" style="border: none; border-collapse: collapse;">
+  <tr style="border: none;">
     <td valign="middle" align="center" width="70%" style="border: none;">
       <img src="./assets/lightrag-framework-arch.png" alt="LightRAG Framework Architecture"><br><br>
       <em>Image Source: <a href="https://arxiv.org/abs/2410.05779">"LightRAG: Simple and Fast Retrieval-Augmented Generation"</a></em>
@@ -225,8 +225,8 @@ adk web
 ```
 **Screenshot:**
 ![lightrag-with-spanner](./assets/lightrag-with-spanner.png)
-<table border="0" style="border: none;">
-  <tr>
+<table border="0" cellpadding="0" cellspacing="0" style="border: none; border-collapse: collapse;">
+  <tr style="border: none;">
     <td valign="middle" style="border: none;">
       <img src="./assets/lightrag-with-spanner-adk_log.png" alt="lightrag-with-spanner-adk_log">
     </td>
