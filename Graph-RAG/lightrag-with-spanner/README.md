@@ -223,9 +223,15 @@ adk run lightrag_with_spanner
 ```bash
 adk web
 ```
+
 **Screenshot:**
-![lightrag-with-spanner](./assets/lightrag-with-spanner.png)
+
 <table border="0" cellpadding="0" cellspacing="0" style="border: none; border-collapse: collapse;">
+  <tr style="border: none;">
+    <td style="border: none;" colspan="2" align="center">
+      <img src="./assets/lightrag-with-spanner.png" alt="lightrag-with-spanner">
+    </td>
+  </tr>
   <tr style="border: none;">
     <td valign="middle" style="border: none;">
       <img src="./assets/lightrag-with-spanner-adk_log.png" alt="lightrag-with-spanner-adk_log">
