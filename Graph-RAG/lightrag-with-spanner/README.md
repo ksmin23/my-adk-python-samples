@@ -6,7 +6,7 @@ It leverages the [LightRAG](https://github.com/HKUDS/LightRAG) library with the 
 
 ## Architecture
 
-<table>
+<table border="0" style="border: none;">
   <tr>
     <td valign="middle" align="center" width="70%">
       <img src="./assets/lightrag-framework-arch.png" alt="LightRAG Framework Architecture"><br><br>
@@ -224,13 +224,13 @@ adk run lightrag_with_spanner
 adk web
 ```
 **Screenshot:**
-<table>
+![lightrag-with-spanner](./assets/lightrag-with-spanner.png)
+<table border="0" style="border: none;">
   <tr>
-    <td valign="top">
-      <img src="./assets/lightrag-with-spanner.png" alt="lightrag-with-spanner"><br><br>
+    <td valign="middle">
       <img src="./assets/lightrag-with-spanner-adk_log.png" alt="lightrag-with-spanner-adk_log">
     </td>
-    <td valign="bottom">
+    <td valign="middle">
       <img src="./assets/lightrag-spanner_storages.png" alt="lightrag-spanner-storages">
     </td>
   </tr>
