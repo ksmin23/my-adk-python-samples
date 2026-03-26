@@ -287,15 +287,18 @@ adk web
 <table border="0" cellpadding="0" cellspacing="0" style="border: none; border-collapse: collapse;">
   <tr style="border: none;">
     <td style="border: none;" colspan="2" align="center">
-      <img src="./assets/pathrag-with-spanner.png" alt="pathrag-with-spanner">
+      <img src="./assets/pathrag-with-spanner.png" alt="pathrag-with-spanner"><br>
+      Figure 1. PathRAG with Spanner - ADK Web UI
     </td>
   </tr>
   <tr style="border: none;">
-    <td valign="top" style="border: none;">
-      <img src="./assets/pathrag-with-spanner-storages.png" alt="pathrag-with-spanner-storages">
+    <td valign="top" align="center" style="border: none;">
+      <img src="./assets/pathrag-with-spanner-storages.png" alt="pathrag-with-spanner-storages"><br>
+      Figure 2. PathRAG with Spanner - Storages
     </td>
-    <td valign="middle" style="border: none;">
-      <img src="./assets/pathrag-with-spanner-adk_log.png" alt="pathrag-with-spanner-adk_log">
+    <td valign="middle" align="center" style="border: none;">
+      <img src="./assets/pathrag-with-spanner-adk_log.png" alt="pathrag-with-spanner-adk_log"><br>
+      Figure 3. PathRAG with Spanner - ADK Log
     </td>
   </tr>
 </table>

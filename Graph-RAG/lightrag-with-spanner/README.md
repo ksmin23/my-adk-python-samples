@@ -229,15 +229,18 @@ adk web
 <table border="0" cellpadding="0" cellspacing="0" style="border: none; border-collapse: collapse;">
   <tr style="border: none;">
     <td style="border: none;" colspan="2" align="center">
-      <img src="./assets/lightrag-with-spanner.png" alt="lightrag-with-spanner">
+      <img src="./assets/lightrag-with-spanner.png" alt="lightrag-with-spanner"><br>
+      Figure 1. LightRAG with Spanner - ADK Web UI
     </td>
   </tr>
   <tr style="border: none;">
-    <td valign="middle" style="border: none;">
-      <img src="./assets/lightrag-with-spanner-adk_log.png" alt="lightrag-with-spanner-adk_log">
+    <td valign="middle" align="center"style="border: none;">
+      <img src="./assets/lightrag-with-spanner-adk_log.png" alt="lightrag-with-spanner-adk_log"><br>
+      Figure 2. LightRAG with Spanner - ADK Log
     </td>
-    <td valign="middle" style="border: none;">
-      <img src="./assets/lightrag-spanner_storages.png" alt="lightrag-spanner-storages">
+    <td valign="middle" align="center" style="border: none;">
+      <img src="./assets/lightrag-spanner_storages.png" alt="lightrag-spanner-storages"><br>
+      Figure 3. LightRAG with Spanner - Storages
     </td>
   </tr>
 </table>
