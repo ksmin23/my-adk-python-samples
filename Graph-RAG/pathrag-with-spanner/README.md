@@ -6,8 +6,14 @@ It leverages the [PathRAG](https://github.com/ksmin23/PathRAG) library with buil
 
 ## Architecture
 
-```
-User Query
+<table border="0" cellpadding="0" cellspacing="0" style="border: none; border-collapse: collapse;">
+  <tr style="border: none;">
+    <td valign="middle" align="center" width="70%" style="border: none;">
+      <img src="./assets/pathrag-framework-arch.png" alt="PathRAG Framework Architecture"><br><br>
+      <em>Image Source: <a href="https://arxiv.org/abs/2502.14902">"PathRAG: Pruning Graph-based Retrieval Augmented Generation with Relational Paths"</a></em>
+    </td>
+    <td valign="middle" width="30%" style="border: none;">
+      <pre>User Query
     |
     v
 ADK Agent (Gemini 2.5 Flash)
@@ -23,10 +29,11 @@ PathRAG.aquery(only_need_context=True)
     +-- Context assembly and return
     |
     v
-ADK Agent generates final answer based on context
-```
-
-`QueryParam(only_need_context=True)` skips answer generation inside PathRAG, letting the ADK Agent's LLM generate the final answer from the retrieved context.
+ADK Agent generates final answer based on context</pre>
+      <p><code>QueryParam(only_need_context=True)</code> skips answer generation inside PathRAG, letting the ADK Agent's LLM generate the final answer from the retrieved context.</p>
+    </td>
+  </tr>
+</table>
 
 ## How It Works
 
@@ -276,7 +283,22 @@ adk run pathrag_with_spanner
 adk web
 ```
 **Screenshot:**
-![pathrag-with-spanner](./assets/pathrag-with-spanner.png)
+
+<table border="0" cellpadding="0" cellspacing="0" style="border: none; border-collapse: collapse;">
+  <tr style="border: none;">
+    <td style="border: none;" colspan="2" align="center">
+      <img src="./assets/pathrag-with-spanner.png" alt="pathrag-with-spanner">
+    </td>
+  </tr>
+  <tr style="border: none;">
+    <td valign="top" style="border: none;">
+      <img src="./assets/pathrag-with-spanner-storages.png" alt="pathrag-with-spanner-storages">
+    </td>
+    <td valign="middle" style="border: none;">
+      <img src="./assets/pathrag-with-spanner-adk_log.png" alt="pathrag-with-spanner-adk_log">
+    </td>
+  </tr>
+</table>
 
 ## References
 
