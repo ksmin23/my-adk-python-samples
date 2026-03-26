@@ -8,11 +8,11 @@ It leverages the [LightRAG](https://github.com/HKUDS/LightRAG) library with the 
 
 <table border="0" style="border: none;">
   <tr>
-    <td valign="middle" align="center" width="70%">
+    <td valign="middle" align="center" width="70%" style="border: none;">
       <img src="./assets/lightrag-framework-arch.png" alt="LightRAG Framework Architecture"><br><br>
       <em>Image Source: <a href="https://arxiv.org/abs/2410.05779">"LightRAG: Simple and Fast Retrieval-Augmented Generation"</a></em>
     </td>
-    <td valign="middle" width="30%">
+    <td valign="middle" width="30%" style="border: none;">
       <pre>User Query
     |
     v
@@ -227,10 +227,10 @@ adk web
 ![lightrag-with-spanner](./assets/lightrag-with-spanner.png)
 <table border="0" style="border: none;">
   <tr>
-    <td valign="middle">
+    <td valign="middle" style="border: none;">
       <img src="./assets/lightrag-with-spanner-adk_log.png" alt="lightrag-with-spanner-adk_log">
     </td>
-    <td valign="middle">
+    <td valign="middle" style="border: none;">
       <img src="./assets/lightrag-spanner_storages.png" alt="lightrag-spanner-storages">
     </td>
   </tr>
