@@ -6,8 +6,14 @@ It leverages the [LightRAG](https://github.com/HKUDS/LightRAG) library with the 
 
 ## Architecture
 
-```
-User Query
+<table>
+  <tr>
+    <td valign="middle" align="center" width="70%">
+      <img src="./assets/lightrag-framework-arch.png" alt="LightRAG Framework Architecture"><br><br>
+      <em>Image Source: <a href="https://arxiv.org/abs/2410.05779">"LightRAG: Simple and Fast Retrieval-Augmented Generation"</a></em>
+    </td>
+    <td valign="middle" width="30%">
+      <pre>User Query
     |
     v
 ADK Agent (Gemini 2.5 Flash)
@@ -23,10 +29,11 @@ LightRAG.aquery(only_need_context=True)
     +-- Context assembly and return
     |
     v
-ADK Agent generates final answer based on context
-```
-
-`QueryParam(only_need_context=True)` skips answer generation inside LightRAG, letting the ADK Agent's LLM generate the final answer from the retrieved context.
+ADK Agent generates final answer based on context</pre>
+      <p><code>QueryParam(only_need_context=True)</code> skips answer generation inside LightRAG, letting the ADK Agent's LLM generate the final answer from the retrieved context.</p>
+    </td>
+  </tr>
+</table>
 
 ## How It Works
 
@@ -217,7 +224,17 @@ adk run lightrag_with_spanner
 adk web
 ```
 **Screenshot:**
-![lightrag-with-spanner](./assets/lightrag-with-spanner.png)
+<table>
+  <tr>
+    <td valign="top">
+      <img src="./assets/lightrag-with-spanner.png" alt="lightrag-with-spanner"><br><br>
+      <img src="./assets/lightrag-with-spanner-adk_log.png" alt="lightrag-with-spanner-adk_log">
+    </td>
+    <td valign="bottom">
+      <img src="./assets/lightrag-spanner_storages.png" alt="lightrag-spanner-storages">
+    </td>
+  </tr>
+</table>
 
 ## References
 
