@@ -16,6 +16,213 @@ The agent can convert natural language questions into BigQuery SQL queries and e
     - `PreloadMemoryTool`: Automatically injecting relevant memories into the agent's context.
     - `LoadMemoryTool`: Enabling the agent to explicitly retrieve memories when needed.
 
+## Architecture
+
+### System Architecture
+
+```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#4285F4",
+    "primaryTextColor": "#FFFFFF",
+    "primaryBorderColor": "#1A73E8",
+    "secondaryColor": "#34A853",
+    "secondaryTextColor": "#FFFFFF",
+    "secondaryBorderColor": "#1E8E3E",
+    "tertiaryColor": "#FBBC04",
+    "tertiaryTextColor": "#202124",
+    "tertiaryBorderColor": "#F9AB00",
+    "lineColor": "#5F6368",
+    "textColor": "#202124",
+    "fontSize": "14px"
+  }
+}}%%
+
+flowchart TB
+    %% ── User ──
+    User["👤 User<br/>(Natural Language Query)"]
+
+    %% ── ADK Runtime ──
+    subgraph ADK["<b>Google ADK Runtime</b>"]
+        direction TB
+
+        subgraph AgentCore["<b>Root Agent: bigquery_data_agent</b><br/>Model: Gemini 2.5 Flash | Temperature: 0.01"]
+            direction TB
+            Instruction["📋 System Instruction<br/>(prompts.py)<br/>• Decision Flow<br/>• Query Execution Workflow<br/>• Memory Scope Rules<br/>• Global SQL Rules"]
+        end
+
+        subgraph Callbacks["<b>Callbacks</b>"]
+            direction LR
+            AfterTool["🔄 after_tool_callback<br/><i>store_query_result_in_state</i><br/>━━━━━━━━━━━━━━━<br/>Caches last SQL, results,<br/>dataset_id in session state"]
+            AfterAgent["💾 after_agent_callback<br/><i>auto_save_session_to_memory</i><br/>━━━━━━━━━━━━━━━<br/>Saves session to Memory Bank<br/>after each interaction"]
+        end
+
+        subgraph Tools["<b>Agent Tools</b>"]
+            direction TB
+
+            subgraph BQTools["BigQuery Tools"]
+                BQToolset["🔍 BigQueryToolset<br/>(execute_sql)<br/>━━━━━━━━━━━━━<br/>WriteMode: BLOCKED<br/>(SELECT only)"]
+            end
+
+            subgraph MemTools["Memory Tools"]
+                direction TB
+                SearchHistory["🔎 search_query_history<br/>━━━━━━━━━━━━━<br/>Scope: user / team / global<br/>Similarity search + metadata filter"]
+                SaveQuery["💾 save_query_to_memory<br/>━━━━━━━━━━━━━<br/>Scope: user / team<br/>Structured fact storage"]
+                SetUserProp["👤 set_user_property<br/>━━━━━━━━━━━━━<br/>Store persistent user props<br/>(e.g., team_id)"]
+            end
+
+            subgraph ADKMemTools["ADK Built-in Memory Tools"]
+                PreloadMem["📥 preload_memory_tool<br/>Auto-load relevant memories"]
+                LoadMem["📤 load_memory_tool<br/>Selective memory retrieval"]
+            end
+        end
+    end
+
+    %% ── External Services ──
+    subgraph GCP["<b>Google Cloud Platform</b>"]
+        direction TB
+
+        BQ[("🗄️ BigQuery<br/>━━━━━━━━━━━<br/>Project / Dataset<br/>(Read-only access)")]
+
+        subgraph AgentEngine["<b>Vertex AI Agent Engine</b><br/>(Memory Bank)"]
+            direction TB
+
+            subgraph MemScopes["Memory Scopes"]
+                direction LR
+                UserScope["👤 User Scope<br/>(user_id)<br/>━━━━━━━━━━━━━<br/>• Personal SQL queries<br/>• User profile (team_id, etc.)<br/>• Preferences<br/>• Conversation details"]
+                TeamScope["👥 Team Scope<br/>(team_id)<br/>━━━━━━━━━━━━━<br/>• Shared SQL queries<br/>• Team preferences<br/>• Key details"]
+            end
+
+            MemConfig["⚙️ Customization Config<br/>━━━━━━━━━━━━━<br/>• Custom Topic: sql_query<br/>• Managed Topics:<br/>  USER_PERSONAL_INFO,<br/>  USER_PREFERENCES,<br/>  KEY_CONVERSATION_DETAILS,<br/>  EXPLICIT_INSTRUCTIONS<br/>• Few-shot examples"]
+        end
+    end
+
+    %% ── Setup Utilities ──
+    subgraph SetupUtils["<b>Setup Utilities</b> (utils/)"]
+        direction LR
+        SetupScript["🛠️ setup_memory_bank.py<br/>CLI: create / update<br/>Agent Engine"]
+        CustomConfig["📝 memory_bank_customization.py<br/>CustomizationConfig builder<br/>for user & team scopes"]
+    end
+
+    %% ── Connections ──
+    User -->|"NL Query"| AgentCore
+    AgentCore -->|"Response<br/>(Markdown + SQL)"| User
+
+    AgentCore --> Tools
+    AgentCore --> Callbacks
+
+    BQToolset -->|"SQL Query"| BQ
+    BQ -->|"Query Results"| BQToolset
+
+    AfterTool -.->|"Update session state"| AgentCore
+    AfterAgent -.->|"memory_service.add_session_to_memory()"| AgentEngine
+
+    SearchHistory -->|"memories.retrieve()<br/>similarity_search"| AgentEngine
+    SaveQuery -->|"memories.generate()<br/>direct_memories"| AgentEngine
+    SetUserProp -->|"memories.generate()<br/>(profile metadata)"| AgentEngine
+    PreloadMem -.->|"Auto-retrieve"| AgentEngine
+    LoadMem -.->|"On-demand retrieve"| AgentEngine
+
+    SetupScript --> CustomConfig
+    CustomConfig -->|"agent_engines.create()<br/>agent_engines.update()"| AgentEngine
+
+    %% ── Styling ──
+    classDef userStyle fill:#E8F0FE,stroke:#1A73E8,stroke-width:2px,color:#1A73E8
+    classDef agentStyle fill:#E6F4EA,stroke:#1E8E3E,stroke-width:2px,color:#1E8E3E
+    classDef toolStyle fill:#FEF7E0,stroke:#F9AB00,stroke-width:1.5px,color:#E37400
+    classDef gcpStyle fill:#F3E8FD,stroke:#9334E6,stroke-width:2px,color:#7627BB
+    classDef memStyle fill:#FCE8E6,stroke:#D93025,stroke-width:1.5px,color:#C5221F
+    classDef setupStyle fill:#F1F3F4,stroke:#5F6368,stroke-width:1.5px,color:#3C4043
+    classDef callbackStyle fill:#E8EAF6,stroke:#3F51B5,stroke-width:1.5px,color:#283593
+
+    class User userStyle
+    class AgentCore,Instruction agentStyle
+    class BQToolset,SearchHistory,SaveQuery,SetUserProp,PreloadMem,LoadMem toolStyle
+    class BQ gcpStyle
+    class UserScope,TeamScope,MemConfig memStyle
+    class SetupScript,CustomConfig setupStyle
+    class AfterTool,AfterAgent callbackStyle
+```
+
+### Query Execution Flow
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Agent as bigquery_data_agent<br/>(Gemini 2.5 Flash)
+    participant State as Session State
+    participant MB as Memory Bank<br/>(Agent Engine)
+    participant BQ as BigQuery
+
+    Note over User, BQ: 1. User asks a natural language question
+
+    User ->> Agent: NL Query (e.g., "Show top search terms in NYC")
+
+    Note over Agent, MB: 2. preload_memory_tool auto-injects relevant memories
+    Agent -) MB: preload_memory_tool()
+    MB --) Agent: Relevant memories (if any)
+
+    Note over Agent, MB: 3. MANDATORY: Search for similar past queries
+    Agent ->> MB: search_query_history(nl_query, scope="global")
+    MB ->> MB: similarity_search + metadata filter<br/>(content_type = "sql")
+    MB -->> Agent: Matching queries (0..N)
+
+    alt Memory HIT — Similar query found
+        Note over Agent: Reuse saved SQL<br/>(directly or as template)
+    else Memory MISS — No match
+        Note over Agent: Generate new SQL from<br/>schema + NL query
+    end
+
+    Note over Agent, BQ: 4. Execute SQL against BigQuery
+    Agent ->> BQ: execute_sql(sql)
+    BQ -->> Agent: Query results (rows)
+
+    Note over Agent, State: 5. after_tool_callback fires
+    Agent ->> State: store_query_result_in_state()<br/>• last_executed_query<br/>• last_query_results<br/>• last_dataset_id
+
+    Note over User, Agent: 6. Return results to user
+    Agent -->> User: Markdown response<br/>(SQL + results table)
+
+    Note over User, MB: 7. Ask to save & persist (if new query)
+    Agent -->> User: "Save this query to memory?<br/>(Scope: User / Team)"
+
+    alt User agrees to save
+        User ->> Agent: "Save as 'NYC Top Terms' to team"
+
+        opt team scope & no team_id
+            Agent ->> MB: get_team_id_from_user_memory()
+            MB -->> Agent: team_id
+        end
+
+        Agent ->> MB: save_query_to_memory()<br/>Title, Description, NL Query, SQL
+        MB -->> Agent: ✓ Saved (scope=user|team)
+        Agent -->> User: "Query saved to memory."
+    end
+
+    Note over Agent, MB: 8. after_agent_callback fires
+    Agent -) MB: auto_save_session_to_memory()<br/>memory_service.add_session_to_memory()
+```
+
+### Memory Scopes
+
+| Scope | Identifier | Visibility | Usage |
+| :--- | :--- | :--- | :--- |
+| **`user`** | `user_id` | **Private** | Personal analysis, ad-hoc queries |
+| **`team`** | `team_id` | **Shared** | Standard reports, team dashboards, common metrics |
+| **`global`** | N/A | **Public** | (Implementation dependent) Organization-wide KPIs |
+
+### Memory Storage Structure
+
+Saved memories are structured to maximize retrieval accuracy:
+
+```text
+Title: Monthly Sales Report
+Description: Aggregates sales data by month for the last 12 months.
+NL Query: Show me monthly sales trends
+SQL: SELECT FORMAT_DATE('%Y-%m', date) as month, SUM(amount) FROM ...
+```
+
 ## Directory Structure
 
 The project is organized as follows:
@@ -167,27 +374,6 @@ The saved queries are stored as structured memories in the Agent Engine, visible
 1.  Searches memory and finds the "NYC Top Search Terms" query.
 2.  Uses the saved SQL as a starting point.
 3.  Executes the query and returns the answer immediately, without needing to regenerate the SQL from scratch.
-
-## Architecture Details
-
-### Memory Scopes
-
-| Scope | Identifier | Visibility | Usage |
-| :--- | :--- | :--- | :--- |
-| **`user`** | `user_id` | **Private** | Personal analysis, ad-hoc queries |
-| **`team`** | `team_id` | **Shared** | Standard reports, team dashboards, common metrics |
-| **`global`** | N/A | **Public** | (Implementation dependent) Organization-wide KPIs |
-
-### Memory Storage Structure
-
-Saved memories are structured to maximize retrieval accuracy:
-
-```text
-Title: Monthly Sales Report
-Description: Aggregates sales data by month for the last 12 months.
-NL Query: Show me monthly sales trends
-SQL: SELECT FORMAT_DATE('%Y-%m', date) as month, SUM(amount) FROM ...
-```
 
 ## 💡 Future Works
 
