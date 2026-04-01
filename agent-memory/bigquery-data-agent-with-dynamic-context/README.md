@@ -157,7 +157,7 @@ The saved queries are stored as structured memories in the Agent Engine, visible
 
 **User**: "Save this query as 'Weekly Trend Report' for the team."
 
-**Agent**: Requires a `team_id` (e.g., "data-science-team"). Saves the query with scope `team`. All members of "data-science-team" can now access this query.
+**Agent**: Requires a `team_id` (e.g., "data-science"). Saves the query with scope `team`. All members of "data-science" can now access this query.
 
 ### Scenario 4: Retrieving from Memory
 
