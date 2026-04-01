@@ -24,13 +24,13 @@ The agent can convert natural language questions into BigQuery SQL queries and e
 %%{init: {
   "theme": "base",
   "themeVariables": {
-    "primaryColor": "#4285F4",
-    "primaryTextColor": "#FFFFFF",
+    "primaryColor": "transparent",
+    "primaryTextColor": "#202124",
     "primaryBorderColor": "#1A73E8",
-    "secondaryColor": "#34A853",
-    "secondaryTextColor": "#FFFFFF",
+    "secondaryColor": "transparent",
+    "secondaryTextColor": "#202124",
     "secondaryBorderColor": "#1E8E3E",
-    "tertiaryColor": "#FBBC04",
+    "tertiaryColor": "transparent",
     "tertiaryTextColor": "#202124",
     "tertiaryBorderColor": "#F9AB00",
     "lineColor": "#5F6368",
@@ -128,13 +128,13 @@ flowchart TB
     CustomConfig -->|"agent_engines.create()<br/>agent_engines.update()"| AgentEngine
 
     %% ── Styling ──
-    classDef userStyle fill:#E8F0FE,stroke:#1A73E8,stroke-width:2px,color:#1A73E8
-    classDef agentStyle fill:#E6F4EA,stroke:#1E8E3E,stroke-width:2px,color:#1E8E3E
-    classDef toolStyle fill:#FEF7E0,stroke:#F9AB00,stroke-width:1.5px,color:#E37400
-    classDef gcpStyle fill:#F3E8FD,stroke:#9334E6,stroke-width:2px,color:#7627BB
-    classDef memStyle fill:#FCE8E6,stroke:#D93025,stroke-width:1.5px,color:#C5221F
-    classDef setupStyle fill:#F1F3F4,stroke:#5F6368,stroke-width:1.5px,color:#3C4043
-    classDef callbackStyle fill:#E8EAF6,stroke:#3F51B5,stroke-width:1.5px,color:#283593
+    classDef userStyle fill:none,stroke:#1A73E8,stroke-width:2px,color:#1A73E8
+    classDef agentStyle fill:none,stroke:#1E8E3E,stroke-width:2px,color:#1E8E3E
+    classDef toolStyle fill:none,stroke:#F9AB00,stroke-width:1.5px,color:#E37400
+    classDef gcpStyle fill:none,stroke:#9334E6,stroke-width:2px,color:#7627BB
+    classDef memStyle fill:none,stroke:#D93025,stroke-width:1.5px,color:#C5221F
+    classDef setupStyle fill:none,stroke:#5F6368,stroke-width:1.5px,color:#3C4043
+    classDef callbackStyle fill:none,stroke:#3F51B5,stroke-width:1.5px,color:#283593
 
     class User userStyle
     class AgentCore,Instruction agentStyle
