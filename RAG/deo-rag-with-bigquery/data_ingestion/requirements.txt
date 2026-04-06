@@ -1,8 +1,12 @@
-google-cloud-aiplatform==1.104.0
+google-cloud-aiplatform==1.145.0
 google-cloud-bigquery==3.29.0
-langchain-google-community[featurestore,bigquery]==2.0.7
+langchain==1.2.15
+langchain-classic==1.0.3
+langchain-community==0.4.1
+langchain-core==1.2.26
+langchain-google-community[featurestore,bigquery]==3.0.5
 langchain-google-vertexai==2.0.27
-langchain-core==0.3.72
-langchain-text-splitters==0.3.9
-langchain-community==0.3.27
+langchain-text-splitters==1.1.1
+pandas-gbq>=0.26.1
 unstructured[md]==0.18.11
+

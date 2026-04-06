@@ -3,14 +3,17 @@ google-adk==1.27.1
 python-dotenv==1.2.2
 
 # LangChain and Vertex AI
-langchain==0.3.27
-langchain-core==0.3.72
+langchain==1.2.15
+langchain-classic==1.0.3
+langchain-community==0.4.1
+langchain-core==1.2.26
+langchain-google-community[featurestore,bigquery]==3.0.5
 langchain-google-vertexai==2.0.27
-langchain-google-community[featurestore]==2.0.7
+pandas-gbq>=0.26.1
 google-cloud-bigquery==3.29.0
 
 # DEO Optimization
 torch>=2.0.0
 
 # For local testing and running
-google-auth==2.40.3
+google-auth[pyopenssl]>=2.47.0

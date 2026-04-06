@@ -6,6 +6,9 @@ import argparse
 import glob
 import json
 import os
+import warnings
+
+warnings.filterwarnings("ignore", category=FutureWarning, module=r"google\.cloud\.bigquery")
 
 from dotenv import load_dotenv, find_dotenv
 from langchain_community.document_loaders import DirectoryLoader
