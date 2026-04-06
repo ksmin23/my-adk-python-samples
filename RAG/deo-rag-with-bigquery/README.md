@@ -103,7 +103,7 @@ cp .env.example .env
 # Edit .env with your GCP project settings
 
 pip install -r requirements.txt
-python ingest.py --source_dir ../source_documents
+python ingest.py --mode jsonl --source_dir ../source_documents/beir/nsir
 ```
 
 ### 4. Run the agent
