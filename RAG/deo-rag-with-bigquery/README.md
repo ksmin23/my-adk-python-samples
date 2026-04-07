@@ -145,7 +145,7 @@ adk web
 
 ## FAQ
 
-### Does DEO modify the original query before computing its embedding?
+#### Q1: Does DEO modify the original query before computing its embedding?
 
 No. The original query is used **as-is**, even if it contains negation phrases like "excluding CNN" or "without MCP". DEO does not strip, rewrite, or otherwise alter the query text.
 
@@ -156,6 +156,48 @@ Instead, the original query is embedded directly to produce the initial embeddin
 - **Anchoring** it to the original embedding via consistency regularization (`reg_weight * ||eu - eo||`), so the optimized vector does not drift too far from the original meaning
 
 This design is intentional — the original embedding already captures the overall intent of the query, and the optimization refines it to better reflect the inclusion/exclusion constraints without losing that context.
+
+#### Q2: How much latency does DEO add per query?
+
+The optimization loop itself is extremely fast because it operates on a **single vector** (768 or 1024 dimensions), not an entire model:
+
+| Environment | 20 steps | 50 steps |
+|-------------|----------|----------|
+| CPU (Ryzen 7 5800X) | **0.016s** (0.67ms/step) | 0.035s |
+| GPU (RTX 3060) | **0.033s** (1.7ms/step) | 0.095s |
+
+The per-query total latency breaks down as follows:
+
+| Stage | Latency | Notes |
+|-------|---------|-------|
+| LLM Query Decomposition | ~200–500ms | Largest bottleneck (API round-trip) |
+| Sub-query Encoding | ~25–70ms | 3 encoder forward passes |
+| Optimization Loop (20 steps) | ~16–33ms | Less than ~5% of total |
+| FAISS / Vector Search | ~1–5ms | Same as standard search |
+| **Total** | **~300–800ms** | |
+
+Since LLM response generation (~1–3s) dominates end-to-end latency, the DEO overhead is relatively small:
+
+| Stage | Standard RAG | With DEO |
+|-------|-------------|----------|
+| Query processing | ~10ms | ~300–500ms (incl. LLM decomposition) |
+| Retrieval | ~5–50ms | ~5–50ms (same) |
+| LLM response generation | ~1–3s | ~1–3s (same) |
+| **Total** | **~1–3s** | **~1.3–3.5s** |
+
+#### Q3: Can latency be reduced further?
+
+Yes. The reference implementation includes two caching layers that can reduce repeat-query latency to **a few milliseconds**:
+
+1. **LLM Decomposition Caching** — Skips the API call on cache hit (~0ms)
+2. **Optimized Embedding Caching** — Skips the entire optimization loop (~1ms)
+
+Additional optimization strategies for production:
+
+- **Reduce steps**: Paper Figure 2 shows 5–10 steps capture most of the performance gain
+- **Selective application**: Apply DEO only when negation/exclusion is detected; use baseline for regular queries (this agent already does this)
+- **Asynchronous decomposition**: Parallelize LLM decomposition with other tasks
+- **Batch optimization**: Group multiple queries for batch processing
 
 ## References
 
