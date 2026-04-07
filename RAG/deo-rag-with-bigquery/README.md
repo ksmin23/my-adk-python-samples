@@ -83,35 +83,38 @@ deo-rag-with-bigquery/
 
 ## Setup
 
+All commands below assume you are in the `deo-rag-with-bigquery/` project root.
+
 ### 1. Configure environment
 
 ```bash
-cd deo_rag_with_bigquery
-cp .env.example .env
-# Edit .env with your GCP project settings
+# Agent environment
+cp deo_rag_with_bigquery/.env.example deo_rag_with_bigquery/.env
+# Edit deo_rag_with_bigquery/.env with your GCP project settings
+
+# Data ingestion environment
+cp data_ingestion/.env.example data_ingestion/.env
+# Edit data_ingestion/.env with your GCP project settings
 ```
 
 ### 2. Install dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -r deo_rag_with_bigquery/requirements.txt
+pip install -r data_ingestion/requirements.txt
 ```
 
 ### 3. Ingest documents into BigQuery
 
 ```bash
 cd data_ingestion
-cp .env.example .env
-# Edit .env with your GCP project settings
-
-pip install -r requirements.txt
 python ingest.py --mode jsonl --source_dir ../source_documents/beir/nsir
+cd ..
 ```
 
 ### 4. Run the agent
 
 ```bash
-cd ..
 adk web
 ```
 
