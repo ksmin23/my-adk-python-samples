@@ -3,7 +3,7 @@
 An in-depth analysis of the DEO (Direct Embedding Optimization) paper and its reference implementation, covering the core algorithm, code-paper correspondence, experimental evaluation, latency considerations, and a recommended agent architecture for production Agentic RAG using Google ADK.
 
 - **Paper**: [DEO: Training-Free Direct Embedding Optimization for Negation-Aware Retrieval](https://arxiv.org/abs/2603.09185)
-- **Code**: [:octocat: DEO-negation-aware-retrieval](https://github.com/taegyeong-lee/DEO-negation-aware-retrieval)
+- **Code**: [:octocat: DEO-negation-aware-retrieval](https://github.com/taegyeong-lee/DEO-negation-aware-retrieval) (analyzed at commit [`d8efb22`](https://github.com/taegyeong-lee/DEO-negation-aware-retrieval/tree/d8efb22))
 
 ## Table of Contents
 
