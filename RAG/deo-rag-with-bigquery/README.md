@@ -199,6 +199,25 @@ Additional optimization strategies for production:
 - **Asynchronous decomposition**: Parallelize LLM decomposition with other tasks
 - **Batch optimization**: Group multiple queries for batch processing
 
+#### Q4: How does Gemini Embedding handle query vs. document task types?
+
+Gemini embedding models (e.g., `gemini-embedding-001`) support a **task type** parameter that optimizes the embedding for its intended use:
+
+| Task Type | Use Case |
+|-----------|----------|
+| `RETRIEVAL_QUERY` | Embedding a **search query** |
+| `RETRIEVAL_DOCUMENT` | Embedding a **document** for the corpus |
+| `SEMANTIC_SIMILARITY` | Similarity comparison |
+| `CLASSIFICATION` | Classification |
+| `CLUSTERING` | Clustering |
+
+In LangChain's `VertexAIEmbeddings`, the task type is selected automatically by the method you call:
+
+- **`embed_query(text)`** → uses `RETRIEVAL_QUERY`
+- **`embed_documents(texts)`** → uses `RETRIEVAL_DOCUMENT`
+
+In this project, DEO's sub-queries (positives/negatives) are decomposed fragments of the **user's query**, not documents. Therefore they are all embedded with `embed_query()` to ensure they share the same `RETRIEVAL_QUERY` vector space as the original query embedding. Document ingestion ([ingest.py](data_ingestion/ingest.py)) uses `embed_documents()` via `add_documents()`, correctly applying `RETRIEVAL_DOCUMENT`.
+
 ## References
 
 - [DEO: Paper Analysis, Code Walkthrough, and Agentic RAG Architecture](./DEO-deep-dive.md)

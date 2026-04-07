@@ -40,8 +40,8 @@ class DEOOptimizer:
     return F.normalize(emb, p=2, dim=1)
 
   def _get_embeddings(self, texts: List[str]) -> torch.Tensor:
-    """Get multiple embeddings from Vertex AI, returned as normalized tensors."""
-    vectors = self.embedding_model.embed_documents(texts)
+    """Get multiple query embeddings from Vertex AI, returned as normalized tensors."""
+    vectors = [self.embedding_model.embed_query(t) for t in texts]
     embs = torch.tensor(vectors, dtype=torch.float32)  # (N, dim)
     return F.normalize(embs, p=2, dim=1)
 
