@@ -61,6 +61,11 @@ def deo_search_documents_in_bigquery(
   positives: List[str],
   negatives: List[str],
   k: int = 4,
+  num_steps: int = 20,
+  lr: float = 0.001,
+  pos_weight: float = 1.0,
+  neg_weight: float = 1.0,
+  reg_weight: float = 0.2,
 ) -> str:
   """
   Searches for relevant documents in BigQuery using DEO (Direct Embedding Optimization).
@@ -77,6 +82,11 @@ def deo_search_documents_in_bigquery(
       negatives: List of negative sub-queries representing aspects to EXCLUDE from retrieval.
                  These should be the explicitly excluded targets and their close synonyms.
       k: The number of documents to return.
+      num_steps: Number of gradient descent steps for embedding optimization.
+      lr: Learning rate for the Adam optimizer.
+      pos_weight: Weight for the positive attraction loss (λp).
+      neg_weight: Weight for the negative repulsion loss (λn).
+      reg_weight: Weight for the consistency regularization loss (λo).
 
   Returns:
       A formatted string of the retrieved documents.
@@ -95,6 +105,11 @@ def deo_search_documents_in_bigquery(
       query=query,
       positives=positives,
       negatives=negatives,
+      num_steps=num_steps,
+      lr=lr,
+      pos_weight=pos_weight,
+      neg_weight=neg_weight,
+      reg_weight=reg_weight,
     )
 
     # Search BigQuery with the optimized embedding vector
