@@ -69,6 +69,8 @@ deo-rag-with-bigquery/
 │   ├── prompt.py                  # Agent instruction with decomposition guide
 │   ├── tools.py                   # Standard + DEO search tools
 │   └── deo_optimizer.py           # DEO embedding optimization engine
+├── notebooks/
+│   └── deo_search_evaluation.ipynb # Evaluation notebook
 ├── source_documents/              # Sample documents
 └── README.md
 ```
@@ -112,6 +114,18 @@ python ingest.py --mode jsonl --source_dir ../source_documents/beir/nsir
 cd ..
 adk web
 ```
+
+<p align="center">
+  <img src="./assets/deo_rag_with_bigquery-adk-web-ui.png" alt="DEO Negation-Aware RAG with BigQuery" width="800">
+  <br>
+  <b>Figure 1: DEO Negation-Aware RAG with BigQuery ADK Web UI</b>
+</p>
+
+<p align="center">
+  <img src="./assets/deo_search_results_comparison.png" alt="DEO Search Results Comparison" width="800">
+  <br>
+  <b>Figure 2: DEO Search Results Comparison</b>
+</p>
 
 ## Example Queries
 
