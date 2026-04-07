@@ -86,14 +86,8 @@ def deo_search_documents_in_bigquery(
     logger.info(f"[DEO] Positives: {positives}")
     logger.info(f"[DEO] Negatives: {negatives}")
 
-    embedding_model = VertexAIEmbeddings(model_name=os.environ.get("EMBEDDING_MODEL_NAME", "gemini-embedding-001"))
-    vector_store = BigQueryVectorStore(
-      project_id=os.environ["GOOGLE_CLOUD_PROJECT"],
-      location=os.environ["BIGQUERY_LOCATION"],
-      dataset_name=os.environ["BIGQUERY_DATASET"],
-      table_name=os.environ["BIGQUERY_TABLE"],
-      embedding=embedding_model,
-    )
+    vector_store = _get_vector_store()
+    embedding_model = vector_store.embedding
 
     # DEO: Optimize query embedding
     optimizer = DEOOptimizer(embedding_model)
