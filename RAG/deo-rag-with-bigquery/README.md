@@ -218,6 +218,24 @@ In LangChain's `VertexAIEmbeddings`, the task type is selected automatically by 
 
 In this project, DEO's sub-queries (positives/negatives) are decomposed fragments of the **user's query**, not documents. Therefore they are all embedded with `embed_query()` to ensure they share the same `RETRIEVAL_QUERY` vector space as the original query embedding. Document ingestion ([ingest.py](data_ingestion/ingest.py)) uses `embed_documents()` via `add_documents()`, correctly applying `RETRIEVAL_DOCUMENT`.
 
+#### Q5: The agent retrieves documents but still says "I couldn't find the information." How do I fix this?
+
+This can happen when the retrieved documents contain both the desired content and the excluded content. The agent may refuse to answer because it sees the excluded terms in the context and considers the results unusable. There are two ways to address this:
+
+**Solution 1: Refine the agent prompt (recommended)**
+
+Add an explicit instruction telling the model to extract only the relevant information from retrieved documents, even if those documents also mention the excluded terms. In this project, this is already addressed in [prompt.py](deo_rag_with_bigquery/prompt.py) — see **Response Guidelines, rule 3**:
+
+> *"When a negation/exclusion was applied, verify that excluded content does not appear in your answer. Even if the retrieved documents contain the excluded terms, you must extract the relevant information for the positive intent and rewrite it to remove any mention of the excluded terms."*
+
+This guideline increases the likelihood that the model will extract useful information from partially contaminated context rather than giving up entirely.
+
+**Solution 2: Tune DEO search parameters**
+
+If the corpus contains documents that discuss the desired topic without mentioning the excluded terms, but DEO still retrieves contaminated documents, you can increase the repulsion force against negative embeddings by raising `neg_weight`.
+
+When calling `deo_search_documents_in_bigquery`, increase `neg_weight` from the default `1.0` to `2.0` or higher. This pushes the optimized query embedding further away from the negative sub-query embeddings, making it less likely to retrieve documents that mention the excluded terms.
+
 ## References
 
 - [DEO: Paper Analysis, Code Walkthrough, and Agentic RAG Architecture](./DEO-deep-dive.md)

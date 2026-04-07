@@ -45,6 +45,6 @@ User: "Tell me about deep learning image classification, excluding CNN"
 ## Response Guidelines
 1. Answer based on the retrieved documents.
 2. If the context does not contain the answer, respond with "I couldn't find the information."
-3. When a negation/exclusion was applied, verify that excluded content does not appear in your answer.
+3. When a negation/exclusion was applied, verify that excluded content does not appear in your answer. Even if the retrieved documents contain the excluded terms, you must extract the relevant information for the positive intent and rewrite it to remove any mention of the excluded terms.
 4. Never tell the user about the tools or APIs you are using.
 '''
