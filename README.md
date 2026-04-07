@@ -13,6 +13,7 @@ This repository contains a collection of sample agents built using the [Google A
   - [5. Agentic RAG](#5-agentic-rag)
     - [QnA Agent with AlloyDB](#qna-agent-with-alloydb)
     - [QnA Agent with BigQuery](#qna-agent-with-bigquery)
+    - [DEO Negation-Aware RAG with BigQuery](#deo-negation-aware-rag-with-bigquery)
     - [QnA Agent with Spanner](#qna-agent-with-spanner)
     - [QnA Agent with Vector Search 2.0](#qna-agent-with-vector-search-20)
     - [QnA Agent with Gemini File Search](#qna-agent-with-gemini-file-search)
@@ -104,6 +105,17 @@ For detailed setup and execution instructions, please see the [RAG with AlloyDB 
     -   Provides instructions for local execution and deployment to Vertex AI Agent Engine.
 
 For detailed setup and execution instructions, please see the [RAG with BigQuery Agent README](./RAG/rag-with-bigquery/README.md).
+
+#### DEO Negation-Aware RAG with BigQuery
+
+-   **Directory**: [`RAG/deo-rag-with-bigquery/`](./RAG/deo-rag-with-bigquery/)
+-   **Description**: An agent that implements **DEO (Direct Embedding Optimization)** for negation-aware retrieval using BigQuery as the vector store.
+-   **Features**:
+    -   **Negation-Aware Retrieval**: Handles queries with exclusion intent using gradient-based embedding optimization.
+    -   **BigQuery Vector Search**: Uses BigQuery for efficient vector search on optimized embeddings.
+    -   **Query Decomposition**: Automatically decomposes complex queries into positive and negative intents.
+
+For detailed setup and execution instructions, please see the [DEO RAG with BigQuery README](./RAG/deo-rag-with-bigquery/README.md).
 
 #### QnA Agent with Spanner
 
