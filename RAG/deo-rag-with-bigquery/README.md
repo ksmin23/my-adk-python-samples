@@ -159,6 +159,7 @@ This design is intentional — the original embedding already captures the overa
 
 ## References
 
-- **DEO Paper**: [DEO: Training-Free Direct Embedding Optimization for Negation-Aware Retrieval](https://arxiv.org/abs/2603.09185)
-    - :octocat: [(GitHub) DEO-negation-aware-retrieval](https://github.com/taegyeong-lee/DEO-negation-aware-retrieval)
+- [DEO: Paper Analysis, Code Walkthrough, and Agentic RAG Architecture](./DEO-deep-dive.md)
+  - **DEO Paper**: [DEO: Training-Free Direct Embedding Optimization for Negation-Aware Retrieval](https://arxiv.org/abs/2603.09185)
+  - :octocat: [(GitHub) DEO-negation-aware-retrieval](https://github.com/taegyeong-lee/DEO-negation-aware-retrieval)
 - **BigQuery Vector Search**: [BigQuery ML Vector Search](https://cloud.google.com/bigquery/docs/vector-search-intro)
