@@ -245,3 +245,4 @@ When calling `deo_search_documents_in_bigquery`, increase `neg_weight` from the 
   - **DEO Paper**: [DEO: Training-Free Direct Embedding Optimization for Negation-Aware Retrieval](https://arxiv.org/abs/2603.09185)
   - :octocat: [(GitHub) DEO-negation-aware-retrieval](https://github.com/taegyeong-lee/DEO-negation-aware-retrieval)
 - **BigQuery Vector Search**: [BigQuery ML Vector Search](https://cloud.google.com/bigquery/docs/vector-search-intro)
+- **Vertex AI Embeddings Task Types**: [Choose an embeddings task type](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/embeddings/task-types)
