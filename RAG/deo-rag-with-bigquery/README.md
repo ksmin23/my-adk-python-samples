@@ -197,7 +197,7 @@ Yes. The reference implementation includes two caching layers that can reduce re
 
 Additional optimization strategies for production:
 
-- **Reduce steps**: Paper Figure 2 shows 5–10 steps capture most of the performance gain
+- **Reduce steps**: [DEO Paper](https://arxiv.org/abs/2603.09185) Figure 2 shows 5–10 steps capture most of the performance gain
 - **Selective application**: Apply DEO only when negation/exclusion is detected; use baseline for regular queries (this agent already does this)
 - **Asynchronous decomposition**: Parallelize LLM decomposition with other tasks
 - **Batch optimization**: Group multiple queries for batch processing
