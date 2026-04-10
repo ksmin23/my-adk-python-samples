@@ -197,6 +197,27 @@ adk run lightrag_with_bigquery
 adk web
 ```
 
+**Screenshot:**
+
+<table border="0" cellpadding="0" cellspacing="0" style="border: none; border-collapse: collapse;">
+  <tr style="border: none;">
+    <td style="border: none;" colspan="2" align="center">
+      <img src="./assets/lightrag-with-bigquery.png" alt="lightrag-with-bigquery"><br>
+      Figure 1. LightRAG with Bigquery - ADK Web UI
+    </td>
+  </tr>
+  <tr style="border: none;">
+    <td valign="middle" align="center"style="border: none;">
+      <img src="./assets/lightrag-with-bigquery-adk_log.png" alt="lightrag-with-bigquery-adk_log"><br>
+      Figure 2. LightRAG with Bigquery - ADK Log
+    </td>
+    <td valign="middle" align="center" style="border: none;">
+      <img src="./assets/lightrag-bigquery_storages.png" alt="lightrag-bigquery-storages"><br>
+      Figure 3. LightRAG with Bigquery - Storages
+    </td>
+  </tr>
+</table>
+
 ## References
 
 - :octocat: [LightRAG GitHub](https://github.com/HKUDS/LightRAG): Simple and Fast Retrieval-Augmented Generation that incorporates graph structures into text indexing and retrieval processes.
