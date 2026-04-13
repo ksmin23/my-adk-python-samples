@@ -224,5 +224,7 @@ adk web
 - :octocat: [lightrag-bigquery GitHub](https://github.com/ksmin23/lightrag-bigquery): Google Cloud BigQuery storage backend for LightRAG.
 - [Intro to GraphRAG](https://graphrag.com/concepts/intro-to-graphrag/) - A dive into GraphRAG pattern details
 - [Google ADK Documentation](https://google.github.io/adk-docs/)
-- [Introduction to BigQuery Graph](https://docs.cloud.google.com/bigquery/docs/graph-overview)
+- **BigQuery Graph**
+  - [Introduction to BigQuery Graph](https://docs.cloud.google.com/bigquery/docs/graph-overview)
+  - [The Practical Guide to BigQuery Graph: Resources, Codelabs, and GQL Examples](https://medium.com/google-cloud/the-practical-guide-to-bigquery-graph-resources-codelabs-and-gql-examples-c88e8ed67a54)
 - [Vertex AI Gemini](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini)
