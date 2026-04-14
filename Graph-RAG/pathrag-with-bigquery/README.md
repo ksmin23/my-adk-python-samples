@@ -196,6 +196,27 @@ adk run pathrag_with_bigquery
 adk web
 ```
 
+**Screenshot:**
+
+<table border="0" cellpadding="0" cellspacing="0" style="border: none; border-collapse: collapse;">
+  <tr style="border: none;">
+    <td style="border: none;" colspan="2" align="center">
+      <img src="./assets/pathrag-with-bigquery.png" alt="pathrag-with-bigquery"><br>
+      Figure 1. PathRAG with BigQuery - ADK Web UI
+    </td>
+  </tr>
+  <tr style="border: none;">
+    <td valign="top" align="center" style="border: none;">
+      <img src="./assets/pathrag-with-bigquery-storages.png" alt="pathrag-with-bigquery-storages"><br>
+      Figure 2. PathRAG with BigQuery - Storages
+    </td>
+    <td valign="middle" align="center" style="border: none;">
+      <img src="./assets/pathrag-with-bigquery-adk_log.png" alt="pathrag-with-bigquery-adk_log"><br>
+      Figure 3. PathRAG with BigQuery - ADK Log
+    </td>
+  </tr>
+</table>
+
 ## References
 
 - :octocat: [PathRAG GitHub](https://github.com/ksmin23/PathRAG): Knowledge Graph-based RAG system that uses path-based retrieval through knowledge graphs for more accurate, explainable, and context-aware LLM responses.
