@@ -22,6 +22,7 @@ This repository contains a collection of sample agents built using the [Google A
     - [Graph RAG with Spanner](#graph-rag-with-spanner)
     - [PathRAG with Spanner](#pathrag-with-spanner)
     - [LightRAG with Spanner](#lightrag-with-spanner)
+    - [LightRAG with BigQuery](#lightrag-with-bigquery)
   - [7. ADK BigQuery Logging Plugin Example](#7-adk-bigquery-logging-plugin-example)
   - [8. Agent Memory](#8-agent-memory)
     - [ADK Redis Session Service](#adk-redis-session-service)
@@ -209,6 +210,16 @@ This section includes agents that implement the Graph Retrieval-Augmented Genera
     -   **Hybrid Retrieval**: Combines Knowledge Graph traversal and vector similarity search via Spanner.
     -   **Optimized LLM Usage**: Uses `QueryParam(only_need_context=True)` to extract structured context from LightRAG and lets the ADK Agent generate the final answer, avoiding redundant LLM calls.
 -   **README**: [LightRAG with Spanner README](./Graph-RAG/lightrag-with-spanner/README.md)
+
+#### LightRAG with BigQuery
+
+-   **Directory**: [`Graph-RAG/lightrag-with-bigquery/`](./Graph-RAG/lightrag-with-bigquery/)
+-   **Description**: An agent that implements the LightRAG (Light Retrieval Augmented Generation) pattern using the Agent Development Kit (ADK) with **Google Cloud BigQuery** as the storage backend. It leverages the [LightRAG](https://github.com/HKUDS/LightRAG) library with the [lightrag-bigquery](https://github.com/ksmin23/lightrag-bigquery) storage plugin and Gemini models for LLM and embedding.
+-   **Features**:
+    -   **Full BigQuery Integration**: Uses BigQuery for all storage components (KV, Vector, Graph, DocStatus) via `lightrag-bigquery`.
+    -   **Hybrid Retrieval**: Combines Knowledge Graph traversal and vector similarity search via BigQuery.
+    -   **Optimized LLM Usage**: Uses `QueryParam(only_need_context=True)` to extract structured context from LightRAG and lets the ADK Agent generate the final answer, avoiding redundant LLM calls.
+-   **README**: [LightRAG with BigQuery README](./Graph-RAG/lightrag-with-bigquery/README.md)
 
 ### 7. ADK BigQuery Logging Plugin Example
 
