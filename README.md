@@ -21,6 +21,7 @@ This repository contains a collection of sample agents built using the [Google A
   - [6. Graph RAG](#6-graph-rag)
     - [Graph RAG with Spanner](#graph-rag-with-spanner)
     - [PathRAG with Spanner](#pathrag-with-spanner)
+    - [PathRAG with BigQuery](#pathrag-with-bigquery)
     - [LightRAG with Spanner](#lightrag-with-spanner)
   - [7. ADK BigQuery Logging Plugin Example](#7-adk-bigquery-logging-plugin-example)
   - [8. Agent Memory](#8-agent-memory)
@@ -199,6 +200,16 @@ This section includes agents that implement the Graph Retrieval-Augmented Genera
     -   Uses `QueryParam(only_need_context=True)` to avoid double LLM calls — PathRAG returns raw context, ADK agent generates the final answer.
     -   Includes sample document ingestion for quick testing.
 -   **README**: [PathRAG with Spanner README](./Graph-RAG/pathrag-with-spanner/README.md)
+
+#### PathRAG with BigQuery
+
+-   **Directory**: [`Graph-RAG/pathrag-with-bigquery/`](./Graph-RAG/pathrag-with-bigquery/)
+-   **Description**: An agent that implements the PathRAG (Path-based Retrieval Augmented Generation) pattern using the Agent Development Kit (ADK) with **Google Cloud BigQuery** as the storage backend. It leverages the [PathRAG](https://github.com/ksmin23/PathRAG) library with the [pathrag-bigquery](https://github.com/ksmin23/pathrag-bigquery) storage plugin.
+-   **Features**:
+    -   **Full BigQuery Integration**: Uses BigQuery for all storage components (KV, Vector, Graph) via `pathrag-bigquery`.
+    -   **Relational Path Retrieval**: Searches BigQuery Property Graph and Vector Store to combine results into structured context.
+    -   **Optimized LLM Usage**: Uses `QueryParam(only_need_context=True)` to extract structured context from PathRAG and lets the ADK Agent generate the final answer, avoiding redundant LLM calls.
+-   **README**: [PathRAG with BigQuery README](./Graph-RAG/pathrag-with-bigquery/README.md)
 
 #### LightRAG with Spanner
 
