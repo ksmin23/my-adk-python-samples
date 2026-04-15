@@ -12,7 +12,7 @@ These samples demonstrate direct implementation of Graph RAG patterns using Goog
 
 -   **[Agentic Graph RAG with Spanner Graph](./graph-rag-with-spanner/)**
     -   **Description**: A sample implementation of an Agentic Graph RAG using Spanner Graph, demonstrating data ingestion and agent orchestration.
-    -   **Storage Backend**: Cloud Spanner (Spanner Graph).
+    -   **Storage Backend**: Google Cloud Spanner (Spanner Graph).
 
 ### 2. LightRAG Implementations
 
@@ -24,7 +24,7 @@ These samples leverage the LightRAG framework, which incorporates graph structur
 
 -   **[LightRAG with Spanner](./lightrag-with-spanner/)**
     -   **Description**: Implements a LightRAG agent using Google Cloud Spanner as the storage backend.
-    -   **Storage Backend**: Cloud Spanner.
+    -   **Storage Backend**: Google Cloud Spanner.
 
 ### 3. PathRAG Implementations
 
@@ -36,4 +36,4 @@ These samples leverage the PathRAG framework, an advanced approach that combines
 
 -   **[PathRAG with Spanner](./pathrag-with-spanner/)**
     -   **Description**: Implements a PathRAG agent using Cloud Spanner as the storage backend.
-    -   **Storage Backend**: Cloud Spanner.
+    -   **Storage Backend**: Google Cloud Spanner.
