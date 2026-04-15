@@ -226,4 +226,5 @@ adk web
 - **BigQuery Graph**
   - [Introduction to BigQuery Graph](https://docs.cloud.google.com/bigquery/docs/graph-overview)
   - [The Practical Guide to BigQuery Graph: Resources, Codelabs, and GQL Examples](https://medium.com/google-cloud/the-practical-guide-to-bigquery-graph-resources-codelabs-and-gql-examples-c88e8ed67a54)
+  - [The unified graph solution with Spanner Graph and BigQuery Graph](https://cloud.google.com/blog/products/data-analytics/the-unified-graph-solution-with-spanner-graph-and-bigquery-graph/)
 - [Vertex AI Gemini](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini)

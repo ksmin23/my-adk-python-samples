@@ -312,4 +312,5 @@ adk web
   - :octocat: [LightRAG GitHub](https://github.com/HKUDS/LightRAG/)
 - [Google ADK Documentation](https://google.github.io/adk-docs/)
 - [Google Cloud Spanner Graph](https://cloud.google.com/spanner/docs/graph/overview)
+- [The unified graph solution with Spanner Graph and BigQuery Graph](https://cloud.google.com/blog/products/data-analytics/the-unified-graph-solution-with-spanner-graph-and-bigquery-graph/)
 - [Vertex AI Gemini](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini)
