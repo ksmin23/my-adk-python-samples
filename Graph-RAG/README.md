@@ -16,7 +16,7 @@ These samples demonstrate direct implementation of Graph RAG patterns using Goog
 
 ### 2. LightRAG Implementations
 
-These samples leverage the LightRAG framework, which incorporates graph structures into text indexing and retrieval processes.
+These samples leverage the [LightRAG](https://github.com/HKUDS/LightRAG) framework, which incorporates graph structures into text indexing and retrieval processes.
 
 -   **[LightRAG with BigQuery](./lightrag-with-bigquery/)**
     -   **Description**: Implements a LightRAG agent using BigQuery as the storage backend (KV, Vector, and Graph storage).
@@ -28,7 +28,7 @@ These samples leverage the LightRAG framework, which incorporates graph structur
 
 ### 3. PathRAG Implementations
 
-These samples leverage the PathRAG framework, an advanced approach that combines knowledge graphs with LLMs using relational paths for more accurate and explainable responses.
+These samples leverage the [PathRAG](https://github.com/ksmin23/PathRAG) framework, an advanced approach that combines knowledge graphs with LLMs using relational paths for more accurate and explainable responses.
 
 -   **[PathRAG with BigQuery](./pathrag-with-bigquery/)**
     -   **Description**: Implements a PathRAG agent using BigQuery as the storage backend.
