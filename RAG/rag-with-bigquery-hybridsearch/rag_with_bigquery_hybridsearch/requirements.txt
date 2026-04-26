@@ -13,7 +13,7 @@ langchain-text-splitters==1.1.1
 google-cloud-bigquery==3.29.0
 
 # BigQuery Hybrid Search (vector + full-text)
-# langchain-bigquery-hybridsearch @ git+https://github.com/ksmin23/langchain-bigquery-hybridsearch.git@main
+langchain-bigquery-hybridsearch @ git+https://github.com/ksmin23/langchain-bigquery-hybridsearch.git@main
 
 # For local testing and running
 google-auth==2.40.3
