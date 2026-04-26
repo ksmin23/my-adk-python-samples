@@ -1,0 +1,19 @@
+# Agent Framework
+google-adk==1.27.4
+python-dotenv==1.1.1
+
+# LangChain and Vertex AI
+langchain==1.2.15
+langchain-classic==1.0.3
+langchain-community==0.4.1
+langchain-core==1.2.26
+langchain-google-community==3.0.5
+langchain-google-vertexai==2.0.27
+langchain-text-splitters==1.1.1
+google-cloud-bigquery==3.29.0
+
+# BigQuery Hybrid Search (vector + full-text)
+# langchain-bigquery-hybridsearch @ git+https://github.com/ksmin23/langchain-bigquery-hybridsearch.git@main
+
+# For local testing and running
+google-auth==2.40.3
