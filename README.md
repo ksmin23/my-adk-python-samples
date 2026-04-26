@@ -13,6 +13,7 @@ This repository contains a collection of sample agents built using the [Google A
   - [5. Agentic RAG](#5-agentic-rag)
     - [QnA Agent with AlloyDB](#qna-agent-with-alloydb)
     - [QnA Agent with BigQuery](#qna-agent-with-bigquery)
+    - [QnA Agent with BigQuery Hybrid Search](#qna-agent-with-bigquery-hybrid-search)
     - [DEO Negation-Aware RAG with BigQuery](#deo-negation-aware-rag-with-bigquery)
     - [QnA Agent with Spanner](#qna-agent-with-spanner)
     - [QnA Agent with Vector Search 2.0](#qna-agent-with-vector-search-20)
@@ -107,6 +108,18 @@ For detailed setup and execution instructions, please see the [RAG with AlloyDB 
     -   Provides instructions for local execution and deployment to Vertex AI Agent Engine.
 
 For detailed setup and execution instructions, please see the [RAG with BigQuery Agent README](./RAG/rag-with-bigquery/README.md).
+
+#### QnA Agent with BigQuery Hybrid Search
+
+-   **Directory**: [`RAG/rag-with-bigquery-hybridsearch/`](./RAG/rag-with-bigquery-hybridsearch/)
+-   **Description**: An agent that implements the RAG pattern using **BigQuery Hybrid Search** — a single retrieval step that combines BigQuery `VECTOR_SEARCH()` (semantic similarity) with `SEARCH()` (full-text keyword matching).
+-   **Features**:
+    -   **Hybrid Search**: Combines semantic and full-text keyword search using Reciprocal Rank Fusion (RRF).
+    -   **Two Modes**: Supports `rrf` (default balance) and `pre_filter` (keyword-strict) modes.
+    -   **langchain-bigquery-hybridsearch**: Uses an extension of `BigQueryVectorStore` for hybrid retrieval.
+    -   **Data Ingestion**: Includes scripts to populate the BigQuery vector store.
+
+For detailed setup and execution instructions, please see the [RAG with BigQuery Hybrid Search Agent README](./RAG/rag-with-bigquery-hybridsearch/README.md).
 
 #### DEO Negation-Aware RAG with BigQuery
 
