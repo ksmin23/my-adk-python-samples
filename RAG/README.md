@@ -30,6 +30,10 @@ These samples demonstrate how to build RAG applications by integrating directly 
     -   **Description**: An Agentic RAG implementation using BigQuery Vector Search.
     -   **Vector Store**: BigQuery.
 
+-   **[RAG with BigQuery Hybrid Search](./rag-with-bigquery-hybridsearch/)**
+    -   **Description**: An Agentic RAG implementation using **BigQuery Hybrid Search** — a single retrieval step that combines BigQuery `VECTOR_SEARCH()` (semantic similarity) with `SEARCH()` (full-text keyword matching).
+    -   **Vector Store**: BigQuery.
+
 -   **[DEO Negation-Aware RAG with BigQuery](./deo-rag-with-bigquery/)**
     -   **Description**: Implements **DEO (Direct Embedding Optimization)** for negation-aware retrieval using BigQuery as the vector store.
     -   **Vector Store**: BigQuery.
