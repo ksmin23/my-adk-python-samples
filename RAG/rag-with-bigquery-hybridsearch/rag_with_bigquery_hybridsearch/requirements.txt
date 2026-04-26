@@ -1,5 +1,5 @@
 # Agent Framework
-google-adk==1.27.4
+google-adk==1.30.0
 python-dotenv==1.1.1
 
 # LangChain and Vertex AI
