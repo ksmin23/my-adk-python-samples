@@ -156,6 +156,10 @@ You can also interact with the agent through a web interface using the `adk web`
 adk web
 ```
 
+**Screenshot:**
+
+![ADK Web Interface for RAG with BigQuery HybridSearch](./assets/rag-with-bigquery-hybridsearch.png)
+
 ### 4. Try It Out
 
 Suggested prompts to verify each retrieval mode:
