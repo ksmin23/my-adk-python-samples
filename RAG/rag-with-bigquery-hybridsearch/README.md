@@ -176,6 +176,7 @@ Suggested prompts to verify each retrieval mode:
 - [langchain-bigquery-hybridsearch](https://github.com/ksmin23/langchain-bigquery-hybridsearch)
 - [BigQuery `SEARCH()` function](https://cloud.google.com/bigquery/docs/reference/standard-sql/search_functions#search)
 - [BigQuery `VECTOR_SEARCH()` function](https://cloud.google.com/bigquery/docs/reference/standard-sql/search_functions#vector_search)
+- [BigQuery `AI.SEARCH()` function](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/bigqueryml-syntax-ai-search)
 - [BigQuery Search Indexes](https://cloud.google.com/bigquery/docs/search-index)
 - [Introduction to vector search | BigQuery | Google Cloud](https://cloud.google.com/bigquery/docs/vector-search-intro)
 - [Search embeddings with vector search | BigQuery | Google Cloud](https://cloud.google.com/bigquery/docs/vector-search)
