@@ -350,7 +350,9 @@ python query_agent.py
 - [IAM for Spanner](https://cloud.google.com/spanner/docs/iam)
 - [Spanner Graph Notebook](https://github.com/cloudspannerecosystem/spanner-graph-notebook) - Visually query Spanner Graph data in notebooks
 - [pydata-google-auth](https://pydata-google-auth.readthedocs.io/en/latest/) - a wrapper to authenticate to Google APIs, such as Google BigQuery
-- [Vertex AI Agent Engine](https://docs.cloud.google.com/agent-builder/agent-engine/overview)
+- [Gemini Enterprise Agent Platform](https://docs.cloud.google.com/agent-builder/agent-engine/overview) - A fully managed environment for scaling AI agents in production, handling testing, release management, and reliability
+- [GraphRAG (Microsoft)](https://microsoft.github.io/graphrag/) - A structured RAG approach by Microsoft that builds knowledge graphs from private datasets to enhance LLM reasoning and holistic understanding of complex data collections
+- [GraphRAG (Microsoft) GitHub](https://github.com/microsoft/graphrag) - A modular graph-based Retrieval-Augmented Generation (RAG) system
 - [GraphRAG in Practice: How to Build Cost-Efficient High-Recall Retrieval Systems (2025-12-09)](https://towardsdatascience.com/graphrag-in-practice-how-to-build-cost-efficient-high-recall-retrieval-systems/)
 - [Building GraphRAG System Step by Step Approach (2025-12-09)](https://machinelearningmastery.com/building-graph-rag-system-step-by-step-approach/) - Step-by-Step Implementation of GraphRAG with LlamaIndex
 - [Enhancing RAG-based applications accuracy by constructing and leveraging knowledge graphs (2025-03-15)](https://blog.langchain.com/enhancing-rag-based-applications-accuracy-by-constructing-and-leveraging-knowledge-graphs/) - A practical guide to constructing and retrieving information from knowledge graphs in RAG applications with Neo4j and LangChain
