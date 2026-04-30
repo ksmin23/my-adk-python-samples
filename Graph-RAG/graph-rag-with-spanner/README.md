@@ -361,9 +361,10 @@ python query_agent.py
   - [LightRAG GitHub](https://github.com/HKUDS/LightRAG/blob/v1.4.9.10/lightrag/prompt.py)
 - [PathRAG](https://github.com/BUPT-GAMMA/PathRAG/blob/main/PathRAG/prompt.py) - PathRAG (Path-based Retrieval Augmented Generation) is an advanced approach to knowledge retrieval and generation that combines the power of knowledge graphs with large language models (LLMs)
 - [We Built Graph RAG Without the Graph Database (2026-04-17)](https://milvus.io/blog/vector-graph-rag-without-graph-database.md) - Introduces Vector Graph RAG, a Python library that brings multi-hop reasoning to RAG using only Milvus, the most widely adopted open-source vector database
-- [Vector Graph RAG GitHub](https://github.com/zilliztech/vector-graph-rag.git) - Graph RAG with pure vector search, achieving SOTA performance in multi-hop reasoning scenarios
+  - [Vector Graph RAG GitHub](https://github.com/zilliztech/vector-graph-rag.git) - A Graph RAG implementation utilizing Milvus for pure vector search, achieving SOTA performance in multi-hop reasoning scenarios
 
 #### Practical Guides & Case Studies
 - [Building GraphRAG System Step by Step Approach (2025-12-09)](https://machinelearningmastery.com/building-graph-rag-system-step-by-step-approach/) - Step-by-Step Implementation of GraphRAG with LlamaIndex
 - [Enhancing RAG-based applications accuracy by constructing and leveraging knowledge graphs (2025-03-15)](https://blog.langchain.com/enhancing-rag-based-applications-accuracy-by-constructing-and-leveraging-knowledge-graphs/) - A practical guide to constructing and retrieving information from knowledge graphs in RAG applications with Neo4j and LangChain
 - [Building knowledge graphs with LLM Graph Transformer (2024-06-26)](https://medium.com/data-science/building-knowledge-graphs-with-llm-graph-transformer-a91045c49b59) - A deep dive into LangChain’s implementation of graph construction with LLMs
+- [GraphRAG Explained: Enhancing RAG with Knowledge Graphs (2024-08-07)](https://medium.com/@zilliz_learn/graphrag-explained-enhancing-rag-with-knowledge-graphs-3312065f99e1)
