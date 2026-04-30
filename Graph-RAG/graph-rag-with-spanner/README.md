@@ -342,6 +342,7 @@ python query_agent.py
 
 ## References
 
+#### Google Cloud & Spanner Graph
 - [Build GraphRAG applications using Spanner Graph and LangChain (2025-03-22)](https://cloud.google.com/blog/products/databases/using-spanner-graph-with-langchain-for-graphrag)
    - [LangChain LLMGraphTransformer - System Prompt to extract nodes and edges from text](https://github.com/langchain-ai/langchain-experimental/blob/libs/experimental/v0.4.1/libs/experimental/langchain_experimental/graph_transformers/llm.py#L72)
 - [langchain-google-spanner-python - GitHub](https://github.com/googleapis/langchain-google-spanner-python)
@@ -351,15 +352,18 @@ python query_agent.py
 - [Spanner Graph Notebook](https://github.com/cloudspannerecosystem/spanner-graph-notebook) - Visually query Spanner Graph data in notebooks
 - [pydata-google-auth](https://pydata-google-auth.readthedocs.io/en/latest/) - a wrapper to authenticate to Google APIs, such as Google BigQuery
 - [Gemini Enterprise Agent Platform](https://docs.cloud.google.com/agent-builder/agent-engine/overview) - A fully managed environment for scaling AI agents in production, handling testing, release management, and reliability
+
+#### GraphRAG Frameworks & Implementations
+- [Intro to GraphRAG](https://graphrag.com/concepts/intro-to-graphrag/) - A dive into GraphRAG pattern details
 - [GraphRAG (Microsoft)](https://microsoft.github.io/graphrag/) - A structured RAG approach by Microsoft that builds knowledge graphs from private datasets to enhance LLM reasoning and holistic understanding of complex data collections
 - [GraphRAG (Microsoft) GitHub](https://github.com/microsoft/graphrag) - A modular graph-based Retrieval-Augmented Generation (RAG) system
-- [GraphRAG in Practice: How to Build Cost-Efficient High-Recall Retrieval Systems (2025-12-09)](https://towardsdatascience.com/graphrag-in-practice-how-to-build-cost-efficient-high-recall-retrieval-systems/)
-- [Building GraphRAG System Step by Step Approach (2025-12-09)](https://machinelearningmastery.com/building-graph-rag-system-step-by-step-approach/) - Step-by-Step Implementation of GraphRAG with LlamaIndex
-- [Enhancing RAG-based applications accuracy by constructing and leveraging knowledge graphs (2025-03-15)](https://blog.langchain.com/enhancing-rag-based-applications-accuracy-by-constructing-and-leveraging-knowledge-graphs/) - A practical guide to constructing and retrieving information from knowledge graphs in RAG applications with Neo4j and LangChain
-- [We Built Graph RAG Without the Graph Database (2026-04-17)](https://milvus.io/blog/vector-graph-rag-without-graph-database.md) - Introduces Vector Graph RAG, a Python library that brings multi-hop reasoning to RAG using only Milvus, the most widely adopted open-source vector database
-- [Vector Graph RAG GitHub](https://github.com/zilliztech/vector-graph-rag.git) - Graph RAG with pure vector search, achieving SOTA performance in multi-hop reasoning scenarios
-- [Building knowledge graphs with LLM Graph Transformer (2024-06-26)](https://medium.com/data-science/building-knowledge-graphs-with-llm-graph-transformer-a91045c49b59) - A deep dive into LangChain’s implementation of graph construction with LLMs
-- [Intro to GraphRAG](https://graphrag.com/concepts/intro-to-graphrag/) - A dive into GraphRAG pattern details
 - [LightRAG](https://lightrag.github.io/) - Simple and Fast Retrieval-Augmented Generation that incorporates graph structures into text indexing and retrieval processes.
   - [LightRAG GitHub](https://github.com/HKUDS/LightRAG/blob/v1.4.9.10/lightrag/prompt.py)
 - [PathRAG](https://github.com/BUPT-GAMMA/PathRAG/blob/main/PathRAG/prompt.py) - PathRAG (Path-based Retrieval Augmented Generation) is an advanced approach to knowledge retrieval and generation that combines the power of knowledge graphs with large language models (LLMs)
+- [We Built Graph RAG Without the Graph Database (2026-04-17)](https://milvus.io/blog/vector-graph-rag-without-graph-database.md) - Introduces Vector Graph RAG, a Python library that brings multi-hop reasoning to RAG using only Milvus, the most widely adopted open-source vector database
+- [Vector Graph RAG GitHub](https://github.com/zilliztech/vector-graph-rag.git) - Graph RAG with pure vector search, achieving SOTA performance in multi-hop reasoning scenarios
+
+#### Practical Guides & Case Studies
+- [Building GraphRAG System Step by Step Approach (2025-12-09)](https://machinelearningmastery.com/building-graph-rag-system-step-by-step-approach/) - Step-by-Step Implementation of GraphRAG with LlamaIndex
+- [Enhancing RAG-based applications accuracy by constructing and leveraging knowledge graphs (2025-03-15)](https://blog.langchain.com/enhancing-rag-based-applications-accuracy-by-constructing-and-leveraging-knowledge-graphs/) - A practical guide to constructing and retrieving information from knowledge graphs in RAG applications with Neo4j and LangChain
+- [Building knowledge graphs with LLM Graph Transformer (2024-06-26)](https://medium.com/data-science/building-knowledge-graphs-with-llm-graph-transformer-a91045c49b59) - A deep dive into LangChain’s implementation of graph construction with LLMs
