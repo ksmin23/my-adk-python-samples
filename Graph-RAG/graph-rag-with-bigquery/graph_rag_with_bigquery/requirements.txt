@@ -1,0 +1,9 @@
+langchain==1.2.15
+langchain-community==0.4.1
+langchain-core==1.3.2
+langchain-experimental==0.4.1
+langchain-bigquery-graph @ git+https://github.com/ksmin23/langchain-bigquery-graph.git
+langchain-google-vertexai==3.2.3
+pydantic==2.13.3
+google-adk==1.32.0
+python-dotenv==1.2.2

@@ -21,6 +21,7 @@ This repository contains a collection of sample agents built using the [Google A
     - [More RAG Agents](#more-rag-agents)
   - [6. Graph RAG](#6-graph-rag)
     - [Graph RAG with Spanner](#graph-rag-with-spanner)
+    - [Graph RAG with BigQuery](#graph-rag-with-bigquery)
     - [PathRAG with Spanner](#pathrag-with-spanner)
     - [PathRAG with BigQuery](#pathrag-with-bigquery)
     - [LightRAG with Spanner](#lightrag-with-spanner)
@@ -204,6 +205,16 @@ This section includes agents that implement the Graph Retrieval-Augmented Genera
     -   Includes data ingestion scripts using `LLMGraphTransformer` to extract nodes and relationships from documents.
     -   Leverages concise retrieval using `SpannerGraphStore`.
 -   **README**: [Graph RAG with Spanner README](./Graph-RAG/graph-rag-with-spanner/README.md)
+
+#### Graph RAG with BigQuery
+
+-   **Directory**: [`Graph-RAG/graph-rag-with-bigquery/`](./Graph-RAG/graph-rag-with-bigquery/)
+-   **Description**: An agent that implements the Graph RAG pattern using Google Cloud BigQuery Graph for knowledge graph storage and retrieval.
+-   **Features**:
+    -   Demonstrates using BigQuery Graph as a knowledge graph store.
+    -   Performs hybrid search using both vector similarity and graph traversal.
+    -   Leverages `BigQueryGraphStore` and `BigQueryGraphVectorContextRetriever`.
+-   **README**: [Graph RAG with BigQuery README](./Graph-RAG/graph-rag-with-bigquery/README.md)
 
 #### PathRAG with Spanner
 
