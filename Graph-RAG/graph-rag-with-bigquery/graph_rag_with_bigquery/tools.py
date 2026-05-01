@@ -39,14 +39,14 @@ def retrieve_graph_context_function(query: str) -> str:
         embedding_service = VertexAIEmbeddings(model_name="gemini-embedding-001")
 
         label_expr = os.environ.get("BIGQUERY_SEARCH_LABEL", "Product")
-        expand_by_hops = int(os.environ.get("BIGQUERY_EXPAND_HOPS", "1"))
+        expand_by_hops = int(os.environ.get("BIGQUERY_EXPAND_HOPS", "2"))
 
         retriever = BigQueryGraphVectorContextRetriever.from_params(
             graph_store=store,
             embedding_service=embedding_service,
             label_expr=label_expr,
             expand_by_hops=expand_by_hops,
-            top_k=1,
+            top_k=3,
             k=10,
         )
 

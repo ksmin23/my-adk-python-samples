@@ -6,15 +6,17 @@ This project is a sample implementation of an Agentic Graph RAG using the Agent 
 
 ```
 /graph-rag-with-bigquery
+├── assets/                  # Images for README
+├── data_ingestion/          # Data ingestion directory
+│   ├── ingest.py            # Data ingestion script
+│   └── requirements.txt     # Data ingestion script dependencies
 ├── graph_rag_with_bigquery/  # ADK Agent directory
 │   ├── agent.py
 │   ├── prompt.py
 │   ├── requirements.txt     # Agent dependencies
 │   └── tools.py
-├── data_ingestion/          # Data ingestion directory
-│   └── ingest.py            # Data ingestion script
-│   └── requirements.txt     # Data ingestion script dependencies
 ├── notebooks/               # Jupyter notebooks for exploration
+│   ├── graph_rag_with_bigquery.ipynb
 │   └── requirements.txt
 └── README.md
 ```
@@ -165,6 +167,30 @@ You can also interact with the agent through a web interface using the `adk web`
 adk web
 ```
 
+**Screenshot:**
+<div align="center">
+  <img src="assets/graph-rag-with-bigquery.png" alt="ADK Web Interface for Graph RAG with BigQuery" width="90%">
+  <br>
+  <b>Figure 1:</b> ADK Web Interface for Graph RAG with BigQuery
+</div>
+
+<br>
+
+<table align="center" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center" valign="middle" width="50%">
+      <img src="assets/retail_graph_in_bigquery.png" alt="Retail Graph in BigQuery" width="100%">
+      <br>
+      <b>Figure 2:</b> Retail Graph in BigQuery
+    </td>
+    <td align="center" valign="middle" width="50%">
+      <img src="./assets/retail_tables_in_bigquery.png" alt="Retail Tables in BigQuery"width="100%">
+      <br>
+      <b>Figure 3:</b> Retail Tables in BigQuery
+    </td>
+  </tr>
+</table>
+
 ## Deployment
 
 The Graph RAG with BigQuery agent can be deployed to Vertex AI Agent Engine using the following commands.
@@ -288,5 +314,6 @@ python query_agent.py
 
 #### Practical Guides & Case Studies
 - [Building GraphRAG System Step by Step Approach (2025-12-09)](https://machinelearningmastery.com/building-graph-rag-system-step-by-step-approach/) - Step-by-Step Implementation of GraphRAG with LlamaIndex
+  - [Hands-on Tutorial for Building a GraphRAG System (GitHub)](https://github.com/ksmin23/building-graph-rag-system-step-by-step-approach)
 - [Enhancing RAG-based applications accuracy by constructing and leveraging knowledge graphs (2025-03-15)](https://blog.langchain.com/enhancing-rag-based-applications-accuracy-by-constructing-and-leveraging-knowledge-graphs/) - A practical guide to constructing and retrieving information from knowledge graphs in RAG applications with Neo4j and LangChain
 - [Building knowledge graphs with LLM Graph Transformer (2024-06-26)](https://medium.com/data-science/building-knowledge-graphs-with-llm-graph-transformer-a91045c49b59) - A deep dive into LangChain's implementation of graph construction with LLMs
