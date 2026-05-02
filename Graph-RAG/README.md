@@ -14,6 +14,11 @@ These samples demonstrate direct implementation of Graph RAG patterns using Goog
     -   **Description**: A sample implementation of an Agentic Graph RAG using Spanner Graph, demonstrating data ingestion and agent orchestration.
     -   **Storage Backend**: Google Cloud Spanner (Spanner Graph).
 
+-   **[Agentic Graph RAG with BigQuery Graph](./graph-rag-with-bigquery/)**
+    -   **Description**: A sample implementation of an Agentic Graph RAG using BigQuery Graph, demonstrating data ingestion and agent orchestration.
+    -   **Storage Backend**: Google Cloud BigQuery (BigQuery Graph).
+
+
 ### 2. LightRAG Implementations
 
 These samples leverage the [LightRAG](https://github.com/HKUDS/LightRAG) framework, which incorporates graph structures into text indexing and retrieval processes.
