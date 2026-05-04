@@ -1,6 +1,6 @@
 # Agentic Graph RAG Project with BigQuery Graph
 
-This project is a sample implementation of an Agentic Graph RAG using the Agent Development Kit (ADK) and the Graph feature of Google Cloud BigQuery.
+This project is a sample implementation of an Agentic Graph RAG using the Agent Development Kit (ADK) and the Graph feature of Google Cloud BigQuery, powered by the [**langchain-bigquery-graph**](https://github.com/ksmin23/langchain-bigquery-graph) library.
 
 ## Project Structure
 
