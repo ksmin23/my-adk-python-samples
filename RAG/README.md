@@ -71,3 +71,7 @@ These samples demonstrate how to use **Gemini File Search**, a fully managed RAG
 -   **[RAG with File Search](./rag-with-file-search/)**
     -   **Description**: An Agentic RAG implementation using **Gemini File Search**. Features automatic MIME type patching, auto-ingestion of files via the ADK Web UI, and session-based data isolation using metadata filters.
     -   **Vector Store**: Gemini File Search Store (Managed).
+
+## References
+
+-   **[RAG Techniques by Nir Diamant](https://github.com/NirDiamant/RAG_Techniques)**: A comprehensive collection of various RAG techniques and implementations, serving as a great reference for building advanced RAG systems.
