@@ -297,8 +297,8 @@ python query_agent.py
 ## References
 
 #### Google Cloud & BigQuery Graph
+- ⭐ [langchain-bigquery-graph (GitHub)](https://github.com/ksmin23/langchain-bigquery-graph) - LangChain integration for BigQuery Property Graph — GraphStore, vector context retriever, and text-to-GQL retriever for building Graph RAG applications
 - [BigQuery Property Graph Overview](https://cloud.google.com/bigquery/docs/graph-overview)
-- [langchain-bigquery-graph - GitHub](https://github.com/ksmin23/langchain-bigquery-graph) - LangChain integration for BigQuery Property Graph — GraphStore, vector context retriever, and text-to-GQL retriever for building Graph RAG applications
 - [BigQuery Graph RAG Example (Jupyter Notebook)](https://github.com/ksmin23/langchain-bigquery-graph/blob/main/examples/graph_rag.ipynb)
 - [Build GraphRAG applications using Spanner Graph and LangChain (2025-03-22)](https://cloud.google.com/blog/products/databases/using-spanner-graph-with-langchain-for-graphrag)
    - [LangChain LLMGraphTransformer - System Prompt to extract nodes and edges from text](https://github.com/langchain-ai/langchain-experimental/blob/libs/experimental/v0.4.1/libs/experimental/langchain_experimental/graph_transformers/llm.py#L72)

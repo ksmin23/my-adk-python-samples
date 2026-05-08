@@ -173,7 +173,7 @@ Suggested prompts to verify each retrieval mode:
 
 ## References
 
-- [langchain-bigquery-hybridsearch](https://github.com/ksmin23/langchain-bigquery-hybridsearch)
+- ⭐ [langchain-bigquery-hybridsearch (GitHub)](https://github.com/ksmin23/langchain-bigquery-hybridsearch) - LangChain vector store that combines BigQuery VECTOR_SEARCH and SEARCH for hybrid semantic + keyword retrieval
 - [BigQuery `SEARCH()` function](https://cloud.google.com/bigquery/docs/reference/standard-sql/search_functions#search)
 - [BigQuery `VECTOR_SEARCH()` function](https://cloud.google.com/bigquery/docs/reference/standard-sql/search_functions#vector_search)
 - [BigQuery `AI.SEARCH()` function](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/bigqueryml-syntax-ai-search)
